@@ -22,6 +22,38 @@ namespace Clothes_DataAccess.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("Clothes_Models.Models.AdminActivity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("ActivityDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ActivityType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("IpAddress")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AdminActivities");
+                });
+
             modelBuilder.Entity("Clothes_Models.Models.Brand", b =>
                 {
                     b.Property<int>("Brand_Id")
@@ -366,7 +398,7 @@ namespace Clothes_DataAccess.Migrations
                         {
                             Product_Id = 1,
                             Category_Id = 1,
-                            DateAdded = new DateTime(2025, 4, 28, 22, 41, 24, 761, DateTimeKind.Local).AddTicks(8428),
+                            DateAdded = new DateTime(2025, 4, 30, 23, 2, 46, 960, DateTimeKind.Local).AddTicks(4944),
                             IsFeatured = false,
                             Product_Color = "Black",
                             Product_Description = "Black T-Shirt Nike",
@@ -380,7 +412,7 @@ namespace Clothes_DataAccess.Migrations
                         {
                             Product_Id = 2,
                             Category_Id = 2,
-                            DateAdded = new DateTime(2025, 4, 28, 22, 41, 24, 761, DateTimeKind.Local).AddTicks(8497),
+                            DateAdded = new DateTime(2025, 4, 30, 23, 2, 46, 960, DateTimeKind.Local).AddTicks(5049),
                             IsFeatured = false,
                             Product_Color = "Red",
                             Product_Description = "Red Pantalon Adidas",
@@ -394,7 +426,7 @@ namespace Clothes_DataAccess.Migrations
                         {
                             Product_Id = 3,
                             Category_Id = 3,
-                            DateAdded = new DateTime(2025, 4, 28, 22, 41, 24, 761, DateTimeKind.Local).AddTicks(8499),
+                            DateAdded = new DateTime(2025, 4, 30, 23, 2, 46, 960, DateTimeKind.Local).AddTicks(5051),
                             IsFeatured = false,
                             Product_Color = "Yellow",
                             Product_Description = "Yellow Shorts Puma",
@@ -754,6 +786,17 @@ namespace Clothes_DataAccess.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasDiscriminator().HasValue("ApplicationUser");
+                });
+
+            modelBuilder.Entity("Clothes_Models.Models.AdminActivity", b =>
+                {
+                    b.HasOne("Clothes_Models.Models.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Clothes_Models.Models.CartItem", b =>
