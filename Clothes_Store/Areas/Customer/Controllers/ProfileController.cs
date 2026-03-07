@@ -1,7 +1,9 @@
-﻿using Clothes_DataAccess.Data;
-using Clothes_Models.Models;
-using Clothes_Models.ViewModels;
-using Clothes_Utilities;
+﻿using LushThreads.Infrastructure.Data;
+using LushThreads.Domain.Constants;
+using LushThreads.Domain.Entites;
+using LushThreads.Domain.ViewModels.Auth;
+using LushThreads.Domain.ViewModels.Products;
+using LushThreads.Domain.ViewModels.Profile;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
@@ -12,7 +14,7 @@ using System;
 using System.Security.Claims;
 using System.Security.Cryptography;
 
-namespace Clothes_Store.Areas.Customer.Controllers
+namespace LushThreads.Areas.Customer.Controllers
 {
     [Area("Customer")]
     [Authorize]

@@ -1,13 +1,13 @@
-﻿using Clothes_DataAccess.Data;
-using Clothes_Models.Models;
-using Clothes_Utilities;
+﻿using LushThreads.Infrastructure.Data;
+using LushThreads.Domain.Constants;
+using LushThreads.Domain.Entites;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using Microsoft.EntityFrameworkCore;
 
-namespace Clothes_Store.Areas.Admin.Controllers
+namespace LushThreads.Areas.Admin.Controllers
 {
     [Area("Admin")]
     [Authorize(Roles = SD.Admin)]

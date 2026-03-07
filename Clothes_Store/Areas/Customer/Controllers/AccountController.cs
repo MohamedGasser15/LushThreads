@@ -3,18 +3,17 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Clothes_DataAccess.Data;
-using Clothes_Models.Models;
-using Clothes_Models.ViewModels;
-using Clothes_Store.Models.ViewModels;
-using Clothes_Utilities;
+using LushThreads.Infrastructure.Data;
+using LushThreads.Domain.Constants;
+using LushThreads.Domain.Entites;
+using LushThreads.Domain.ViewModels.Auth;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
-namespace Clothes_Store.Areas.Customer.Controllers
+namespace LushThreads.Areas.Customer.Controllers
 {
     [Area("Customer")]
     [AllowAnonymous]

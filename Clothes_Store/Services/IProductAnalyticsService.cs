@@ -1,15 +1,12 @@
-﻿using Clothes_DataAccess.Data;
-using Clothes_Models.Models;
-using Clothes_Models.ViewModels;
+﻿using LushThreads.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using LushThreads.Domain.ViewModels.ProductAnalytics;
 
-using Clothes_Models.ViewModels;
-
-namespace Clothes_Store.Services
+namespace LushThreads.Services
 {
     public interface IProductAnalyticsService
     {

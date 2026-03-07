@@ -1,15 +1,14 @@
 ﻿using System.Diagnostics;
 using System.Linq.Expressions;
 using System.Security.Claims;
-using Clothes_DataAccess.Data;
-using Clothes_Models.Models;
-using Clothes_Models.ViewModels;
-using Clothes_Store.Models;
+using LushThreads.Infrastructure.Data;
+using LushThreads.Domain.Entites;
+using LushThreads.Domain.ViewModels.Home;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace Clothes_Store.Controllers
+namespace LushThreads.Areas.Customer.Controllers
 {
     [Area("Customer")]
     public class HomeController : Controller

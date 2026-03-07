@@ -1,7 +1,8 @@
-﻿using Clothes_DataAccess.Data;
-using Clothes_Models.Models;
-using Clothes_Models.ViewModels;
-using Clothes_Utilities;
+﻿using LushThreads.Infrastructure.Data;
+using LushThreads.Domain.Constants;
+using LushThreads.Domain.Entites;
+using LushThreads.Domain.ViewModels.Cart;
+using LushThreads.Domain.ViewModels.Products;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -10,7 +11,7 @@ using Stripe;
 using Stripe.Checkout;
 using System.Security.Claims;
 
-namespace Clothes_Store.Areas.Customer.Controllers
+namespace LushThreads.Areas.Customer.Controllers
 {
     [Area("Customer")]
     [Authorize]
@@ -319,7 +320,7 @@ namespace Clothes_Store.Areas.Customer.Controllers
             {
                 var paymentMethod = await _db.PaymentMethods
                     .FirstOrDefaultAsync(p => p.UserId == user.Id && p.IsDefault)
-                    ?? new Clothes_Models.Models.PaymentMethod
+                    ?? new LushThreads.Domain.Entites.PaymentMethod
                     {
                         UserId = user.Id,
                         IsDefault = true,
@@ -357,7 +358,7 @@ namespace Clothes_Store.Areas.Customer.Controllers
 
             var paymentMethodForOrder = await _db.PaymentMethods
                 .FirstOrDefaultAsync(p => p.UserId == user.Id && p.IsDefault)
-                ?? new Clothes_Models.Models.PaymentMethod
+                ?? new LushThreads.Domain.Entites.PaymentMethod
                 {
                     UserId = user.Id,
                     IsDefault = true,
@@ -522,7 +523,7 @@ namespace Clothes_Store.Areas.Customer.Controllers
 
                             var paymentMethod = await _db.PaymentMethods
                                 .FirstOrDefaultAsync(p => p.StripePaymentMethodId == paymentIntent.PaymentMethodId)
-                                ?? new Clothes_Models.Models.PaymentMethod
+                                ?? new LushThreads.Domain.Entites.PaymentMethod
                                 {
                                     UserId = user.Id,
                                     StripePaymentMethodId = paymentIntent.PaymentMethodId,

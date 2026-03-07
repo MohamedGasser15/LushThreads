@@ -4,7 +4,7 @@
 
 #pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
 
-namespace Clothes_DataAccess.Migrations
+namespace LushThreads.Migrations
 {
     /// <inheritdoc />
     public partial class Seed_Data_To_Db : Migration

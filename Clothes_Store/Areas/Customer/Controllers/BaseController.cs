@@ -1,11 +1,11 @@
-﻿using Clothes_DataAccess.Data;
-using Clothes_Models.Models;
+﻿using LushThreads.Infrastructure.Data;
+using LushThreads.Domain.Entites;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
 
-namespace Clothes_Store.Areas.Customer.Controllers
+namespace LushThreads.Areas.Customer.Controllers
 {
     [Area("Customer")]
     public class BaseController : Controller
