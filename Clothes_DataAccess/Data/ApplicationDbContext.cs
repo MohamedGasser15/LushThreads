@@ -1,4 +1,4 @@
-﻿using Clothes_Models.Models;
+﻿using LushThreads.Domain.Entites;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Clothes_DataAccess.Data
+namespace LushThreads.Infrastructure.Data
 {
     public class ApplicationDbContext : IdentityDbContext
     {

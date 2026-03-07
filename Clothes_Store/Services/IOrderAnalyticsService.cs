@@ -1,13 +1,13 @@
-﻿using Clothes_DataAccess.Data;
-using Clothes_Models.Models;
-using Clothes_Models.ViewModels;
+﻿using LushThreads.Infrastructure.Data;
+using LushThreads.Domain.Entites;
+using LushThreads.Domain.ViewModels.OrderAnalytics;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Clothes_Store.Services
+namespace LushThreads.Services
 {
     public interface IOrderAnalyticsService
     {

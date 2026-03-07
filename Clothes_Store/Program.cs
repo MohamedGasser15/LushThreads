@@ -1,15 +1,14 @@
-using Clothes_DataAccess.Data;
-using Clothes_DataAccess.Repo;
-using Clothes_DataAccess.Repo.Interfaces;
-using Clothes_Models.Models;
-using Clothes_Store.Services;
-using Clothes_Utilities;
+using LushThreads.Infrastructure.Data;
+using LushThreads.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using Stripe;
+using LushThreads.Domain.Entites;
+using LushThreads.Infrastructure.Configurations;
+using LushThreads.Domain.Constants;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -48,7 +47,6 @@ builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddTransient<IEmailSender, EmailSender>();
-builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IUserAnalyticsService, UserAnalyticsService>();
 builder.Services.AddScoped<IOrderAnalyticsService, OrderAnalyticsService>();
 builder.Services.AddScoped<IProductAnalyticsService, ProductAnalyticsService>();

@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace Clothes_DataAccess.Migrations
+namespace LushThreads.Migrations
 {
     /// <inheritdoc />
     public partial class Add_OrderDetails_To_Db : Migration

@@ -1,10 +1,10 @@
-﻿using Clothes_DataAccess.Data;
-using Clothes_Models.Models;
+﻿using LushThreads.Infrastructure.Data;
+using LushThreads.Domain.Entites;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Clothes_Store.Areas.Customer.Controllers
+namespace LushThreads.Areas.Customer.Controllers
 {
     [Area("Customer")]
     [Authorize]

@@ -1,10 +1,10 @@
-﻿using Clothes_DataAccess.Data;
-using Clothes_Models.Models;
-using Clothes_Models.ViewModels;
+﻿using LushThreads.Infrastructure.Data;
+using LushThreads.Domain.Entites;
+using LushThreads.Domain.ViewModels.UserAnalytics;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
-namespace Clothes_Store.Services
+namespace LushThreads.Services
 {
     // Services/Interfaces/IUserAnalyticsService.cs
     public interface IUserAnalyticsService

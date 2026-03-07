@@ -1,5 +1,7 @@
-﻿@model Clothes_Models.Models.Category
-@inject Clothes_DataAccess.Data.ApplicationDbContext _db
+﻿@using LushThreads.Infrastructure.Data
+@using LushThreads.Domain.Entites
+@model Category
+@inject ApplicationDbContext _db
 
 @{
     var title = "Create Category";

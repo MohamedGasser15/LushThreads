@@ -1,12 +1,11 @@
 using System.Diagnostics;
-using Clothes_Models.ViewModels;
-using Clothes_Store.Models;
-using Clothes_Store.Services;
-using Clothes_Utilities;
+using LushThreads.Services;
+using LushThreads.Domain.Constants;
+using LushThreads.Domain.ViewModels.OrderAnalytics;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Clothes_Store.Controllers
+namespace LushThreads.Areas.Admin.Controllers
 {
     [Area("Admin")]
     [Authorize(Roles = SD.Admin)]

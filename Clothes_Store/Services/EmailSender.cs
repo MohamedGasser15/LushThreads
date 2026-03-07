@@ -3,7 +3,7 @@ using MailKit.Net.Smtp;
 using MimeKit;
 using MimeKit.Text;
 
-namespace Clothes_Store.Services
+namespace LushThreads.Services
 {
     public class EmailSender : IEmailSender
     {

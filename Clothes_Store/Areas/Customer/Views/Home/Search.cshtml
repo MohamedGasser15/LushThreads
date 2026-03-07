@@ -1,4 +1,5 @@
-﻿@model Clothes_Models.ViewModels.SearchViewModel
+﻿@using LushThreads.Domain.ViewModels.Home
+@model SearchViewModel
 @{
     var showSuccessMessage = TempData["AddToCartSuccess"] != null && (bool)TempData["AddToCartSuccess"];
     var showErrorMessage = TempData["AddToCartError"] != null && (bool)TempData["AddToCartError"];
