@@ -13,6 +13,7 @@ namespace LushThreads.Application.Configurations
         {
             // Add in-memory cache
             services.AddMemoryCache();
+            services.AddHttpClient();
 
             // Register AutoMapper profiles from this assembly
             services.AddAutoMapper(typeof(BrandProfile).Assembly);
