@@ -28,9 +28,9 @@ namespace LushThreads.Application.Services
 
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IOrderRepository _orderHeaderRepository;
-        private readonly IRepository<OrderDetail> _orderDetailRepository;
-        private readonly IRepository<UserDevice> _userDeviceRepository;
-        private readonly IRepository<SecurityActivity> _securityActivityRepository;
+        private readonly IOrderDetailRepository _orderDetailRepository;
+        private readonly IUserDeviceRepository _userDeviceRepository;
+        private readonly ISecurityActivityRepository _securityActivityRepository;
         private readonly IAdminActivityService _adminActivityService;
         private readonly IEmailSender _emailSender;
         private readonly IEmailTemplateService _emailTemplateService;
@@ -43,9 +43,9 @@ namespace LushThreads.Application.Services
         public ProfileService(
             UserManager<ApplicationUser> userManager,
             IOrderRepository orderHeaderRepository,
-            IRepository<OrderDetail> orderDetailRepository,
-            IRepository<UserDevice> userDeviceRepository,
-            IRepository<SecurityActivity> securityActivityRepository,
+            IOrderDetailRepository orderDetailRepository,
+            IUserDeviceRepository userDeviceRepository,
+            ISecurityActivityRepository securityActivityRepository,
             IAdminActivityService adminActivityService,
             IEmailSender emailSender,
             IEmailTemplateService emailTemplateService,

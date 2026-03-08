@@ -23,12 +23,12 @@ namespace LushThreads.Application.Services
     {
         #region Fields
 
-        private readonly IRepository<CartItem> _cartItemRepository;
-        private readonly IRepository<Domain.Entites.Product> _productRepository;
-        private readonly IRepository<OrderHeader> _orderHeaderRepository;
-        private readonly IRepository<OrderDetail> _orderDetailRepository;
-        private readonly IRepository<Stock> _stockRepository;
-        private readonly IRepository<Domain.Entites.PaymentMethod> _paymentMethodRepository;
+        private readonly ICartItemRepository _cartItemRepository;
+        private readonly IProductRepository _productRepository;
+        private readonly IOrderRepository _orderHeaderRepository;
+        private readonly IOrderDetailRepository _orderDetailRepository;
+        private readonly IStockRepository _stockRepository;
+        private readonly IPaymentMethodRepository _paymentMethodRepository;
         private readonly ILogger<CartService> _logger;
 
         #endregion
@@ -36,12 +36,12 @@ namespace LushThreads.Application.Services
         #region Constructor
 
         public CartService(
-            IRepository<CartItem> cartItemRepository,
-            IRepository<Domain.Entites.Product> productRepository,
-            IRepository<OrderHeader> orderHeaderRepository,
-            IRepository<OrderDetail> orderDetailRepository,
-            IRepository<Stock> stockRepository,
-            IRepository<Domain.Entites.PaymentMethod> paymentMethodRepository,
+            ICartItemRepository cartItemRepository,
+            IProductRepository productRepository,
+            IOrderRepository orderHeaderRepository,
+            IOrderDetailRepository orderDetailRepository,
+            IStockRepository stockRepository,
+            IPaymentMethodRepository paymentMethodRepository,
             ILogger<CartService> logger)
         {
             _cartItemRepository = cartItemRepository;

@@ -2,6 +2,7 @@
 using LushThreads.Domain.Entites;
 using LushThreads.Domain.ViewModels.Home;
 using LushThreads.Infrastructure.Persistence.IRepository;
+using LushThreads.Infrastructure.Persistence.Repository;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -19,9 +20,9 @@ namespace LushThreads.Application.Services
     {
         #region Fields
 
-        private readonly IRepository<Product> _productRepository;
-        private readonly IRepository<Category> _categoryRepository;
-        private readonly IRepository<Brand> _brandRepository;
+        private readonly IProductRepository _productRepository;
+        private readonly ICategoryRepository _categoryRepository;
+        private readonly IBrandRepository _brandRepository;
         private readonly ILogger<HomeService> _logger;
 
         #endregion
@@ -29,9 +30,9 @@ namespace LushThreads.Application.Services
         #region Constructor
 
         public HomeService(
-            IRepository<Product> productRepository,
-            IRepository<Category> categoryRepository,
-            IRepository<Brand> brandRepository,
+            IProductRepository productRepository,
+            ICategoryRepository categoryRepository,
+            IBrandRepository brandRepository,
             ILogger<HomeService> logger)
         {
             _productRepository = productRepository;

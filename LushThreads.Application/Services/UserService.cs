@@ -21,7 +21,7 @@ namespace LushThreads.Application.Services
 
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
-        private readonly IRepository<UserDevice> _userDeviceRepository; // Assuming UserDevice exists
+        private readonly IUserDeviceRepository _userDeviceRepository; // Assuming UserDevice exists
         private readonly IAdminActivityService _adminActivityService;
         private readonly ILogger<UserService> _logger;
 
@@ -32,7 +32,7 @@ namespace LushThreads.Application.Services
         public UserService(
             UserManager<ApplicationUser> userManager,
             RoleManager<IdentityRole> roleManager,
-            IRepository<UserDevice> userDeviceRepository,
+            IUserDeviceRepository userDeviceRepository,
             IAdminActivityService adminActivityService,
             ILogger<UserService> logger)
         {
