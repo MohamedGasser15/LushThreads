@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
-namespace LushThreads.Areas.Admin.Controllers
+namespace LushThreads.Web.Areas.Admin.Controllers
 {
     /// <summary>
     /// Controller for managing admin activity logs.

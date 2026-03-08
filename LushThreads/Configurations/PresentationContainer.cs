@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace LushThreads.Configurations
+namespace LushThreads.Web.Configurations
 {
     /// <summary>
     /// Handles dependency injection for the Presentation (Web) layer.

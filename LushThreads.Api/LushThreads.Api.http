@@ -1,0 +1,6 @@
+@LushThreads.Api_HostAddress = http://localhost:5001
+
+GET {{LushThreads.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

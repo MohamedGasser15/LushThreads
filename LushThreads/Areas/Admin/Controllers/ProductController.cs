@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Threading.Tasks;
 
-namespace LushThreads.Areas.Admin.Controllers
+namespace LushThreads.Web.Areas.Admin.Controllers
 {
     /// <summary>
     /// Controller for managing product operations in the admin area.
