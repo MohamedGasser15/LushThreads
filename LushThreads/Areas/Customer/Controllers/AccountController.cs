@@ -11,7 +11,7 @@ using System;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace LushThreads.Areas.Customer.Controllers
+namespace LushThreads.Web.Areas.Customer.Controllers
 {
     [Area("Customer")]
     [AllowAnonymous]

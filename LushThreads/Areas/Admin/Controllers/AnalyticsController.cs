@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using LushThreads.Application.ServiceInterfaces;
 
-namespace LushThreads.Areas.Admin.Controllers
+namespace LushThreads.Web.Areas.Admin.Controllers
 {
     [Area("Admin")]
     [Authorize(Roles = SD.Admin)]

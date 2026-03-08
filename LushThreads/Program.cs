@@ -1,7 +1,7 @@
 using LushThreads.Application.Configurations;
-using LushThreads.Configurations;
 using LushThreads.Infrastructure.Configurations;
 using LushThreads.Infrastructure.Data;
+using LushThreads.Web.Configurations;
 using Stripe;
 
 var builder = WebApplication.CreateBuilder(args);

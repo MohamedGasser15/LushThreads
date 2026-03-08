@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
 
-namespace LushThreads.Areas.Customer.Controllers
+namespace LushThreads.Web.Areas.Customer.Controllers
 {
     [Area("Customer")]
     public class BaseController : Controller

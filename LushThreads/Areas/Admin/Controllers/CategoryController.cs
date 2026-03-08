@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
 
-namespace LushThreads.Areas.Admin.Controllers
+namespace LushThreads.Web.Areas.Admin.Controllers
 {
     /// <summary>
     /// Controller for managing category operations in the admin area.

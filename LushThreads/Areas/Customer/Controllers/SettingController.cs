@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
 
-namespace LushThreads.Areas.Customer.Controllers
+namespace LushThreads.Web.Areas.Customer.Controllers
 {
     [Area("Customer")]
     [Authorize]
