@@ -1,22 +1,22 @@
 using LushThreads.Application.Configurations;
 using LushThreads.Configurations;
-using LushThreads.Domain.Constants;
-using LushThreads.Domain.Entites;
 using LushThreads.Infrastructure.Configurations;
-using Microsoft.AspNetCore.Identity;
+using LushThreads.Infrastructure.Data;
 using Stripe;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Add logging (already included by default, but explicit for clarity)
+builder.Services.AddLogging();
+
+// Register layer services
 builder.Services.AddInfrastructureServices(builder.Configuration);
-
 builder.Services.AddApplicationServices();
-
 builder.Services.AddPresentationServices(builder.Configuration);
 
 var app = builder.Build();
 
-// تكوين middleware
+// Configure middleware pipeline
 if (app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
@@ -48,52 +48,10 @@ app.MapControllerRoute(
     pattern: "{*url}",
     defaults: new { controller = "Home", action = "Error", statusCode = 404 });
 
+// Seed database
 using (var scope = app.Services.CreateScope())
 {
-    var services = scope.ServiceProvider;
-    var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
-    var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-
-    string adminEmail = "admin@example.com";
-    string adminPassword = "Admin1234@";
-
-    if (!await roleManager.RoleExistsAsync(SD.Admin))
-    {
-        await roleManager.CreateAsync(new IdentityRole(SD.Admin));
-        await roleManager.CreateAsync(new IdentityRole(SD.User));
-    }
-
-    var adminUser = await userManager.FindByEmailAsync(adminEmail);
-    if (adminUser == null)
-    {
-        adminUser = new ApplicationUser
-        {
-            UserName = adminEmail,
-            Email = adminEmail,
-            EmailConfirmed = true,
-            Name = "Admin",
-        };
-        var result = await userManager.CreateAsync(adminUser, adminPassword);
-
-        if (result.Succeeded)
-        {
-            await userManager.AddToRoleAsync(adminUser, "Admin");
-            Console.WriteLine("Admin user created successfully!");
-        }
-        else
-        {
-            Console.WriteLine("Error creating admin user:");
-            foreach (var error in result.Errors)
-            {
-                Console.WriteLine($"- {error.Description}");
-            }
-        }
-    }
-    else
-    {
-        Console.WriteLine("Admin user already exists.");
-    }
+    await DbInitializer.InitializeAsync(scope.ServiceProvider);
 }
-
 
 app.Run();
