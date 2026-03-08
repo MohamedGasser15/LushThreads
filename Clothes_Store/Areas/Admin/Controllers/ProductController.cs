@@ -1,4 +1,4 @@
-﻿using LushThreads.Infrastructure.Data;
+﻿using LushThreads.Application.ServiceInterfaces;
 using LushThreads.Domain.Constants;
 using LushThreads.Domain.Entites;
 using LushThreads.Domain.ViewModels.Products;
@@ -6,273 +6,162 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
+using System;
+using System.Threading.Tasks;
 
 namespace LushThreads.Areas.Admin.Controllers
 {
+    /// <summary>
+    /// Controller for managing product operations in the admin area.
+    /// Requires authentication and admin role.
+    /// </summary>
     [Area("Admin")]
     [Authorize(Roles = SD.Admin)]
     public class ProductController : Controller
     {
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IWebHostEnvironment _webHostEnvironment;
-        private readonly ApplicationDbContext _db;
+        #region Fields
+
+        private readonly IProductService _productService;
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public ProductController(IUnitOfWork unitOfWork, IWebHostEnvironment webHostEnvironment, ApplicationDbContext db, UserManager<ApplicationUser> userManager)
+        #endregion
+
+        #region Constructor
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ProductController"/> class.
+        /// </summary>
+        /// <param name="productService">Service for product business logic.</param>
+        /// <param name="userManager">Identity user manager for retrieving current user.</param>
+        public ProductController(IProductService productService, UserManager<ApplicationUser> userManager)
         {
-            _unitOfWork = unitOfWork;
-            _webHostEnvironment = webHostEnvironment;
-            _db = db;
+            _productService = productService;
             _userManager = userManager;
         }
 
-        // Displays the list of all products
+        #endregion
+
+        #region Actions
+
+        /// <summary>
+        /// Displays the list of all products.
+        /// </summary>
         public async Task<IActionResult> Index()
         {
-            IEnumerable<Product> objList = await _db.Products
-                .Include(p => p.Stocks)
-                .Include(p => p.Category)
-                .Include(p => p.Brand)
-                .OrderByDescending(p => p.Product_Id)
-                .ToListAsync();
-            return View(objList);
+            var products = await _productService.GetAllProductsAsync();
+            return View(products);
         }
 
-        // Displays the form for creating or editing a product
+        /// <summary>
+        /// Displays the form for creating or editing a product.
+        /// </summary>
+        /// <param name="id">Product ID (0 for new).</param>
         public async Task<IActionResult> Upsert(int id)
         {
-            ProductViewModel obj = new();
-            var Brands = await _unitOfWork.Brands.GetAll();
-            obj.BrandList = Brands.Select(i => new SelectListItem
-            {
-                Text = i.Brand_Name,
-                Value = i.Brand_Id.ToString()
-            });
+            var viewModel = await _productService.GetProductViewModelForUpsertAsync(id);
 
-            var categories = await _db.Categories.ToListAsync();
-            var categoryLookup = categories.ToDictionary(c => c.Category_Id, c => c.Category_Name);
-            obj.CategoryList = categories.Select(i => new SelectListItem
-            {
-                Text = i.ParentCategoryId == null
-                    ? i.Category_Name
-                    : $"-- {(categoryLookup.TryGetValue(i.ParentCategoryId.Value, out var parentName) ? parentName : "Unknown")} > {i.Category_Name}",
-                Value = i.Category_Id.ToString()
-            }).ToList();
-
-            if (id == 0)
-            {
-                obj.Product = new Product();
-                obj.Stocks = new List<Stock>();
-                return View(obj);
-            }
-
-            obj.Product = await _db.Products
-                .Include(p => p.Stocks)
-                .Include(p => p.Category)
-                .Include(p => p.Brand)
-                .FirstOrDefaultAsync(p => p.Product_Id == id);
-
-            if (obj.Product == null)
+            if (id != 0 && viewModel.Product == null)
                 return NotFound();
 
-            obj.Stocks = obj.Product.Stocks.ToList();
-            return View(obj);
+            return View(viewModel);
         }
 
-        // Creates or updates a product with image and stock handling
+        /// <summary>
+        /// Handles the creation or update of a product with image and stock handling.
+        /// </summary>
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Upsert(ProductViewModel obj, IFormFile? file, string? croppedImageData)
+        public async Task<IActionResult> Upsert(ProductViewModel viewModel, IFormFile? file, string? croppedImageData)
         {
-            var Brands = await _unitOfWork.Brands.GetAll();
-            obj.BrandList = Brands.Select(i => new SelectListItem
+            // Step 1: Retrieve current user
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+                return NotFound();
+
+           
+
+            try
             {
-                Text = i.Brand_Name,
-                Value = i.Brand_Id.ToString()
-            });
-
-            var categories = await _db.Categories.ToListAsync();
-            var categoryLookup = categories.ToDictionary(c => c.Category_Id, c => c.Category_Name);
-            obj.CategoryList = categories.Select(i => new SelectListItem
-            {
-                Text = i.ParentCategoryId == null
-                    ? i.Category_Name
-                    : $"-- {(categoryLookup.TryGetValue(i.ParentCategoryId.Value, out var parentName) ? parentName : "Unknown")} > {i.Category_Name}",
-                Value = i.Category_Id.ToString()
-            }).ToList();
-
-            var selectedCategory = await _db.Categories.FirstOrDefaultAsync(c => c.Category_Id == obj.Product.Category_Id);
-            if (selectedCategory != null && selectedCategory.ParentCategoryId == null)
-                ModelState.AddModelError("Product.Category_Id", "Products must be assigned to a subcategory, not a parent category.");
-
-            string wwwRootPath = _webHostEnvironment.WebRootPath;
-            if (!string.IsNullOrEmpty(croppedImageData) || file != null)
-            {
-                string fileName;
-                string productPath = Path.Combine(wwwRootPath, @"img", @"products");
-
-                if (!string.IsNullOrEmpty(obj.Product.imgUrl))
-                {
-                    var oldImagePath = Path.Combine(wwwRootPath, obj.Product.imgUrl.TrimStart('\\'));
-                    if (System.IO.File.Exists(oldImagePath))
-                        System.IO.File.Delete(oldImagePath);
-                }
-
-                if (!string.IsNullOrEmpty(croppedImageData))
-                {
-                    var base64Data = croppedImageData.Split(',')[1];
-                    var bytes = Convert.FromBase64String(base64Data);
-                    string extension = croppedImageData.StartsWith("data:image/jpeg") ? ".jpg" : ".png";
-                    fileName = Guid.NewGuid().ToString() + extension;
-                    await System.IO.File.WriteAllBytesAsync(Path.Combine(productPath, fileName), bytes);
-                }
-                else
-                {
-                    fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
-                    using (var fileStream = new FileStream(Path.Combine(productPath, fileName), FileMode.Create))
-                    {
-                        await file.CopyToAsync(fileStream);
-                    }
-                }
-
-                obj.Product.imgUrl = @"\img\products\" + fileName;
-            }
-            else if (obj.Product.Product_Id != 0)
-            {
-                var existingProduct = await _unitOfWork.Products.GetById(obj.Product.Product_Id);
-                obj.Product.imgUrl = existingProduct?.imgUrl;
-            }
-
-            if (obj.Product.Product_Id == 0)
-            {
-                obj.Product.DateAdded = DateTime.Now;
-                await _unitOfWork.Products.Add(obj.Product);
-
-                await _unitOfWork.Products.AdminActivityAsync(
-                    userId: _userManager.GetUserId(User),
-                    activityType: "AddProduct",
-                    description: $"Add Product (Id: {obj.Product.Product_Id})",
-                    ipAddress: HttpContext.Connection.RemoteIpAddress?.ToString()
-                );
-                await _unitOfWork.SaveAsync();
-
-                if (obj.Stocks != null && obj.Stocks.Any())
-                {
-                    foreach (var stock in obj.Stocks)
-                    {
-                        stock.Product_Id = obj.Product.Product_Id;
-                        _db.Stocks.Add(stock);
-                    }
-                }
-
-                TempData["Success"] = "Product Added successfully";
-            }
-            else
-            {
-                _unitOfWork.Products.UpdateAsync(obj.Product);
-
-                await _unitOfWork.Products.AdminActivityAsync(
-                    userId: _userManager.GetUserId(User),
-                    activityType: "UpdateProduct",
-                    description: $"Update Product (Id: {obj.Product.Product_Id})",
-                    ipAddress: HttpContext.Connection.RemoteIpAddress?.ToString()
+                // Step 3: Perform upsert via service
+                int productId = await _productService.UpsertProductAsync(
+                    viewModel,
+                    file,
+                    croppedImageData,
+                    user.Id,
+                    HttpContext.Connection.RemoteIpAddress?.ToString()
                 );
 
-                var existingStocks = await _db.Stocks
-                    .Where(s => s.Product_Id == obj.Product.Product_Id)
-                    .ToListAsync();
-                _db.Stocks.RemoveRange(existingStocks);
+                TempData["Success"] = viewModel.Product.Product_Id == 0
+                    ? "Product Added successfully"
+                    : $"'{viewModel.Product.Product_Name}' updated successfully";
 
-                if (obj.Stocks != null && obj.Stocks.Any())
-                {
-                    foreach (var stock in obj.Stocks)
-                    {
-                        stock.Product_Id = obj.Product.Product_Id;
-                        _db.Stocks.Add(stock);
-                    }
-                }
-
-                TempData["Success"] = $"('{obj.Product.Product_Name}') updated successfully";
+                return RedirectToAction(nameof(Index));
             }
-
-            await _unitOfWork.SaveAsync();
-
-            var legacyProducts = _db.Products
-                .Where(p => p.DateAdded == DateTime.MinValue)
-                .ToList();
-            if (legacyProducts.Any())
+            catch (InvalidOperationException ex)
             {
-                var referenceDate = DateTime.Now.AddDays(-60);
-                foreach (var product in legacyProducts)
-                    product.DateAdded = referenceDate;
-                await _db.SaveChangesAsync();
+                ModelState.AddModelError("", ex.Message);
+                // Repopulate dropdowns
+                var freshViewModel = await _productService.GetProductViewModelForUpsertAsync(viewModel.Product?.Product_Id ?? 0);
+                viewModel.BrandList = freshViewModel.BrandList;
+                viewModel.CategoryList = freshViewModel.CategoryList;
+                return View(viewModel);
             }
-
-            return RedirectToAction(nameof(Index));
+            catch (Exception ex)
+            {
+                // Log exception (service already logs)
+                TempData["Error"] = "An error occurred while saving the product.";
+                return RedirectToAction(nameof(Index));
+            }
         }
 
-        // Deletes a product and its associated stocks and image
+        /// <summary>
+        /// Deletes a product and its associated stocks and image.
+        /// </summary>
         public async Task<IActionResult> Delete(int id)
         {
-            var obj = await _db.Products
-                .Include(p => p.Stocks)
-                .FirstOrDefaultAsync(p => p.Product_Id == id);
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+                return NotFound();
 
-            if (obj == null)
+            try
+            {
+                await _productService.DeleteProductAsync(id, user.Id, HttpContext.Connection.RemoteIpAddress?.ToString());
+                TempData["Success"] = "Product deleted successfully!";
+            }
+            catch (Exception ex)
             {
                 TempData["Error"] = "Oops! Something went wrong. Please try again.";
-                return NotFound();
             }
 
-            if (obj.Stocks != null && obj.Stocks.Any())
-                _db.Stocks.RemoveRange(obj.Stocks);
-
-            if (!string.IsNullOrEmpty(obj.imgUrl))
-            {
-                var imagePath = Path.Combine(_webHostEnvironment.WebRootPath, obj.imgUrl.TrimStart('\\'));
-                if (System.IO.File.Exists(imagePath))
-                    System.IO.File.Delete(imagePath);
-            }
-
-            await _unitOfWork.Products.Delete(obj);
-            await _unitOfWork.Products.AdminActivityAsync(
-                userId: _userManager.GetUserId(User),
-                activityType: "DeleteProduct",
-                description: $"Delete Product (Id: {obj.Product_Id})",
-                ipAddress: HttpContext.Connection.RemoteIpAddress?.ToString()
-            );
-            TempData["Success"] = "Product deleted successfully!";
-            await _unitOfWork.SaveAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        // Toggles the featured status of a product
+        /// <summary>
+        /// Toggles the featured status of a product.
+        /// </summary>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> MakeFeatured(int id)
         {
-            var obj = await _db.Products.FirstOrDefaultAsync(p => p.Product_Id == id);
-            if (obj == null)
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+                return NotFound();
+
+            try
+            {
+                bool isFeatured = await _productService.ToggleFeaturedAsync(id, user.Id, HttpContext.Connection.RemoteIpAddress?.ToString());
+                TempData["Success"] = isFeatured
+                    ? "Product has been added to featured items!"
+                    : "Product has been removed from featured items!";
+            }
+            catch (Exception ex)
             {
                 TempData["Error"] = "Oops! Something went wrong. Please try again.";
-                return NotFound();
             }
 
-            obj.IsFeatured = !obj.IsFeatured;
-            TempData["Success"] = obj.IsFeatured
-                ? "Product has been added to featured items!"
-                : "Product has been removed from featured items!";
-
-            await _unitOfWork.Products.UpdateAsync(obj);
-            await _unitOfWork.Products.AdminActivityAsync(
-                userId: _userManager.GetUserId(User),
-                activityType: obj.IsFeatured ? "AddToFeatured" : "RemoveFromFeatured",
-                description: $"{(obj.IsFeatured ? "Add" : "Remove")} Product (Id: {obj.Product_Id}) to/from featured items",
-                ipAddress: HttpContext.Connection.RemoteIpAddress?.ToString()
-            );
-            await _unitOfWork.SaveAsync();
             return RedirectToAction(nameof(Index));
         }
+
+        #endregion
     }
 }

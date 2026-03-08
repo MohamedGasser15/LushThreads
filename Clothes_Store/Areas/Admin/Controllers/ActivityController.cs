@@ -1,25 +1,49 @@
-﻿using LushThreads.Infrastructure.Data;
+﻿using LushThreads.Application.ServiceInterfaces;
 using LushThreads.Domain.Constants;
 using LushThreads.Domain.Entites;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Razor.TagHelpers;
-using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 namespace LushThreads.Areas.Admin.Controllers
 {
+    /// <summary>
+    /// Controller for managing admin activity logs.
+    /// </summary>
     [Area("Admin")]
     [Authorize(Roles = SD.Admin)]
     public class ActivityController : Controller
     {
-        private readonly ApplicationDbContext _db;
+        #region Fields
+
+        private readonly IAdminActivityService _adminActivityService;
         private readonly UserManager<ApplicationUser> _userManager;
-        public ActivityController(ApplicationDbContext db , UserManager<ApplicationUser> userManager)
+
+        #endregion
+
+        #region Constructor
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ActivityController"/> class.
+        /// </summary>
+        /// <param name="adminActivityService">Service for admin activity operations.</param>
+        /// <param name="userManager">Identity user manager.</param>
+        public ActivityController(
+            IAdminActivityService adminActivityService,
+            UserManager<ApplicationUser> userManager)
         {
-            _db = db;
+            _adminActivityService = adminActivityService;
             _userManager = userManager;
         }
+
+        #endregion
+
+        #region Actions
+
+        /// <summary>
+        /// Displays the list of all admin activities.
+        /// </summary>
         public async Task<IActionResult> Index()
         {
             var user = await _userManager.GetUserAsync(User);
@@ -27,12 +51,11 @@ namespace LushThreads.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            var RecentSecurityActivities = await _db.AdminActivities
-                           .Include(a => a.User)
-                           .OrderByDescending(a => a.ActivityDate)
-                           .ToListAsync();
 
-            return View(RecentSecurityActivities);
+            var activities = await _adminActivityService.GetAllActivitiesAsync();
+            return View(activities);
         }
+
+        #endregion
     }
 }

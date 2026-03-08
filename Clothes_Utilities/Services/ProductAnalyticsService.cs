@@ -1,17 +1,15 @@
-﻿using LushThreads.Infrastructure.Data;
+﻿using LushThreads.Application.ServiceInterfaces;
+using LushThreads.Domain.ViewModels.ProductAnalytics;
+using LushThreads.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
-using LushThreads.Domain.ViewModels.ProductAnalytics;
 
-namespace LushThreads.Services
+namespace LushThreads.Application.Services
 {
-    public interface IProductAnalyticsService
-    {
-        Task<ProductAnalyticsViewModel> GetProductAnalytics(int days);
-    }
     public class ProductAnalyticsService : IProductAnalyticsService
     {
         private readonly ApplicationDbContext _db;
@@ -165,4 +163,5 @@ namespace LushThreads.Services
                 .ToListAsync();
         }
     }
+
 }

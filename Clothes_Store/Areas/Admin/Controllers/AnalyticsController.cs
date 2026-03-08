@@ -1,9 +1,9 @@
 using System.Diagnostics;
-using LushThreads.Services;
 using LushThreads.Domain.Constants;
 using LushThreads.Domain.ViewModels.OrderAnalytics;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using LushThreads.Application.ServiceInterfaces;
 
 namespace LushThreads.Areas.Admin.Controllers
 {

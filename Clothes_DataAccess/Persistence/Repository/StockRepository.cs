@@ -1,15 +1,15 @@
 ﻿using LushThreads.Infrastructure.Data;
 using LushThreads.Domain.Entites;
 using LushThreads.Infrastructure.Persistence.IRepository;
-using Microsoft.Extensions.Logging; // Added for ILogger if needed, but not present in original
+using Microsoft.Extensions.Logging;
 
 namespace LushThreads.Infrastructure.Persistence.Repository
 {
     /// <summary>
-    /// Repository implementation for Category entity.
-    /// Inherits from generic Repository and implements ICategoryRepository.
+    /// Repository implementation for Stock entity.
+    /// Inherits from generic Repository and implements IStockRepository.
     /// </summary>
-    public class CategoryRepository : Repository<Category>, ICategoryRepository
+    public class StockRepository : Repository<Stock>, IStockRepository
     {
         #region Fields
 
@@ -20,10 +20,11 @@ namespace LushThreads.Infrastructure.Persistence.Repository
         #region Constructor
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="CategoryRepository"/> class.
+        /// Initializes a new instance of the <see cref="StockRepository"/> class.
         /// </summary>
         /// <param name="db">The application database context.</param>
-        public CategoryRepository(ApplicationDbContext db, ILogger<Repository<Category>> logger)
+        /// <param name="logger">Logger for the generic repository operations.</param>
+        public StockRepository(ApplicationDbContext db, ILogger<Repository<Stock>> logger)
             : base(db, logger)
         {
             _db = db;

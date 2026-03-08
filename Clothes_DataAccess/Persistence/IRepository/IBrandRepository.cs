@@ -2,8 +2,5 @@
 
 namespace LushThreads.Infrastructure.Persistence.IRepository
 {
-    public interface IBrandRepository : IRepository<Brand>
-    {
-        Task UpdateAsync(Brand brand);
-    }
+    public interface IBrandRepository : IRepository<Brand> {}
 }

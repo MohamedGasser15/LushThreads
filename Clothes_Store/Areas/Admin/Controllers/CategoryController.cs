@@ -1,113 +1,138 @@
-﻿using LushThreads.Infrastructure.Data;
+﻿using LushThreads.Application.ServiceInterfaces;
 using LushThreads.Domain.Constants;
 using LushThreads.Domain.Entites;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Threading.Tasks;
 
 namespace LushThreads.Areas.Admin.Controllers
 {
+    /// <summary>
+    /// Controller for managing category operations in the admin area.
+    /// Requires authentication and admin role.
+    /// </summary>
     [Area("Admin")]
     [Authorize(Roles = SD.Admin)]
     public class CategoryController : Controller
     {
-        private readonly IUnitOfWork _unitOfWork;
+        #region Fields
+
+        private readonly ICategoryService _categoryService;
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public CategoryController(IUnitOfWork unitOfWork, UserManager<ApplicationUser> userManager)
+        #endregion
+
+        #region Constructor
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CategoryController"/> class.
+        /// </summary>
+        /// <param name="categoryService">Service for category business logic.</param>
+        /// <param name="userManager">Identity user manager for retrieving current user.</param>
+        public CategoryController(ICategoryService categoryService, UserManager<ApplicationUser> userManager)
         {
-            _unitOfWork = unitOfWork;
+            _categoryService = categoryService;
             _userManager = userManager;
         }
 
-        // Displays the list of all categories
+        #endregion
+
+        #region Actions
+
+        /// <summary>
+        /// Displays the list of all categories.
+        /// </summary>
+        /// <returns>View with the list of categories.</returns>
         public async Task<IActionResult> Index()
         {
-            IEnumerable<Category> objList = await _unitOfWork.Categories.GetAll();
-            return View(objList);
+            var categories = await _categoryService.GetAllCategoriesAsync();
+            return View(categories);
         }
 
-        // Displays the form for creating or editing a category
+        /// <summary>
+        /// Displays the upsert (create/edit) form for a category.
+        /// If id is 0, shows create form; otherwise shows edit form with category data.
+        /// </summary>
+        /// <param name="id">The category ID (0 for new category).</param>
+        /// <returns>The upsert view with the category model.</returns>
         public async Task<IActionResult> Upsert(int id)
         {
-            Category obj = new();
             if (id == 0)
-                return View(obj);
+                return View(new Category()); // Create new category
 
-            obj = await _unitOfWork.Categories.GetById(id);
-            if (obj == null)
+            var category = await _categoryService.GetCategoryByIdAsync(id);
+            if (category == null)
                 return NotFound();
 
-            return View(obj);
+            return View(category); // Edit existing category
         }
 
-        // Creates or updates a category
+        /// <summary>
+        /// Handles the creation or update of a category.
+        /// </summary>
+        /// <param name="obj">The category data submitted from the form.</param>
+        /// <returns>Redirects to Index on success, or returns the view with errors.</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Upsert(Category obj)
         {
+            // Step 1: Retrieve the current user
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
-            {
                 return NotFound();
-            }
 
-            if (obj.Category_Id == 0)
+
+
+            try
             {
-                await _unitOfWork.Categories.Add(obj);
-                await _unitOfWork.Categories.AdminActivityAsync(
-                    userId: user.Id,
-                    activityType: "AddCategory",
-                       description: $"Add Category(Id: {obj.Category_Id})",
-                    ipAddress: HttpContext.Connection.RemoteIpAddress.ToString()
-                );
-                TempData["Success"] = "Category Added successfully";
+                // Step 3: Perform create or update via service
+                if (obj.Category_Id == 0)
+                {
+                    await _categoryService.CreateCategoryAsync(obj, user.Id, HttpContext.Connection.RemoteIpAddress?.ToString());
+                    TempData["Success"] = "Category Added successfully";
+                }
+                else
+                {
+                    await _categoryService.UpdateCategoryAsync(obj, user.Id, HttpContext.Connection.RemoteIpAddress?.ToString());
+                    TempData["Success"] = $"'{obj.Category_Name}' Category updated successfully";
+                }
+
+                return RedirectToAction(nameof(Index));
             }
-            else
+            catch (Exception ex)
             {
-                _unitOfWork.Categories.UpdateAsync(obj);
-                await _unitOfWork.Categories.AdminActivityAsync(
-                    userId: user.Id,
-                    activityType: "UpdateCategory",
-                description: $"Update Category (Id: {obj.Category_Id})",
-
-                    ipAddress: HttpContext.Connection.RemoteIpAddress.ToString()
-                );
-                TempData["Success"] = $"('{obj.Category_Name}') updated successfully";
+                // Log exception if needed; service already logs.
+                TempData["Error"] = "An error occurred while saving the category.";
+                return View(obj);
             }
-
-            await _unitOfWork.SaveAsync();
-            return RedirectToAction(nameof(Index));
         }
 
-        // Deletes a category by ID
+        /// <summary>
+        /// Deletes a category by its ID.
+        /// </summary>
+        /// <param name="id">The ID of the category to delete.</param>
+        /// <returns>Redirects to Index with a success or error message.</returns>
         public async Task<IActionResult> Delete(int id)
         {
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
-            {
                 return NotFound();
+
+            try
+            {
+                await _categoryService.DeleteCategoryAsync(id, user.Id, HttpContext.Connection.RemoteIpAddress?.ToString());
+                TempData["Success"] = "Category deleted successfully!";
             }
-            var obj = await _unitOfWork.Categories.GetById(id);
-            if (obj == null)
+            catch (Exception ex)
             {
                 TempData["Error"] = "Oops! Something went wrong. Please try again.";
-                return NotFound();
-            }
-            else
-            {
-            _unitOfWork.Categories.Delete(obj);
-                await _unitOfWork.Categories.AdminActivityAsync(
-                userId: user.Id,
-                activityType: "DeleteCategory",
-                description: $"Delete Category (Id: {obj.Category_Id})",
-                ipAddress: HttpContext.Connection.RemoteIpAddress.ToString()
-            );
-            TempData["Success"] = "Category deleted successfully!";
-            await _unitOfWork.SaveAsync();
             }
 
             return RedirectToAction(nameof(Index));
         }
+
+        #endregion
     }
 }

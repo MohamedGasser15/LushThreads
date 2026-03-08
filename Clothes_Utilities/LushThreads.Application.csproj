@@ -21,8 +21,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="ServiceInterfaces\" />
-    <Folder Include="Services\" />
+    <ProjectReference Include="..\Clothes_DataAccess\LushThreads.Infrastructure.csproj" />
+    <ProjectReference Include="..\Clothes_Models\LushThreads.Domain.csproj" />
   </ItemGroup>
 
 </Project>

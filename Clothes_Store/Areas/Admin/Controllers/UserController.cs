@@ -1,9 +1,10 @@
-﻿using LushThreads.Infrastructure.Data;
+﻿using LushThreads.Application.ServiceInterfaces;
 using LushThreads.Domain.Constants;
 using LushThreads.Domain.Entites;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace LushThreads.Areas.Admin.Controllers
 {
@@ -11,171 +12,139 @@ namespace LushThreads.Areas.Admin.Controllers
     [Authorize(Roles = SD.Admin)]
     public class UserController : Controller
     {
+        #region Fields
+
+        private readonly IUserService _userService;
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly ApplicationDbContext _db;
-        public UserController(UserManager<ApplicationUser> userManager, ApplicationDbContext db)
+
+        #endregion
+
+        #region Constructor
+
+        public UserController(IUserService userService, UserManager<ApplicationUser> userManager)
         {
+            _userService = userService;
             _userManager = userManager;
-            _db = db;
         }
 
-        // Displays the list of all users with their roles
-        public IActionResult Index()
+        #endregion
+
+        #region Actions
+
+        /// <summary>
+        /// Displays the list of all users with their roles.
+        /// </summary>
+        public async Task<IActionResult> Index()
         {
-            var UserAccount = _db.ApplicationUsers.ToList();
-            var userRole = _db.UserRoles.ToList();
-            var roles = _db.Roles.ToList();
-            foreach (var user in UserAccount)
-            {
-                var role = userRole.FirstOrDefault(u => u.UserId == user.Id);
-                user.Role = role == null ? "None" : roles.FirstOrDefault(u => u.Id == role.RoleId).Name;
-            }
-            return View(UserAccount);
+            var users = await _userService.GetAllUsersAsync();
+            return View(users);
         }
 
-        // Displays the form for editing a user's details
-        public IActionResult Edit(string userId)
+        /// <summary>
+        /// Displays the form for editing a user's details.
+        /// </summary>
+        public async Task<IActionResult> Edit(string userId)
         {
-            var objFromDb = _db.ApplicationUsers.FirstOrDefault(u => u.Id == userId);
-            if (objFromDb == null)
+            var user = await _userService.GetUserForEditAsync(userId);
+            if (user == null)
                 return NotFound();
 
-            var userRole = _db.UserRoles.ToList();
-            var roles = _db.Roles.ToList();
-            var role = userRole.FirstOrDefault(u => u.UserId == objFromDb.Id);
-            if (role != null)
-                objFromDb.RoleId = roles.FirstOrDefault(u => u.Id == role.RoleId).Id;
-
-            objFromDb.RoleList = _db.Roles.Select(u => new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem
-            {
-                Text = u.Name,
-                Value = u.Id
-            });
-            return View(objFromDb);
+            return View(user);
         }
 
-        // Updates a user's details and role
+        /// <summary>
+        /// Updates a user's details and role.
+        /// </summary>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(ApplicationUser user)
         {
-            var objFromDb = _db.ApplicationUsers.FirstOrDefault(u => u.Id == user.Id);
-            if (objFromDb == null)
-            {
-                TempData["Error"] = "Oops! Something went wrong. Please try again.";
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser == null)
                 return NotFound();
-            }
 
-            var userRole = _db.UserRoles.FirstOrDefault(u => u.UserId == objFromDb.Id);
-            if (userRole != null)
+            bool success = await _userService.UpdateUserAsync(
+                user,
+                currentUser.Id,
+                HttpContext.Connection.RemoteIpAddress?.ToString()
+            );
+
+            if (success)
             {
-                var previousRoleName = _db.Roles.Where(u => u.Id == userRole.RoleId).Select(e => e.Name).FirstOrDefault();
-                await _userManager.RemoveFromRoleAsync(objFromDb, previousRoleName);
-            }
-
-            await _userManager.AddToRoleAsync(objFromDb, _db.Roles.FirstOrDefault(u => u.Id == user.RoleId).Name);
-            objFromDb.Name = user.Name;
-            var ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
-
-            var activity = new AdminActivity
-            {
-                UserId = _userManager.GetUserId(User),
-                ActivityType = "EditUser",
-                Description = $"Edit User (Email: '{objFromDb.Email}')",
-                IpAddress = ipAddress
-            };
-
-            _db.AdminActivities.Add(activity);
-            _db.SaveChanges();
-
-            TempData["Success"] = $"User ('{objFromDb.Name}') updated successfully";
-            await _db.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
-        // Deletes a user and their associated devices
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Delete(string userId)
-        {
-            try
-            {
-                var obj = _db.ApplicationUsers.FirstOrDefault(u => u.Id == userId);
-                if (obj == null)
-                {
-                    TempData["Error"] = "User not found.";
-                    return RedirectToAction(nameof(Index));
-                }
-
-                var userDevices = _db.UserDevices.Where(ud => ud.UserId == userId);
-                _db.UserDevices.RemoveRange(userDevices);
-                _db.ApplicationUsers.Remove(obj);
-                var ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
-
-                var activity = new AdminActivity
-                {
-                    UserId = _userManager.GetUserId(User),
-                    ActivityType = "DeleteUser",
-                    Description = $"Delete User (Email: '{obj.Email}')",
-                    IpAddress = ipAddress
-                };
-
-                _db.AdminActivities.Add(activity);
-                _db.SaveChanges();
-
-                TempData["Success"] = $"User '{obj.Name}' deleted successfully!";
+                TempData["Success"] = $"User ('{user.Name}') updated successfully";
                 return RedirectToAction(nameof(Index));
-            }
-            catch (Exception)
-            {
-                TempData["Error"] = "An error occurred while deleting the user. Please try again.";
-                return RedirectToAction(nameof(Index));
-            }
-        }
-
-        // Locks or unlocks a user account
-        public IActionResult LockUnlock(string userId)
-        {
-            var objFromDb = _db.ApplicationUsers.FirstOrDefault(u => u.Id == userId);
-            if (objFromDb == null)
-            {
-                TempData["Error"] = "User not found! The account may have been deleted or doesn't exist.";
-                return NotFound();
-            }
-
-            if (objFromDb.LockoutEnd != null && objFromDb.LockoutEnd > DateTime.Now)
-            {
-                objFromDb.LockoutEnd = DateTime.Now;
-                var ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
-                var activity = new AdminActivity
-                {
-                    UserId = _userManager.GetUserId(User),
-                    ActivityType = "UnlockUser",
-                    Description = $"Unlock User (Email: '{objFromDb.Email}')",
-                    IpAddress = ipAddress
-                };
-                _db.AdminActivities.Add(activity);
-
-                TempData["Success"] = $"Successfully unlocked user ({objFromDb.Name})!";
             }
             else
             {
-                objFromDb.LockoutEnd = DateTime.Now.AddDays(10);
-                var ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
-                var activity = new AdminActivity
-                {
-                    UserId = _userManager.GetUserId(User),
-                    ActivityType = "LockUser",
-                    Description = $"Lock User (Email: '{objFromDb.Email}')",
-                    IpAddress = ipAddress
-                };
-                _db.AdminActivities.Add(activity);
+                TempData["Error"] = "Oops! Something went wrong. Please try again.";
+                user.RoleList = (await _userService.GetUserForEditAsync(user.Id))?.RoleList;
+                return View(user);
+            }
+        }
 
-                TempData["Success"] = $"Successfully locked user ({objFromDb.Name}) for 10 days!";
+        /// <summary>
+        /// Deletes a user and their associated devices.
+        /// </summary>
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(string userId)
+        {
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser == null)
+                return NotFound();
+
+            bool success = await _userService.DeleteUserAsync(
+                userId,
+                currentUser.Id,
+                HttpContext.Connection.RemoteIpAddress?.ToString()
+            );
+
+            if (success)
+            {
+                TempData["Success"] = "User deleted successfully!";
+            }
+            else
+            {
+                TempData["Error"] = "An error occurred while deleting the user. Please try again.";
             }
 
-            _db.SaveChanges();
             return RedirectToAction(nameof(Index));
         }
+
+        /// <summary>
+        /// Locks or unlocks a user account.
+        /// </summary>
+        public async Task<IActionResult> LockUnlock(string userId)
+        {
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser == null)
+                return NotFound();
+
+            var result = await _userService.LockUnlockUserAsync(
+                userId,
+                currentUser.Id,
+                HttpContext.Connection.RemoteIpAddress?.ToString()
+            );
+
+            if (result.Success)
+            {
+                if (result.IsLocked)
+                {
+                    TempData["Success"] = $"Successfully locked user ({result.UserName}) for 10 days!";
+                }
+                else
+                {
+                    TempData["Success"] = $"Successfully unlocked user ({result.UserName})!";
+                }
+            }
+            else
+            {
+                TempData["Error"] = "User not found! The account may have been deleted or doesn't exist.";
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        #endregion
     }
 }
