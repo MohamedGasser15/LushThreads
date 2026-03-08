@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Clothes_Models\LushThreads.Domain.csproj" />
+    <ProjectReference Include="..\LushThreads.Domain\LushThreads.Domain.csproj" />
   </ItemGroup>
 
 </Project>

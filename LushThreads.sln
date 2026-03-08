@@ -3,21 +3,21 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 18
 VisualStudioVersion = 18.4.11519.219 insiders
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LushThreads", "Clothes_Store\LushThreads.csproj", "{A4024C7B-C06B-441C-BA62-BDA8EFAAB55F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LushThreads", "LushThreads\LushThreads.csproj", "{A4024C7B-C06B-441C-BA62-BDA8EFAAB55F}"
 	ProjectSection(ProjectDependencies) = postProject
 		{76510152-FCC2-48FA-B4EC-9065B440C957} = {76510152-FCC2-48FA-B4EC-9065B440C957}
 		{B1A9ECB1-0449-4728-B966-CA19F94C7CE5} = {B1A9ECB1-0449-4728-B966-CA19F94C7CE5}
 		{D1BF3D18-B879-4AA5-A539-306A8CB36D11} = {D1BF3D18-B879-4AA5-A539-306A8CB36D11}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LushThreads.Domain", "Clothes_Models\LushThreads.Domain.csproj", "{76510152-FCC2-48FA-B4EC-9065B440C957}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LushThreads.Domain", "LushThreads.Domain\LushThreads.Domain.csproj", "{76510152-FCC2-48FA-B4EC-9065B440C957}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LushThreads.Infrastructure", "Clothes_DataAccess\LushThreads.Infrastructure.csproj", "{D1BF3D18-B879-4AA5-A539-306A8CB36D11}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LushThreads.Infrastructure", "LushThreads.Infrastructure\LushThreads.Infrastructure.csproj", "{D1BF3D18-B879-4AA5-A539-306A8CB36D11}"
 	ProjectSection(ProjectDependencies) = postProject
 		{76510152-FCC2-48FA-B4EC-9065B440C957} = {76510152-FCC2-48FA-B4EC-9065B440C957}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LushThreads.Application", "Clothes_Utilities\LushThreads.Application.csproj", "{B1A9ECB1-0449-4728-B966-CA19F94C7CE5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LushThreads.Application", "LushThreads.Application\LushThreads.Application.csproj", "{B1A9ECB1-0449-4728-B966-CA19F94C7CE5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -21,9 +21,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Clothes_DataAccess\LushThreads.Infrastructure.csproj" />
-    <ProjectReference Include="..\Clothes_Models\LushThreads.Domain.csproj" />
-    <ProjectReference Include="..\Clothes_Utilities\LushThreads.Application.csproj" />
+    <ProjectReference Include="..\LushThreads.Infrastructure\LushThreads.Infrastructure.csproj" />
+    <ProjectReference Include="..\LushThreads.Domain\LushThreads.Domain.csproj" />
+    <ProjectReference Include="..\LushThreads.Application\LushThreads.Application.csproj" />
   </ItemGroup>
 
   <ItemGroup>
