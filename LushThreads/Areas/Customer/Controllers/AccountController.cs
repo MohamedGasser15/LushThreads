@@ -22,24 +22,37 @@ namespace LushThreads.Web.Areas.Customer.Controllers
         private readonly IAccountService _accountService;
         private readonly IEmailTemplateService _emailTemplateService;
         private readonly ILogger<AccountController> _logger;
-        private readonly UserManager<ApplicationUser> _userManager;
-        private IEmailSender _emailSender => (IEmailSender)HttpContext.RequestServices.GetService(typeof(IEmailSender));
-
-        private SignInManager<ApplicationUser> _signInManager => (SignInManager<ApplicationUser>)HttpContext.RequestServices.GetService(typeof(SignInManager<ApplicationUser>));
+        private readonly IEmailSender _emailSender;
+        private readonly SignInManager<ApplicationUser> _signInManager;
 
         #endregion
 
         #region Constructor
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AccountController"/> class.
+        /// </summary>
+        /// <param name="accountService">Service for account operations.</param>
+        /// <param name="emailTemplateService">Service for email templates.</param>
+        /// <param name="deviceTrackingService">Service for tracking user devices.</param>
+        /// <param name="userManager">Identity user manager (passed to base controller).</param>
+        /// <param name="emailSender">Email sender service.</param>
+        /// <param name="signInManager">Identity sign-in manager.</param>
+        /// <param name="logger">Logger instance.</param>
         public AccountController(
             IAccountService accountService,
             IEmailTemplateService emailTemplateService,
+            IDeviceTrackingService deviceTrackingService,
             UserManager<ApplicationUser> userManager,
+            IEmailSender emailSender,
+            SignInManager<ApplicationUser> signInManager,
             ILogger<AccountController> logger)
-            : base(null, userManager)
+            : base(userManager, deviceTrackingService)
         {
             _accountService = accountService;
             _emailTemplateService = emailTemplateService;
+            _emailSender = emailSender;
+            _signInManager = signInManager;
             _logger = logger;
         }
 

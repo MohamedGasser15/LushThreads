@@ -1,6 +1,7 @@
 ﻿using LushThreads.Domain.Entites;
 using LushThreads.Infrastructure.Data;
 using LushThreads.Infrastructure.Persistence.IRepository;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace LushThreads.Infrastructure.Persistence.Repository
@@ -30,5 +31,10 @@ namespace LushThreads.Infrastructure.Persistence.Repository
         }
 
         #endregion
+
+        public async Task<int> GetTotalProductsCountAsync()
+        {
+            return await dbSet.CountAsync();
+        }
     }
 }

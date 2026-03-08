@@ -30,13 +30,23 @@ namespace LushThreads.Web.Areas.Customer.Controllers
 
         #region Constructor
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ProfileController"/> class.
+        /// </summary>
+        /// <param name="profileService">Service for profile operations.</param>
+        /// <param name="deviceTrackingService">Service for tracking user devices (passed to base controller).</param>
+        /// <param name="userManager">Identity user manager (passed to base controller).</param>
+        /// <param name="emailSender">Email sender service.</param>
+        /// <param name="emailTemplateService">Service for email templates.</param>
+        /// <param name="logger">Logger instance.</param>
         public ProfileController(
             IProfileService profileService,
+            IDeviceTrackingService deviceTrackingService,
             UserManager<ApplicationUser> userManager,
             IEmailSender emailSender,
             IEmailTemplateService emailTemplateService,
             ILogger<ProfileController> logger)
-            : base(null, userManager) // BaseController expects db and userManager; we pass null for db (not used)
+            : base(userManager, deviceTrackingService)
         {
             _profileService = profileService;
             _emailSender = emailSender;

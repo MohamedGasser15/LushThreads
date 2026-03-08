@@ -1,7 +1,5 @@
-﻿@using LushThreads.Infrastructure.Data
-@using LushThreads.Domain.Entites
+﻿@using LushThreads.Domain.Entites
 @model Category
-@inject ApplicationDbContext _db
 
 @{
     var title = "Create Category";
@@ -12,10 +10,7 @@
         actionText = "Update";
     }
 
-    // Get main categories (where ParentCategoryId is null) for the dropdown
-    var mainCategories = _db.Categories
-        .Where(c => c.ParentCategoryId == null && c.Category_Id != Model.Category_Id)
-        .ToList();
+    var mainCategories = ViewBag.MainCategories as IEnumerable<Category> ?? Enumerable.Empty<Category>();
 }
 
 <div class="max-w-4xl mx-auto py-4 md:py-8 px-4 sm:px-6 lg:px-8">

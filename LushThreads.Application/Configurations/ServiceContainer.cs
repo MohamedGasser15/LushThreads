@@ -42,6 +42,8 @@ namespace LushThreads.Application.Configurations
             services.AddScoped<ICartService, CartService>();
             services.AddScoped<IHomeService, HomeService>();
             services.AddScoped<ITokenService, TokenService>();
+            services.AddScoped<IIpLocationService, IpLocationService>();
+            services.AddScoped<IDeviceTrackingService, DeviceTrackingService>();
             return services;
         }
     }

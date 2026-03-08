@@ -60,13 +60,19 @@ namespace LushThreads.Web.Areas.Admin.Controllers
         public async Task<IActionResult> Upsert(int id)
         {
             if (id == 0)
-                return View(new Category()); // Create new category
+            {
+                // Create new category: pass empty model and main categories (excluding none)
+                ViewBag.MainCategories = await _categoryService.GetMainCategoriesAsync();
+                return View(new Category());
+            }
 
             var category = await _categoryService.GetCategoryByIdAsync(id);
             if (category == null)
                 return NotFound();
 
-            return View(category); // Edit existing category
+            // Edit existing category: pass main categories excluding the current category (to avoid self-reference)
+            ViewBag.MainCategories = await _categoryService.GetMainCategoriesAsync(excludeCategoryId: id);
+            return View(category);
         }
 
         /// <summary>

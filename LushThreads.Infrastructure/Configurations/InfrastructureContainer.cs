@@ -59,6 +59,8 @@ namespace LushThreads.Infrastructure.Configurations
             services.AddScoped<ISecurityActivityRepository, SecurityActivityRepository>();
             services.AddScoped<ICartItemRepository, CartItemRepository>();
             services.AddScoped<IPaymentMethodRepository, PaymentMethodRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IRoleRepository, RoleRepository>();
             return services;
         }
     }

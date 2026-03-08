@@ -4,5 +4,6 @@ namespace LushThreads.Infrastructure.Persistence.IRepository
 {
     public interface IProductRepository : IRepository<Product>
     {
+        Task<int> GetTotalProductsCountAsync();
     }
 }

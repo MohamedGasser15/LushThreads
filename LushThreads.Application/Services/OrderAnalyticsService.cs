@@ -1,34 +1,60 @@
 ﻿using LushThreads.Application.ServiceInterfaces;
 using LushThreads.Domain.Entites;
 using LushThreads.Domain.ViewModels.OrderAnalytics;
-using LushThreads.Infrastructure.Data;
-using Microsoft.EntityFrameworkCore;
+using LushThreads.Infrastructure.Persistence.IRepository;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace LushThreads.Application.Services
 {
+    /// <summary>
+    /// Service responsible for providing order analytics data including revenue trends,
+    /// order status distribution, top products, and other key metrics.
+    /// </summary>
     public class OrderAnalyticsService : IOrderAnalyticsService
     {
-        private readonly ApplicationDbContext _context;
+        #region Fields
+
+        private readonly IOrderRepository _orderRepository;
+        private readonly IOrderDetailRepository _orderDetailRepository;
         private readonly ILogger<OrderAnalyticsService> _logger;
 
-        public OrderAnalyticsService(ApplicationDbContext context, ILogger<OrderAnalyticsService> logger)
+        #endregion
+
+        #region Constructor
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="OrderAnalyticsService"/> class.
+        /// </summary>
+        /// <param name="orderRepository">Repository for order operations.</param>
+        /// <param name="orderDetailRepository">Repository for order detail operations.</param>
+        /// <param name="logger">Logger instance.</param>
+        public OrderAnalyticsService(
+            IOrderRepository orderRepository,
+            IOrderDetailRepository orderDetailRepository,
+            ILogger<OrderAnalyticsService> logger)
         {
-            _context = context;
+            _orderRepository = orderRepository;
+            _orderDetailRepository = orderDetailRepository;
             _logger = logger;
         }
 
+        #endregion
+
+        #region Public Methods
+
+        /// <inheritdoc />
         public async Task<OrderAnalyticsViewModel> GetDashboardData(OrderAnalyticsFilter filter)
         {
             try
             {
                 var endDate = filter.EndDate ?? DateTime.UtcNow;
                 var startDate = filter.StartDate ?? endDate.AddDays(-filter.Days);
+
+                _logger.LogInformation("Generating order analytics from {StartDate} to {EndDate}", startDate, endDate);
 
                 return new OrderAnalyticsViewModel
                 {
@@ -50,49 +76,61 @@ namespace LushThreads.Application.Services
             }
         }
 
+        /// <inheritdoc />
+        public async Task<RevenueTrendViewModel> GetRevenueTrendData(DateTime startDate, DateTime endDate, int days)
+        {
+            return await GetRevenueTrend(startDate, endDate, new OrderAnalyticsFilter
+            {
+                Days = days,
+                StartDate = startDate,
+                EndDate = endDate
+            });
+        }
+
+        /// <inheritdoc />
+        public async Task<OrderStatusDistributionViewModel> GetOrderStatusData(DateTime startDate, DateTime endDate)
+        {
+            return await GetOrderStatusDistribution(startDate, endDate, new OrderAnalyticsFilter());
+        }
+
+        /// <inheritdoc />
+        public async Task<TopProductsViewModel> GetTopProductsData(int topCount, DateTime startDate, DateTime endDate)
+        {
+            return await GetTopProducts(startDate, endDate, topCount, new OrderAnalyticsFilter());
+        }
+
+        #endregion
+
+        #region Private Methods - Analytics Builders
+
+        /// <summary>
+        /// Builds revenue trend data.
+        /// </summary>
         private async Task<RevenueTrendViewModel> GetRevenueTrend(DateTime startDate, DateTime endDate, OrderAnalyticsFilter filter)
         {
             var interval = DetermineInterval(startDate, endDate);
-            var query = BuildBaseQuery(startDate, endDate, filter);
+            var trendItems = await _orderRepository.GetRevenueTrendAsync(startDate, endDate, filter, interval);
 
             var model = new RevenueTrendViewModel();
-            var currentDate = startDate;
-
-            while (currentDate <= endDate)
+            foreach (var item in trendItems)
             {
-                var (nextDate, label) = GetNextInterval(currentDate, interval);
-
-                var ordersInPeriod = await query
-                    .Where(o => o.OrderDate >= currentDate && o.OrderDate < nextDate)
-                    .ToListAsync();
-
-                model.Labels.Add(label);
-                model.Revenue.Add((decimal)ordersInPeriod.Sum(o => o.OrderTotal));
-                model.Subtotal.Add((decimal)ordersInPeriod.Sum(o => o.Subtotal));
-                model.ShippingFees.Add((decimal)ordersInPeriod.Sum(o => o.ShippingFee));
-                model.Taxes.Add((decimal)ordersInPeriod.Sum(o => o.Tax));
-                model.OrderCounts.Add(ordersInPeriod.Count);
-
-                currentDate = nextDate;
+                model.Labels.Add(item.Label);
+                model.Revenue.Add((decimal)item.Revenue);
+                model.Subtotal.Add((decimal)item.Subtotal);
+                model.ShippingFees.Add((decimal)item.ShippingFees);
+                model.Taxes.Add((decimal)item.Taxes);
+                model.OrderCounts.Add(item.OrderCount);
             }
 
             return model;
         }
 
-        private async Task<OrderStatusDistributionViewModel> GetOrderStatusDistribution(
-            DateTime startDate, DateTime endDate, OrderAnalyticsFilter filter)
+        /// <summary>
+        /// Builds order status distribution.
+        /// </summary>
+        private async Task<OrderStatusDistributionViewModel> GetOrderStatusDistribution(DateTime startDate, DateTime endDate, OrderAnalyticsFilter filter)
         {
-            var query = BuildBaseQuery(startDate, endDate, filter);
-
-            var statusGroups = await query
-                .GroupBy(o => o.OrderStatus ?? "Unknown")
-                .Select(g => new
-                {
-                    Status = g.Key,
-                    Count = g.Count(),
-                    Revenue = g.Sum(o => o.OrderTotal)
-                })
-                .ToListAsync();
+            var statusGroups = await _orderRepository.GetOrderStatusDistributionAsync(startDate, endDate, filter);
 
             var model = new OrderStatusDistributionViewModel();
             var standardStatuses = new List<string> { "Delivered", "Pending", "Processing", "Cancelled", "Refunded", "Shipped", "Approved" };
@@ -117,189 +155,65 @@ namespace LushThreads.Application.Services
             // Ensure colors match the number of statuses
             while (model.Colors.Count < model.Statuses.Count)
             {
-                model.Colors.Add("#D1D5DB"); // Add default color (gray) for extra statuses
+                model.Colors.Add("#D1D5DB"); // Default gray
             }
             model.Colors = model.Colors.Take(model.Statuses.Count).ToList();
 
             return model;
         }
 
-        private async Task<TopProductsViewModel> GetTopProducts(
-            DateTime startDate, DateTime endDate, int topCount, OrderAnalyticsFilter filter)
+        /// <summary>
+        /// Builds payment status distribution.
+        /// </summary>
+        private async Task<PaymentStatusDistributionViewModel> GetPaymentStatusDistribution(DateTime startDate, DateTime endDate, OrderAnalyticsFilter filter)
         {
-            var query = _context.OrderDetails
-                .Include(od => od.OrderHeader)
-                .Include(od => od.Product)
-                .Where(od => od.OrderHeader.OrderDate >= startDate && od.OrderHeader.OrderDate <= endDate);
-
-            if (filter.ProductId.HasValue)
-                query = query.Where(od => od.ProductId == filter.ProductId.Value);
-
-            var productGroups = await query
-                .GroupBy(od => new { od.ProductId, od.Product.Product_Name, od.Product.imgUrl })
-                .Select(g => new
-                {
-                    g.Key.Product_Name,
-                    g.Key.imgUrl,
-                    Quantity = g.Sum(od => od.Count),
-                    Revenue = g.Sum(od => od.price * od.Count)
-                })
-                .OrderByDescending(g => g.Revenue)
-                .Take(topCount)
-                .ToListAsync();
-
-            var model = new TopProductsViewModel();
-
-            foreach (var product in productGroups)
-            {
-                model.ProductNames.Add(product.Product_Name);
-                model.QuantitiesSold.Add(product.Quantity);
-                model.RevenueGenerated.Add((decimal)product.Revenue);
-                model.ProductImages.Add(product.imgUrl ?? "/images/default-product.png");
-            }
-
-            return model;
-        }
-
-        private async Task<KeyMetricsViewModel> GetKeyMetrics(
-            DateTime startDate, DateTime endDate, OrderAnalyticsFilter filter)
-        {
-            var query = BuildBaseQuery(startDate, endDate, filter);
-            var previousPeriodQuery = BuildBaseQuery(
-                startDate.AddDays(-(endDate - startDate).TotalDays),
-                startDate,
-                filter);
-
-            var currentOrders = await query.ToListAsync();
-            var previousOrders = await previousPeriodQuery.ToListAsync();
-
-            var currentRevenue = currentOrders.Sum(o => o.OrderTotal);
-            var previousRevenue = previousOrders.Sum(o => o.OrderTotal);
-            var revenueChange = previousRevenue > 0
-                ? (currentRevenue - previousRevenue) / previousRevenue
-                : 0;
-
-            return new KeyMetricsViewModel
-            {
-                TotalRevenue = (decimal)currentRevenue,
-                RevenueChangePercentage = (decimal)revenueChange,
-                TotalOrders = currentOrders.Count,
-                OrderChangePercentage = (int)(previousOrders.Count > 0
-                    ? (currentOrders.Count - previousOrders.Count) / (double)previousOrders.Count
-                    : 0),
-                AverageOrderValue = currentOrders.Count > 0
-                    ? (decimal)(currentRevenue / currentOrders.Count)
-                    : 0,
-                NewCustomers = await GetNewCustomerCount(startDate, endDate, filter)
-            };
-        }
-
-        private IQueryable<OrderHeader> BuildBaseQuery(DateTime startDate, DateTime endDate, OrderAnalyticsFilter filter)
-        {
-            var query = _context.OrderHeaders
-                .Where(o => o.OrderDate >= startDate && o.OrderDate <= endDate);
-
-            if (!string.IsNullOrEmpty(filter.OrderStatus))
-                query = query.Where(o => o.OrderStatus == filter.OrderStatus);
-
-            if (!string.IsNullOrEmpty(filter.PaymentStatus))
-                query = query.Where(o => o.PaymentStatus == filter.PaymentStatus);
-
-            if (!string.IsNullOrEmpty(filter.Country))
-                query = query.Where(o => o.Country == filter.Country);
-
-            return query;
-        }
-
-        private async Task<int> GetNewCustomerCount(DateTime startDate, DateTime endDate, OrderAnalyticsFilter filter)
-        {
-            var query = _context.OrderHeaders
-                .Where(o => o.OrderDate >= startDate && o.OrderDate <= endDate)
-                .GroupBy(o => o.ApplicationUserId)
-                .Where(g => g.Min(o => o.OrderDate) >= startDate);
-
-            if (!string.IsNullOrEmpty(filter.Country))
-                query = query.Where(g => g.First().Country == filter.Country);
-
-            return await query.CountAsync();
-        }
-
-        private string DetermineInterval(DateTime startDate, DateTime endDate)
-        {
-            var days = (endDate - startDate).TotalDays;
-            return days <= 7 ? "day" : days <= 30 ? "week" : "month";
-        }
-
-        private (DateTime nextDate, string label) GetNextInterval(DateTime currentDate, string interval)
-        {
-            return interval switch
-            {
-                "day" => (currentDate.AddDays(1), currentDate.ToString("MMM dd")),
-                "week" => (currentDate.AddDays(7), $"Week {GetWeekOfMonth(currentDate)}"),
-                _ => (currentDate.AddMonths(1), currentDate.ToString("MMM yyyy"))
-            };
-        }
-
-        private int GetWeekOfMonth(DateTime date)
-        {
-            date = date.Date;
-            DateTime firstDayOfMonth = new(date.Year, date.Month, 1);
-            DateTime firstMonday = firstDayOfMonth.AddDays((DayOfWeek.Monday + 7 - firstDayOfMonth.DayOfWeek) % 7);
-            if (firstMonday > date)
-            {
-                firstDayOfMonth = firstDayOfMonth.AddMonths(-1);
-                firstMonday = firstDayOfMonth.AddDays((DayOfWeek.Monday + 7 - firstDayOfMonth.DayOfWeek) % 7);
-            }
-            return (date - firstMonday).Days / 7 + 1;
-        }
-
-        private async Task<PaymentStatusDistributionViewModel> GetPaymentStatusDistribution(
-            DateTime startDate, DateTime endDate, OrderAnalyticsFilter filter)
-        {
-            var query = BuildBaseQuery(startDate, endDate, filter);
-
-            var statusGroups = await query
-                .GroupBy(o => o.PaymentStatus ?? "Unknown")
-                .Select(g => new
-                {
-                    Status = g.Key,
-                    Count = g.Count()
-                })
-                .OrderByDescending(g => g.Count)
-                .ToListAsync();
+            var paymentGroups = await _orderRepository.GetPaymentStatusDistributionAsync(startDate, endDate, filter);
 
             var model = new PaymentStatusDistributionViewModel();
-
-            foreach (var group in statusGroups)
+            foreach (var group in paymentGroups)
             {
                 model.Statuses.Add(group.Status);
                 model.Counts.Add(group.Count);
             }
 
+            // Ensure colors match the number of statuses
+            while (model.Colors.Count < model.Statuses.Count)
+            {
+                model.Colors.Add("#D1D5DB");
+            }
             model.Colors = model.Colors.Take(model.Statuses.Count).ToList();
 
             return model;
         }
 
-        private async Task<SalesByDayOfWeekViewModel> GetSalesByDayOfWeek(
-            DateTime startDate, DateTime endDate, OrderAnalyticsFilter filter)
+        /// <summary>
+        /// Builds top products data.
+        /// </summary>
+        private async Task<TopProductsViewModel> GetTopProducts(DateTime startDate, DateTime endDate, int topCount, OrderAnalyticsFilter filter)
         {
-            var orders = await BuildBaseQuery(startDate, endDate, filter)
-                .Select(o => new { o.OrderDate, o.OrderTotal })
-                .ToListAsync();
+            var topProducts = await _orderDetailRepository.GetTopProductsAsync(startDate, endDate, topCount, filter);
 
-            var dayGroups = orders
-                .GroupBy(o => o.OrderDate.DayOfWeek)
-                .Select(g => new
-                {
-                    DayOfWeek = g.Key,
-                    Revenue = g.Sum(o => o.OrderTotal),
-                    OrderCount = g.Count()
-                })
-                .ToList();
+            var model = new TopProductsViewModel();
+            foreach (var product in topProducts)
+            {
+                model.ProductNames.Add(product.ProductName);
+                model.QuantitiesSold.Add(product.QuantitySold);
+                model.RevenueGenerated.Add((decimal)product.Revenue);
+                model.ProductImages.Add(product.ImageUrl ?? "/images/default-product.png");
+            }
+
+            return model;
+        }
+
+        /// <summary>
+        /// Builds sales by day of week data.
+        /// </summary>
+        private async Task<SalesByDayOfWeekViewModel> GetSalesByDayOfWeek(DateTime startDate, DateTime endDate, OrderAnalyticsFilter filter)
+        {
+            var dayGroups = await _orderRepository.GetSalesByDayOfWeekAsync(startDate, endDate, filter);
 
             var model = new SalesByDayOfWeekViewModel();
-
+            // Initialize all days with zero
             for (int i = 0; i < 7; i++)
             {
                 model.Revenue.Add(0);
@@ -316,62 +230,40 @@ namespace LushThreads.Application.Services
             return model;
         }
 
-        private async Task<SalesByCategoryViewModel> GetSalesByCategory(
-            DateTime startDate, DateTime endDate, OrderAnalyticsFilter filter)
+        /// <summary>
+        /// Builds sales by category data.
+        /// </summary>
+        private async Task<SalesByCategoryViewModel> GetSalesByCategory(DateTime startDate, DateTime endDate, OrderAnalyticsFilter filter)
         {
-            var query = _context.OrderDetails
-                .Include(od => od.OrderHeader)
-                .Include(od => od.Product)
-                .ThenInclude(p => p.Category)
-                .Where(od => od.OrderHeader.OrderDate >= startDate &&
-                            od.OrderHeader.OrderDate <= endDate);
-
-            if (filter.CategoryId.HasValue)
-                query = query.Where(od => od.Product.Category_Id == filter.CategoryId.Value);
-
-            var categoryGroups = await query
-                .GroupBy(od => new { od.Product.Category.Category_Id, od.Product.Category.Category_Name })
-                .Select(g => new
-                {
-                    g.Key.Category_Name,
-                    Revenue = g.Sum(od => od.price * od.Count),
-                    OrderCount = g.Select(od => od.OrderHeaderId).Distinct().Count()
-                })
-                .OrderByDescending(g => g.Revenue)
-                .ToListAsync();
+            var categoryGroups = await _orderDetailRepository.GetSalesByCategoryAsync(startDate, endDate, filter);
 
             var model = new SalesByCategoryViewModel();
-
             foreach (var group in categoryGroups)
             {
-                model.CategoryNames.Add(group.Category_Name);
-                model.Revenue.Add((decimal)group.Revenue);
+                model.CategoryNames.Add(group.CategoryName);
                 model.OrderCounts.Add(group.OrderCount);
+                model.Revenue.Add((decimal)group.Revenue);
             }
 
+            // Ensure colors match the number of categories
+            while (model.Colors.Count < model.CategoryNames.Count)
+            {
+                model.Colors.Add("#D1D5DB");
+            }
             model.Colors = model.Colors.Take(model.CategoryNames.Count).ToList();
 
             return model;
         }
 
-        private async Task<SalesByHourViewModel> GetSalesByHour(
-            DateTime startDate, DateTime endDate, OrderAnalyticsFilter filter)
+        /// <summary>
+        /// Builds sales by hour data.
+        /// </summary>
+        private async Task<SalesByHourViewModel> GetSalesByHour(DateTime startDate, DateTime endDate, OrderAnalyticsFilter filter)
         {
-            var query = BuildBaseQuery(startDate, endDate, filter);
-
-            var hourGroups = await query
-                .GroupBy(o => o.OrderDate.Hour)
-                .Select(g => new
-                {
-                    Hour = g.Key,
-                    Revenue = g.Sum(o => o.OrderTotal),
-                    OrderCount = g.Count()
-                })
-                .OrderBy(g => g.Hour)
-                .ToListAsync();
+            var hourGroups = await _orderRepository.GetSalesByHourAsync(startDate, endDate, filter);
 
             var model = new SalesByHourViewModel();
-
+            // Initialize all hours with zero
             for (int i = 0; i < 24; i++)
             {
                 model.Revenue.Add(0);
@@ -387,24 +279,62 @@ namespace LushThreads.Application.Services
             return model;
         }
 
-        public async Task<RevenueTrendViewModel> GetRevenueTrendData(DateTime startDate, DateTime endDate, int days)
+        /// <summary>
+        /// Builds key metrics data.
+        /// </summary>
+        private async Task<KeyMetricsViewModel> GetKeyMetrics(DateTime startDate, DateTime endDate, OrderAnalyticsFilter filter)
         {
-            return await GetRevenueTrend(startDate, endDate, new OrderAnalyticsFilter
+            var (currentOrders, previousOrders) = await _orderRepository.GetOrdersForMetricsAsync(startDate, endDate, filter);
+
+            var currentRevenue = currentOrders.Sum(o => o.OrderTotal);
+            var previousRevenue = previousOrders.Sum(o => o.OrderTotal);
+            var revenueChange = previousRevenue > 0
+                ? (currentRevenue - previousRevenue) / previousRevenue
+                : 0;
+
+            var currentOrderCount = currentOrders.Count;
+            var previousOrderCount = previousOrders.Count;
+            var orderChangePercentage = previousOrderCount > 0
+                ? (currentOrderCount - previousOrderCount) / (double)previousOrderCount
+                : 0;
+
+            var averageOrderValue = currentOrderCount > 0 ? currentRevenue / currentOrderCount : 0;
+            var previousAOV = previousOrderCount > 0 ? previousRevenue / previousOrderCount : 0;
+            var aovChange = previousAOV > 0 ? (averageOrderValue - previousAOV) / previousAOV : 0;
+
+            var newCustomers = await _orderRepository.GetNewCustomerCountAsync(startDate, endDate, filter);
+
+            // Refund rate calculation (assuming orders with status "Refunded")
+            var refundedRevenue = currentOrders.Where(o => o.OrderStatus == "Refunded").Sum(o => o.OrderTotal);
+            var refundRate = currentRevenue > 0 ? refundedRevenue / currentRevenue : 0;
+
+            return new KeyMetricsViewModel
             {
-                Days = days,
-                StartDate = startDate,
-                EndDate = endDate
-            });
+                TotalRevenue = (decimal)currentRevenue,
+                RevenueChangePercentage = (decimal)revenueChange,
+                TotalOrders = currentOrderCount,
+                OrderChangePercentage = (int)(orderChangePercentage * 100),
+                AverageOrderValue = (decimal)averageOrderValue,
+                AOVChangePercentage = (decimal)aovChange,
+                NewCustomers = newCustomers,
+                RefundRate = (decimal)refundRate,
+                ConversionRates = new Dictionary<string, decimal>
+                {
+                    ["CartToCheckout"] = 0m, // Placeholder - would need additional data
+                    ["CheckoutToPurchase"] = 0m
+                }
+            };
         }
 
-        public async Task<OrderStatusDistributionViewModel> GetOrderStatusData(DateTime startDate, DateTime endDate)
+        /// <summary>
+        /// Determines the interval for grouping based on date range length.
+        /// </summary>
+        private string DetermineInterval(DateTime startDate, DateTime endDate)
         {
-            return await GetOrderStatusDistribution(startDate, endDate, new OrderAnalyticsFilter());
+            var days = (endDate - startDate).TotalDays;
+            return days <= 7 ? "day" : days <= 30 ? "week" : "month";
         }
 
-        public async Task<TopProductsViewModel> GetTopProductsData(int topCount, DateTime startDate, DateTime endDate)
-        {
-            return await GetTopProducts(startDate, endDate, topCount, new OrderAnalyticsFilter());
-        }
+        #endregion
     }
 }

@@ -27,13 +27,14 @@ namespace LushThreads.Web.Areas.Customer.Controllers
         /// </summary>
         /// <param name="settingService">Service for user settings.</param>
         /// <param name="adminActivityService">Service for logging activities.</param>
-        /// <param name="userManager">User manager (passed to base).</param>
-        /// <param name="db">Database context (passed to base).</param>
+        /// <param name="deviceTrackingService">Service for tracking user devices (passed to base controller).</param>
+        /// <param name="userManager">Identity user manager (passed to base controller).</param>
         public SettingController(
             ISettingService settingService,
             IAdminActivityService adminActivityService,
-            UserManager<ApplicationUser> userManager,
-            ApplicationDbContext db) : base(db, userManager)
+            IDeviceTrackingService deviceTrackingService,
+            UserManager<ApplicationUser> userManager)
+            : base(userManager, deviceTrackingService)
         {
             _settingService = settingService;
             _adminActivityService = adminActivityService;

@@ -1,17 +1,19 @@
 ﻿using LushThreads.Domain.Entites;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace LushThreads.Infrastructure.Persistence.IRepository
 {
     /// <summary>
-    /// Interface for UserDevice repository.
-    /// Inherits from the generic IRepository interface.
+    /// Repository interface for UserDevice entity.
     /// </summary>
     public interface IUserDeviceRepository : IRepository<UserDevice>
     {
+        /// <summary>
+        /// Gets a user device by user ID and device token.
+        /// </summary>
+        /// <param name="userId">The user ID.</param>
+        /// <param name="deviceToken">The device token.</param>
+        /// <returns>The user device if found, otherwise null.</returns>
+        Task<UserDevice?> GetByUserAndTokenAsync(string userId, string deviceToken);
     }
 }

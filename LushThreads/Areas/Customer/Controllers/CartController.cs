@@ -22,15 +22,23 @@ namespace LushThreads.Web.Areas.Customer.Controllers
 
         #region Constructor
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CartController"/> class.
+        /// </summary>
+        /// <param name="cartService">Service for cart operations.</param>
+        /// <param name="deviceTrackingService">Service for tracking user devices (passed to base controller).</param>
+        /// <param name="userManager">Identity user manager (passed to base controller).</param>
         public CartController(
             ICartService cartService,
+            IDeviceTrackingService deviceTrackingService,
             UserManager<ApplicationUser> userManager)
-            : base(null, userManager) // BaseController expects db and userManager, we pass null for db
+            : base(userManager, deviceTrackingService)
         {
             _cartService = cartService;
         }
 
         #endregion
+
 
         #region Cart Views
 

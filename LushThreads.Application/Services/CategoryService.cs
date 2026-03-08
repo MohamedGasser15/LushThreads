@@ -67,6 +67,16 @@ namespace LushThreads.Application.Services
         }
 
         /// <inheritdoc />
+        public async Task<IEnumerable<Category>> GetMainCategoriesAsync(int? excludeCategoryId = null)
+        {
+            _logger.LogDebug("Retrieving main categories from repository.");
+            var categories = await _categoryRepository.GetAllAsync(
+                filter: c => c.ParentCategoryId == null && (!excludeCategoryId.HasValue || c.Category_Id != excludeCategoryId.Value)
+            );
+            return categories;
+        }
+
+        /// <inheritdoc />
         public async Task CreateCategoryAsync(Category category, string userId, string ipAddress)
         {
             try
