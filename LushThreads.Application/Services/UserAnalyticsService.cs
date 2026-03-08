@@ -1,28 +1,52 @@
 ﻿using LushThreads.Application.ServiceInterfaces;
 using LushThreads.Domain.Entites;
 using LushThreads.Domain.ViewModels.UserAnalytics;
-using LushThreads.Infrastructure.Data;
+using LushThreads.Infrastructure.Persistence.IRepository;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace LushThreads.Application.Services
 {
+    /// <summary>
+    /// Service responsible for providing user analytics data including user growth,
+    /// roles distribution, account status, registration sources, and recent activity.
+    /// </summary>
     public class UserAnalyticsService : IUserAnalyticsService
     {
-        private readonly ApplicationDbContext _context;
+        #region Fields
+
+        private readonly IUserRepository _userRepository;
+        private readonly IRoleRepository _roleRepository;
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public UserAnalyticsService(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        #endregion
+
+        #region Constructor
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="UserAnalyticsService"/> class.
+        /// </summary>
+        /// <param name="userRepository">Repository for user operations.</param>
+        /// <param name="roleRepository">Repository for role operations.</param>
+        /// <param name="userManager">User manager for Identity operations.</param>
+        public UserAnalyticsService(
+            IUserRepository userRepository,
+            IRoleRepository roleRepository,
+            UserManager<ApplicationUser> userManager)
         {
-            _context = context;
+            _userRepository = userRepository;
+            _roleRepository = roleRepository;
             _userManager = userManager;
         }
 
+        #endregion
+
+        #region Public Methods
+
+        /// <inheritdoc />
         public async Task<UserAnalyticsViewModel> GetUserAnalytics(int days)
         {
             var endDate = DateTime.UtcNow;
@@ -35,12 +59,13 @@ namespace LushThreads.Application.Services
                 AccountStatus = await GetAccountStatusData(),
                 RegistrationSources = GetRegistrationSourcesData(),
                 RecentActivity = await GetRecentActivityData(),
-                TotalUsers = await _context.Users.CountAsync()
+                TotalUsers = await _userRepository.GetTotalUsersCountAsync()
             };
 
             return model;
         }
 
+        /// <inheritdoc />
         public async Task<UserGrowthViewModel> GetUserGrowthData(DateTime startDate, DateTime endDate, int days)
         {
             var interval = days <= 7 ? "day" : days <= 30 ? "week" : "month";
@@ -85,9 +110,7 @@ namespace LushThreads.Application.Services
                     _ => currentDate.AddMonths(1)
                 };
 
-                var newUsersCount = await _context.ApplicationUsers
-                    .Where(u => u.CreatedDate >= currentDate && u.CreatedDate < nextDate)
-                    .CountAsync();
+                var newUsersCount = await _userRepository.GetNewUsersCountAsync(currentDate, nextDate);
 
                 totalUsers += newUsersCount;
 
@@ -100,6 +123,13 @@ namespace LushThreads.Application.Services
             return userGrowth;
         }
 
+        #endregion
+
+        #region Private Methods
+
+        /// <summary>
+        /// Calculates the week of the month for a given date.
+        /// </summary>
         private int GetWeekOfMonth(DateTime date)
         {
             date = date.Date;
@@ -113,20 +143,21 @@ namespace LushThreads.Application.Services
             return (date - firstMonthMonday).Days / 7 + 1;
         }
 
+        /// <summary>
+        /// Retrieves the distribution of users across roles.
+        /// </summary>
         private async Task<UserRolesDistributionViewModel> GetRolesDistributionData()
         {
             // 1. Get all existing roles from the database
-            var existingRoles = await _context.Roles
-                .Select(r => r.Name)
-                .ToListAsync();
+            var existingRoles = await _roleRepository.GetAllRoleNamesAsync();
 
             // 2. Define role display names mapping
             var roleDisplayNames = new Dictionary<string, string>
-    {
-        {"Admin", "Administrator"},
-        {"User", "Regular User"}
-        // Add more mappings as needed
-    };
+            {
+                {"Admin", "Administrator"},
+                {"User", "Regular User"}
+                // Add more mappings as needed
+            };
 
             // 3. Handle case where there are many roles
             var roleCounts = new List<int>();
@@ -193,15 +224,13 @@ namespace LushThreads.Application.Services
             };
         }
 
+        /// <summary>
+        /// Retrieves account status data (active vs locked users).
+        /// </summary>
         private async Task<UserStatusViewModel> GetAccountStatusData()
         {
-            var activeUsers = await _context.Users
-                .Where(u => u.LockoutEnd == null || u.LockoutEnd < DateTime.Now)
-                .CountAsync();
-
-            var lockedUsers = await _context.Users
-                .Where(u => u.LockoutEnd != null && u.LockoutEnd > DateTime.Now)
-                .CountAsync();
+            var activeUsers = await _userRepository.GetActiveUsersCountAsync();
+            var lockedUsers = await _userRepository.GetLockedUsersCountAsync();
 
             return new UserStatusViewModel
             {
@@ -210,6 +239,10 @@ namespace LushThreads.Application.Services
             };
         }
 
+        /// <summary>
+        /// Retrieves registration sources data.
+        /// Note: In a real application, this should come from a database table tracking registration sources.
+        /// </summary>
         private RegistrationSourcesViewModel GetRegistrationSourcesData()
         {
             // In a real app, you would query this from your database
@@ -222,15 +255,17 @@ namespace LushThreads.Application.Services
             };
         }
 
+        /// <summary>
+        /// Retrieves recent activity data (new users, logins, purchases).
+        /// Note: Login and purchase data require additional tracking; these are placeholders.
+        /// </summary>
         private async Task<RecentActivityViewModel> GetRecentActivityData()
         {
             var today = DateTime.UtcNow.Date;
             var yesterday = today.AddDays(-1);
             var last24Hours = DateTime.UtcNow.AddHours(-24);
 
-            var newUsersToday = await _context.ApplicationUsers
-                .Where(u => u.CreatedDate >= today)
-                .CountAsync();
+            var newUsersToday = await _userRepository.GetNewUsersCountAsync(today, today.AddDays(1));
 
             // For logins, you would need to track login activity separately
             // This is a placeholder - you would need to implement actual login tracking
@@ -246,5 +281,7 @@ namespace LushThreads.Application.Services
                 PurchasesYesterday = purchasesYesterday
             };
         }
+
+        #endregion
     }
 }

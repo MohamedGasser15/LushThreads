@@ -27,6 +27,8 @@ namespace LushThreads.Application.ServiceInterfaces
         /// <returns>The <see cref="Category"/> if found; otherwise, <c>null</c>.</returns>
         Task<Category?> GetCategoryByIdAsync(int id);
 
+        Task<IEnumerable<Category>> GetMainCategoriesAsync(int? excludeCategoryId = null);
+
         #endregion
 
         #region Command Methods
