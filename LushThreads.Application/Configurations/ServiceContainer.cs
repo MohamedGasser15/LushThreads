@@ -19,6 +19,10 @@ namespace LushThreads.Application.Configurations
             services.AddAutoMapper(typeof(CategoryProfile).Assembly);
             services.AddAutoMapper(typeof(UserProfile).Assembly);
             services.AddAutoMapper(typeof(AuthProfile).Assembly);
+            services.AddAutoMapper(typeof(ProductProfile).Assembly);
+            services.AddAutoMapper(typeof(AdminActivityProfile).Assembly);
+            services.AddAutoMapper(typeof(OrderProfile).Assembly);
+            services.AddAutoMapper(typeof(SettingsProfile).Assembly);
 
             // Register application services (business logic)
             services.AddScoped<IBrandService, BrandService>();
