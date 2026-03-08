@@ -18,7 +18,7 @@ namespace LushThreads.Application.Services
         #region Fields
 
         private readonly IOrderRepository _orderRepository;
-        private readonly IRepository<OrderDetail> _orderDetailRepository;
+        private readonly IOrderDetailRepository _orderDetailRepository;
         private readonly IAdminActivityService _adminActivityService;
         private readonly IEmailSender _emailSender;
         private readonly IEmailTemplateService _emailTemplateService;
@@ -31,7 +31,7 @@ namespace LushThreads.Application.Services
 
         public OrderService(
             IOrderRepository orderRepository,
-            IRepository<OrderDetail> orderDetailRepository,
+            IOrderDetailRepository orderDetailRepository,
             IAdminActivityService adminActivityService,
             IEmailSender emailSender,
             IEmailTemplateService emailTemplateService,

@@ -28,8 +28,8 @@ namespace LushThreads.Application.Services
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IEmailSender _emailSender;
         private readonly IEmailTemplateService _emailTemplateService;
-        private readonly IRepository<SecurityActivity> _securityActivityRepository;
-        private readonly IRepository<UserDevice> _userDeviceRepository;
+        private readonly ISecurityActivityRepository _securityActivityRepository;
+        private readonly IUserDeviceRepository _userDeviceRepository;
         private readonly ILogger<AccountService> _logger;
 
         #endregion
@@ -42,8 +42,8 @@ namespace LushThreads.Application.Services
             RoleManager<IdentityRole> roleManager,
             IEmailSender emailSender,
             IEmailTemplateService emailTemplateService,
-            IRepository<SecurityActivity> securityActivityRepository,
-            IRepository<UserDevice> userDeviceRepository,
+            ISecurityActivityRepository securityActivityRepository,
+            IUserDeviceRepository userDeviceRepository,
             ILogger<AccountService> logger)
         {
             _userManager = userManager;
