@@ -2,8 +2,9 @@
 using MailKit.Net.Smtp;
 using MimeKit;
 using MimeKit.Text;
+using Microsoft.Extensions.Configuration;
 
-namespace LushThreads.Services
+namespace LushThreads.Application.Services
 {
     public class EmailSender : IEmailSender
     {

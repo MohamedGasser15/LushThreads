@@ -1,19 +1,17 @@
-﻿using LushThreads.Infrastructure.Data;
+﻿using LushThreads.Application.ServiceInterfaces;
 using LushThreads.Domain.Entites;
 using LushThreads.Domain.ViewModels.UserAnalytics;
+using LushThreads.Infrastructure.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace LushThreads.Services
+namespace LushThreads.Application.Services
 {
-    // Services/Interfaces/IUserAnalyticsService.cs
-    public interface IUserAnalyticsService
-    {
-        Task<UserAnalyticsViewModel> GetUserAnalytics(int days);
-        Task<UserGrowthViewModel> GetUserGrowthData(DateTime startDate, DateTime endDate, int days);
-    }
-
-    // Services/UserAnalyticsService.cs
     public class UserAnalyticsService : IUserAnalyticsService
     {
         private readonly ApplicationDbContext _context;

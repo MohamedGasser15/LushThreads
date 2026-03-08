@@ -1,112 +1,140 @@
-﻿using LushThreads.Infrastructure.Data;
+﻿using LushThreads.Application.ServiceInterfaces;
 using LushThreads.Domain.Constants;
 using LushThreads.Domain.Entites;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Threading.Tasks;
 
 namespace LushThreads.Areas.Admin.Controllers
 {
+    /// <summary>
+    /// Controller for managing brand operations in the admin area.
+    /// Requires authentication and admin role.
+    /// </summary>
     [Area("Admin")]
     [Authorize(Roles = SD.Admin)]
     public class BrandController : Controller
     {
-        private readonly IUnitOfWork _unitOfWork;
+        #region Fields
+
+        private readonly IBrandService _brandService;
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public BrandController(IUnitOfWork unitOfWork, UserManager<ApplicationUser> userManager)
+        #endregion
+
+        #region Constructor
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BrandController"/> class.
+        /// </summary>
+        /// <param name="brandService">Service for brand business logic.</param>
+        /// <param name="userManager">Identity user manager for retrieving current user.</param>
+        public BrandController(IBrandService brandService, UserManager<ApplicationUser> userManager)
         {
-            _unitOfWork = unitOfWork;
+            _brandService = brandService;
             _userManager = userManager;
         }
 
-        // Displays the list of all brands
+        #endregion
+
+        #region Actions
+
+        /// <summary>
+        /// Displays the list of all brands.
+        /// </summary>
+        /// <returns>View with the list of brands.</returns>
         public async Task<IActionResult> Index()
         {
-            IEnumerable<Brand> objList = await _unitOfWork.Brands.GetAll();
-            return View(objList);
+            var brands = await _brandService.GetAllBrandsAsync();
+            return View(brands);
         }
 
-        // Displays the form for creating or editing a brand
+        /// <summary>
+        /// Displays the upsert (create/edit) form for a brand.
+        /// If id is 0, shows create form; otherwise shows edit form with brand data.
+        /// </summary>
+        /// <param name="id">The brand ID (0 for new brand).</param>
+        /// <returns>The upsert view with the brand model.</returns>
         public async Task<IActionResult> Upsert(int id)
         {
-            Brand obj = new();
             if (id == 0)
-                return View(obj);
+                return View(new Brand()); // Create new brand
 
-            obj = await _unitOfWork.Brands.GetById(id);
-            if (obj == null)
+            var brand = await _brandService.GetBrandByIdAsync(id);
+            if (brand == null)
                 return NotFound();
 
-            return View(obj);
+            return View(brand); // Edit existing brand
         }
 
-        // Creates or updates a brand
+        /// <summary>
+        /// Handles the creation or update of a brand.
+        /// </summary>
+        /// <param name="obj">The brand data submitted from the form.</param>
+        /// <returns>Redirects to Index on success, or returns the view with errors.</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Upsert(Brand obj)
         {
+            // Step 1: Retrieve the current user
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
-            {
                 return NotFound();
-            }
 
-            if (obj.Brand_Id == 0)
-            {
-                await _unitOfWork.Brands.Add(obj);
-                await _unitOfWork.Brands.AdminActivityAsync(
-                     userId: user.Id,
-                     activityType: "AddBrand",
-                     description: $"Add Brand (Id: {obj.Brand_Id})",
-                     ipAddress: HttpContext.Connection.RemoteIpAddress?.ToString()
-                    );
-                TempData["Success"] = "Brand Added successfully";
-            }
-            else
-            {
-                _unitOfWork.Brands.UpdateAsync(obj);
-                await _unitOfWork.Brands.AdminActivityAsync(
-                     userId: user.Id,
-                     activityType: "UpdateBrand",
-                     description: $"Update Brand (Id: {obj.Brand_Id})",
-                     ipAddress: HttpContext.Connection.RemoteIpAddress?.ToString()
-                    );
-                TempData["Success"] = $"'{obj.Brand_Name}' Brand updated successfully";
-            }
+            // Step 2: Validate model state
+            if (!ModelState.IsValid)
+                return View(obj);
 
-            await _unitOfWork.SaveAsync();
-            return RedirectToAction(nameof(Index));
+            try
+            {
+                // Step 3: Perform create or update via service
+                if (obj.Brand_Id == 0)
+                {
+                    await _brandService.CreateBrandAsync(obj, user.Id, HttpContext.Connection.RemoteIpAddress?.ToString());
+                    TempData["Success"] = "Brand Added successfully";
+                }
+                else
+                {
+                    await _brandService.UpdateBrandAsync(obj, user.Id, HttpContext.Connection.RemoteIpAddress?.ToString());
+                    TempData["Success"] = $"'{obj.Brand_Name}' Brand updated successfully";
+                }
+
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                // Log exception if needed; service already logs, but we can add controller-level logging.
+                TempData["Error"] = "An error occurred while saving the brand.";
+                return View(obj);
+            }
         }
 
-        // Deletes a brand by ID
+        /// <summary>
+        /// Deletes a brand by its ID.
+        /// </summary>
+        /// <param name="id">The ID of the brand to delete.</param>
+        /// <returns>Redirects to Index with a success or error message.</returns>
         public async Task<IActionResult> Delete(int id)
         {
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
-            {
                 return NotFound();
+
+            try
+            {
+                await _brandService.DeleteBrandAsync(id, user.Id, HttpContext.Connection.RemoteIpAddress?.ToString());
+                TempData["Success"] = "Brand deleted successfully!";
             }
-            var obj = await _unitOfWork.Brands.GetById(id);
-            if (obj == null)
+            catch (Exception ex)
             {
                 TempData["Error"] = "Oops! Something went wrong. Please try again.";
-                return NotFound();
-            }
-            else
-            {
-                _unitOfWork.Brands.Delete(obj);
-            await _unitOfWork.Brands.AdminActivityAsync(
-                     userId: user.Id,
-                     activityType: "RemoveBrand",
-                     description: $"Remove Brand (Id: {obj.Brand_Id})",
-                     ipAddress: HttpContext.Connection.RemoteIpAddress?.ToString()
-                    );
-            TempData["Success"] = "Brand deleted successfully!";
-            await _unitOfWork.SaveAsync();
             }
 
             return RedirectToAction(nameof(Index));
         }
+
+        #endregion
     }
 }

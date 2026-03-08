@@ -1,65 +1,26 @@
-using LushThreads.Infrastructure.Data;
-using LushThreads.Services;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using System;
-using Stripe;
+using LushThreads.Application.Configurations;
+using LushThreads.Configurations;
+using LushThreads.Domain.Constants;
 using LushThreads.Domain.Entites;
 using LushThreads.Infrastructure.Configurations;
-using LushThreads.Domain.Constants;
+using Microsoft.AspNetCore.Identity;
+using Stripe;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-builder.Services.AddControllersWithViews();
+builder.Services.AddInfrastructureServices(builder.Configuration);
 
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-{
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnectionString"));
-});
-builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("Stripe"));
+builder.Services.AddApplicationServices();
 
-builder.Services.AddAuthentication().AddFacebook(facebookOptions =>
-{
-    facebookOptions.ClientId = builder.Configuration.GetSection("Facebook:ClientId").Value;
-    facebookOptions.ClientSecret = builder.Configuration.GetSection("Facebook:ClientSecret").Value;
-});
-builder.Services.AddAuthentication().AddGoogle(googleOptions =>
-{
-    googleOptions.ClientId = builder.Configuration.GetSection("Google:ClientId").Value;
-    googleOptions.ClientSecret = builder.Configuration.GetSection("Google:ClientSecret").Value;
-});
-builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
-    .AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
-
-builder.Services.Configure<IdentityOptions>(options =>
-{
-    options.Password.RequireDigit = false;
-    options.Password.RequireLowercase = false;
-    options.Password.RequireNonAlphanumeric = false;
-    options.Password.RequireUppercase = false;
-    options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
-    options.User.RequireUniqueEmail = true;
-});
-builder.Services.AddDistributedMemoryCache();
-builder.Services.AddSession();
-builder.Services.AddHttpContextAccessor();
-builder.Services.AddTransient<IEmailSender, EmailSender>();
-builder.Services.AddScoped<IUserAnalyticsService, UserAnalyticsService>();
-builder.Services.AddScoped<IOrderAnalyticsService, OrderAnalyticsService>();
-builder.Services.AddScoped<IProductAnalyticsService, ProductAnalyticsService>();
+builder.Services.AddPresentationServices(builder.Configuration);
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// تكوين middleware
 if (app.Environment.IsDevelopment())
 {
-    // Comment out or remove UseDeveloperExceptionPage to test custom error page
-    // app.UseDeveloperExceptionPage();
-    app.UseExceptionHandler("/Home/Error"); // Handle exceptions
-    app.UseStatusCodePagesWithReExecute("/Home/Error/{0}"); // Handle status codes (e.g., 404)
+    app.UseExceptionHandler("/Home/Error");
+    app.UseStatusCodePagesWithReExecute("/Home/Error/{0}");
 }
 else
 {
@@ -67,9 +28,12 @@ else
     app.UseStatusCodePagesWithReExecute("/Home/Error/{0}");
     app.UseHsts();
 }
+
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+
 StripeConfiguration.ApiKey = builder.Configuration.GetSection("Stripe:SecretKey").Get<string>();
+
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
@@ -79,7 +43,6 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{area=Customer}/{controller=Home}/{action=Home}/{id?}");
 
-// Optional: Catch-all route for unmatched URLs
 app.MapControllerRoute(
     name: "catch-all",
     pattern: "{*url}",
@@ -131,5 +94,6 @@ using (var scope = app.Services.CreateScope())
         Console.WriteLine("Admin user already exists.");
     }
 }
+
 
 app.Run();
