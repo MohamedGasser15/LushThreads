@@ -477,6 +477,53 @@ namespace LushThreads.Application.Services
 
         #endregion
 
+        #region API Methods (JWT compatible)
+
+        public async Task<(bool success, string errorMessage, ApplicationUser user, bool requiresTwoFactor)> ApiValidateLoginAsync(string email, string password)
+        {
+            _logger.LogDebug("API: Validating login for email {Email}", email);
+
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null)
+                return (false, "Invalid email or password.", null, false);
+
+            var passwordValid = await _userManager.CheckPasswordAsync(user, password);
+            if (!passwordValid)
+                return (false, "Invalid email or password.", null, false);
+
+            var requiresTwoFactor = await _userManager.GetTwoFactorEnabledAsync(user);
+            return (true, null, user, requiresTwoFactor);
+        }
+
+        public async Task<(bool success, string errorMessage, ApplicationUser user)> ApiVerifyTwoFactorAsync(string userId, string code, bool rememberMe, HttpContext httpContext)
+        {
+            _logger.LogInformation("API: Verifying 2FA code for user {UserId}", userId);
+
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+                return (false, "User not found.", null);
+
+            var claims = await _userManager.GetClaimsAsync(user);
+            var storedCode = claims.FirstOrDefault(c => c.Type == "2FA_Code")?.Value;
+
+            if (!SecureEquals(code, storedCode))
+                return (false, "Invalid verification code.", null);
+
+            // لا نقوم بتسجيل الدخول عبر SignInManager هنا
+            // فقط ننظف الكليمات ونرجع المستخدم
+            await _userManager.RemoveClaimAsync(user, claims.First(c => c.Type == "2FA_Code"));
+            var rememberMeClaim = claims.FirstOrDefault(c => c.Type == "2FA_RememberMe");
+            if (rememberMeClaim != null)
+                await _userManager.RemoveClaimAsync(user, rememberMeClaim);
+
+            // تتبع الجهاز (اختياري)
+            await TrackUserDeviceAsync(user, httpContext);
+
+            return (true, null, user);
+        }
+
+        #endregion
+
         #region Private Link Generators (will be overridden in controller with UrlHelper)
 
         private string Generate2FALink(ApplicationUser user, string code)

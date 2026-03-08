@@ -1,25 +1,24 @@
-﻿using LushThreads.Application.ServiceInterfaces;
+﻿using AutoMapper;
+using LushThreads.Application.Mapping; // فولدر الـ Profiles
+using LushThreads.Application.ServiceInterfaces;
 using LushThreads.Application.Services;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace LushThreads.Application.Configurations
 {
-    /// <summary>
-    /// Handles dependency injection for the Application layer.
-    /// Registers application services, memory cache, and email sender.
-    /// </summary>
     public static class ServiceContainer
     {
-        /// <summary>
-        /// Registers all Application-level services into the DI container.
-        /// </summary>
-        /// <param name="services">The service collection used for dependency injection.</param>
-        /// <returns>The updated service collection.</returns>
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
             // Add in-memory cache
             services.AddMemoryCache();
+
+            // Register AutoMapper profiles from this assembly
+            services.AddAutoMapper(typeof(BrandProfile).Assembly);
+            services.AddAutoMapper(typeof(CategoryProfile).Assembly);
+            services.AddAutoMapper(typeof(UserProfile).Assembly);
+            services.AddAutoMapper(typeof(AuthProfile).Assembly);
 
             // Register application services (business logic)
             services.AddScoped<IBrandService, BrandService>();
@@ -38,6 +37,7 @@ namespace LushThreads.Application.Configurations
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<ICartService, CartService>();
             services.AddScoped<IHomeService, HomeService>();
+            services.AddScoped<ITokenService, TokenService>();
             return services;
         }
     }
