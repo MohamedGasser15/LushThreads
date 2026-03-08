@@ -1,4 +1,5 @@
-﻿@model IEnumerable<dynamic>
+﻿@using LushThreads.Domain.ViewModels.Home
+@model IEnumerable<ShopProductViewModel>
 
 @{
     var showSuccessMessage = TempData["AddToCartSuccess"] != null && (bool)TempData["AddToCartSuccess"];

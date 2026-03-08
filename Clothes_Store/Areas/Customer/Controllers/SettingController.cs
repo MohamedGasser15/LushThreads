@@ -1,8 +1,11 @@
-﻿using LushThreads.Infrastructure.Data;
+﻿using LushThreads.Application.ServiceInterfaces;
 using LushThreads.Domain.Entites;
+using LushThreads.Infrastructure.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Threading.Tasks;
 
 namespace LushThreads.Areas.Customer.Controllers
 {
@@ -10,272 +13,247 @@ namespace LushThreads.Areas.Customer.Controllers
     [Authorize]
     public class SettingController : BaseController
     {
-        // Constructor initializes database context and user manager
-        public SettingController(ApplicationDbContext db, UserManager<ApplicationUser> userManager)
-            : base(db, userManager)
+        #region Fields
+
+        private readonly ISettingService _settingService;
+        private readonly IAdminActivityService _adminActivityService;
+
+        #endregion
+
+        #region Constructor
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SettingController"/> class.
+        /// </summary>
+        /// <param name="settingService">Service for user settings.</param>
+        /// <param name="adminActivityService">Service for logging activities.</param>
+        /// <param name="userManager">User manager (passed to base).</param>
+        /// <param name="db">Database context (passed to base).</param>
+        public SettingController(
+            ISettingService settingService,
+            IAdminActivityService adminActivityService,
+            UserManager<ApplicationUser> userManager,
+            ApplicationDbContext db) : base(db, userManager)
         {
+            _settingService = settingService;
+            _adminActivityService = adminActivityService;
         }
 
-        // Displays user settings page
+        #endregion
+
+        #region Actions
+
+        /// <summary>
+        /// Displays user settings page.
+        /// </summary>
         public async Task<IActionResult> Index()
         {
             var userId = _userManager.GetUserId(User);
-            var user = await _userManager.FindByIdAsync(userId);
+            var user = await _settingService.GetUserByIdAsync(userId);
             return View(user);
         }
 
-        // Changes user's preferred language and updates session
+        /// <summary>
+        /// Changes user's preferred language and updates session.
+        /// </summary>
         [HttpPost]
         public async Task<IActionResult> ChangeLanguage(string PreferredLanguage)
         {
             var userId = _userManager.GetUserId(User);
-            var user = await _userManager.FindByIdAsync(userId);
+            var result = await _settingService.ChangeLanguageAsync(userId, PreferredLanguage);
 
-            if (user == null)
+            if (result.Succeeded)
             {
-                TempData["ErrorMessage"] = "User not found";
-                return RedirectToAction(nameof(Index));
-            }
-
-            try
-            {
-                user.PreferredLanguage = PreferredLanguage;
-                await _userManager.UpdateAsync(user);
                 HttpContext.Session?.SetString("lang", PreferredLanguage);
-
+                await _adminActivityService.LogActivityAsync(userId, "ChangeLanguage", $"Changed language to {PreferredLanguage}", HttpContext.Connection.RemoteIpAddress?.ToString());
                 TempData["SuccessMessage"] = "Language changed successfully!";
-                return RedirectToAction(nameof(Index));
             }
-            catch (Exception)
+            else
             {
                 TempData["ErrorMessage"] = "Failed to change language";
-                return RedirectToAction(nameof(Index));
             }
+
+            return RedirectToAction(nameof(Index));
         }
 
-        // Changes user's preferred currency
+        /// <summary>
+        /// Changes user's preferred currency.
+        /// </summary>
         [HttpPost]
         public async Task<IActionResult> ChangeCurrency(string Currency)
         {
             var userId = _userManager.GetUserId(User);
-            var user = await _userManager.FindByIdAsync(userId);
+            var result = await _settingService.ChangeCurrencyAsync(userId, Currency);
 
-            if (user == null)
+            if (result.Succeeded)
             {
-                TempData["ErrorMessage"] = "User not found";
-                return RedirectToAction(nameof(Index));
-            }
-
-            try
-            {
-                user.Currency = Currency;
-                await _userManager.UpdateAsync(user);
-
+                await _adminActivityService.LogActivityAsync(userId, "ChangeCurrency", $"Changed currency to {Currency}", HttpContext.Connection.RemoteIpAddress?.ToString());
                 TempData["SuccessMessage"] = "Currency changed successfully!";
-                return RedirectToAction(nameof(Index));
             }
-            catch (Exception)
+            else
             {
                 TempData["ErrorMessage"] = "Failed to change currency";
-                return RedirectToAction(nameof(Index));
             }
+
+            return RedirectToAction(nameof(Index));
         }
 
-        // Updates user's preferred payment method
+        /// <summary>
+        /// Updates user's preferred payment method.
+        /// </summary>
         [HttpPost]
         public async Task<IActionResult> ChangePayment(string PaymentMethod)
         {
             var userId = _userManager.GetUserId(User);
-            var user = await _userManager.FindByIdAsync(userId);
+            var result = await _settingService.ChangePaymentMethodAsync(userId, PaymentMethod);
 
-            if (user == null)
+            if (result.Succeeded)
             {
-                TempData["ErrorMessage"] = "User not found";
-                return RedirectToAction(nameof(Index));
-            }
-
-            try
-            {
-                user.PaymentMehtod = PaymentMethod; // Note: Typo in property name (Mehtod)
-                await _userManager.UpdateAsync(user);
-
+                await _adminActivityService.LogActivityAsync(userId, "ChangePaymentMethod", $"Changed payment method to {PaymentMethod}", HttpContext.Connection.RemoteIpAddress?.ToString());
                 TempData["SuccessMessage"] = "Payment method updated successfully!";
-                return RedirectToAction(nameof(Index));
             }
-            catch (Exception)
+            else
             {
                 TempData["ErrorMessage"] = "Failed to update payment method";
-                return RedirectToAction(nameof(Index));
             }
+
+            return RedirectToAction(nameof(Index));
         }
 
-        // Updates user's preferred shipping carriers
+        /// <summary>
+        /// Updates user's preferred shipping carriers.
+        /// </summary>
         [HttpPost]
         public async Task<IActionResult> ChangePreferredCarriers(string PreferredCarriers)
         {
             var userId = _userManager.GetUserId(User);
-            var user = await _userManager.FindByIdAsync(userId);
+            var result = await _settingService.ChangePreferredCarriersAsync(userId, PreferredCarriers);
 
-            if (user == null)
+            if (result.Succeeded)
             {
-                TempData["ErrorMessage"] = "User not found";
-                return RedirectToAction(nameof(Index));
-            }
-
-            try
-            {
-                user.PreferredCarriers = PreferredCarriers;
-                await _userManager.UpdateAsync(user);
-
+                await _adminActivityService.LogActivityAsync(userId, "ChangePreferredCarriers", $"Changed carriers to {PreferredCarriers}", HttpContext.Connection.RemoteIpAddress?.ToString());
                 TempData["SuccessMessage"] = "Preferred carriers updated successfully!";
-                return RedirectToAction(nameof(Index));
             }
-            catch (Exception)
+            else
             {
                 TempData["ErrorMessage"] = "Failed to update preferred carriers";
-                return RedirectToAction(nameof(Index));
             }
+
+            return RedirectToAction(nameof(Index));
         }
 
-        // Updates user's primary address
+        /// <summary>
+        /// Updates user's primary address.
+        /// </summary>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdatePrimaryAddress(string userId, string addressValue)
         {
-            var user = await _userManager.FindByIdAsync(userId);
-            if (user == null)
-            {
-                TempData["ErrorMessage"] = "User not found";
-                return RedirectToAction(nameof(Index));
-            }
+            var result = await _settingService.UpdatePrimaryAddressAsync(userId, addressValue);
 
-            try
+            if (result.Succeeded)
             {
-                user.StreetAddress = addressValue;
-                user.SelectedAddress = "primary";
-                var result = await _userManager.UpdateAsync(user);
-
-                TempData[result.Succeeded ? "SuccessMessage" : "ErrorMessage"] =
-                    result.Succeeded ? "Primary address updated successfully" : "Failed to update primary address";
+                await _adminActivityService.LogActivityAsync(userId, "UpdatePrimaryAddress", $"Updated primary address", HttpContext.Connection.RemoteIpAddress?.ToString());
+                TempData["SuccessMessage"] = "Primary address updated successfully";
             }
-            catch (Exception ex)
+            else
             {
-                TempData["ErrorMessage"] = $"Error updating address: {ex.Message}";
+                TempData["ErrorMessage"] = "Failed to update primary address";
             }
 
             return RedirectToAction(nameof(Index));
         }
 
-        // Updates user's secondary address
+        /// <summary>
+        /// Updates user's secondary address.
+        /// </summary>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateSecondaryAddress(string userId, string addressValue)
         {
-            var user = await _userManager.FindByIdAsync(userId);
-            if (user == null)
-            {
-                TempData["ErrorMessage"] = "User not found";
-                return RedirectToAction(nameof(Index));
-            }
+            var result = await _settingService.UpdateSecondaryAddressAsync(userId, addressValue);
 
-            try
+            if (result.Succeeded)
             {
-                user.StreetAddress2 = addressValue;
-                var result = await _userManager.UpdateAsync(user);
-
-                TempData[result.Succeeded ? "SuccessMessage" : "ErrorMessage"] =
-                    result.Succeeded ? "Secondary address updated successfully" : "Failed to update secondary address";
+                await _adminActivityService.LogActivityAsync(userId, "UpdateSecondaryAddress", $"Updated secondary address", HttpContext.Connection.RemoteIpAddress?.ToString());
+                TempData["SuccessMessage"] = "Secondary address updated successfully";
             }
-            catch (Exception ex)
+            else
             {
-                TempData["ErrorMessage"] = $"Error updating address: {ex.Message}";
+                TempData["ErrorMessage"] = "Failed to update secondary address";
             }
 
             return RedirectToAction(nameof(Index));
         }
 
-        // Swaps primary and secondary addresses
+        /// <summary>
+        /// Swaps primary and secondary addresses.
+        /// </summary>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> SetPrimaryAddress(string userId)
         {
-            var user = await _userManager.FindByIdAsync(userId);
-            if (user == null)
+            var result = await _settingService.SetPrimaryAddressAsync(userId);
+
+            if (result.Succeeded)
             {
-                TempData["ErrorMessage"] = "User not found";
-                return RedirectToAction(nameof(Index));
+                await _adminActivityService.LogActivityAsync(userId, "SwapAddresses", $"Swapped primary and secondary addresses", HttpContext.Connection.RemoteIpAddress?.ToString());
+                TempData["SuccessMessage"] = "Primary address changed successfully";
             }
-
-            try
+            else
             {
-                if (!string.IsNullOrEmpty(user.StreetAddress2))
-                {
-                    var temp = user.StreetAddress;
-                    user.StreetAddress = user.StreetAddress2;
-                    user.StreetAddress2 = temp;
-                    user.SelectedAddress = "primary";
-
-                    var result = await _userManager.UpdateAsync(user);
-
-                    TempData[result.Succeeded ? "SuccessMessage" : "ErrorMessage"] =
-                        result.Succeeded ? "Primary address changed successfully" : "Failed to update primary address";
-                }
-            }
-            catch (Exception ex)
-            {
-                TempData["ErrorMessage"] = $"Error updating address: {ex.Message}";
+                TempData["ErrorMessage"] = "Failed to change primary address";
             }
 
             return RedirectToAction(nameof(Index));
         }
 
-        // Deletes user's secondary address
+        /// <summary>
+        /// Deletes user's secondary address.
+        /// </summary>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteSecondaryAddress(string userId)
         {
-            var user = await _userManager.FindByIdAsync(userId);
-            if (user == null)
+            var result = await _settingService.DeleteSecondaryAddressAsync(userId);
+
+            if (result.Succeeded)
             {
-                TempData["ErrorMessage"] = "User not found";
-                return RedirectToAction(nameof(Index));
+                await _adminActivityService.LogActivityAsync(userId, "DeleteSecondaryAddress", $"Deleted secondary address", HttpContext.Connection.RemoteIpAddress?.ToString());
+                TempData["SuccessMessage"] = "Secondary address removed";
             }
-
-            try
+            else
             {
-                user.StreetAddress2 = null;
-                if (user.SelectedAddress == "secondary")
-                    user.SelectedAddress = "primary";
-
-                var result = await _userManager.UpdateAsync(user);
-
-                TempData[result.Succeeded ? "SuccessMessage" : "ErrorMessage"] =
-                    result.Succeeded ? "Secondary address removed" : "Failed to remove address";
-            }
-            catch (Exception ex)
-            {
-                TempData["ErrorMessage"] = $"Error removing address: {ex.Message}";
+                TempData["ErrorMessage"] = "Failed to remove address";
             }
 
             return RedirectToAction(nameof(Index));
         }
 
-        // Displays shipping settings page
+        /// <summary>
+        /// Displays shipping settings page.
+        /// </summary>
         public IActionResult Shipping()
         {
             return View();
         }
 
-        // Displays notifications settings page
+        /// <summary>
+        /// Displays notifications settings page.
+        /// </summary>
         public IActionResult Notifications()
         {
             return View();
         }
 
-        // Displays privacy settings page
+        /// <summary>
+        /// Displays privacy settings page.
+        /// </summary>
         public IActionResult Privacy()
         {
             return View();
         }
+
+        #endregion
     }
 }

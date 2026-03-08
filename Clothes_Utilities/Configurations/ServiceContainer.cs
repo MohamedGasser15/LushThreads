@@ -33,7 +33,11 @@ namespace LushThreads.Application.Configurations
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IEmailTemplateService, EmailTemplateService>();
             services.AddScoped<IOrderService, OrderService>();
-
+            services.AddScoped<ISettingService, SettingService>();
+            services.AddScoped<IProfileService, ProfileService>();
+            services.AddScoped<IAccountService, AccountService>();
+            services.AddScoped<ICartService, CartService>();
+            services.AddScoped<IHomeService, HomeService>();
             return services;
         }
     }
