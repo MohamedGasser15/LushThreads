@@ -9,6 +9,7 @@ namespace LushThreads.Infrastructure.Persistence.IRepository
             string? includeProperties = null,
             bool isTracking = false,
             Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
+            int? skip = null,
             int? take = null,
             CancellationToken cancellationToken = default);
 

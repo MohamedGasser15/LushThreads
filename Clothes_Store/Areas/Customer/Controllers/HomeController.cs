@@ -1,116 +1,71 @@
-﻿using System.Diagnostics;
-using System.Linq.Expressions;
-using System.Security.Claims;
-using LushThreads.Infrastructure.Data;
+﻿using LushThreads.Application.ServiceInterfaces;
 using LushThreads.Domain.Entites;
 using LushThreads.Domain.ViewModels.Home;
+using LushThreads.Infrastructure.Persistence.IRepository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using System.Diagnostics;
+using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace LushThreads.Areas.Customer.Controllers
 {
     [Area("Customer")]
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
-        private readonly ApplicationDbContext _db;
+        #region Fields
 
-        public HomeController(ILogger<HomeController> logger, ApplicationDbContext db)
+        private readonly ILogger<HomeController> _logger;
+        private readonly IHomeService _homeService;
+        private readonly IRepository<CartItem> _cartItemRepository;
+
+        #endregion
+
+        #region Constructor
+
+        public HomeController(
+            ILogger<HomeController> logger,
+            IHomeService homeService,
+            IRepository<CartItem> cartItemRepository)
         {
             _logger = logger;
-            _db = db;
+            _homeService = homeService;
+            _cartItemRepository = cartItemRepository;
         }
 
-        // Displays home page with featured and new arrival products
+        #endregion
+
+        #region Home Page
+
+        /// <summary>
+        /// Displays home page with featured and new arrival products.
+        /// </summary>
         public async Task<IActionResult> Home(int? categoryId = null)
         {
             ViewBag.CartCount = GetCartCount();
 
-            var productsQuery = _db.Products
-                .Include(p => p.Brand)
-                .Include(p => p.Category)
-                .OrderBy(p => p.Product_Id);
+            var viewModel = await _homeService.GetHomeViewModelAsync(categoryId);
 
-            if (categoryId.HasValue && categoryId > 0)
-            {
-                var subCategoryIds = await _db.Categories
-                    .Where(c => c.ParentCategoryId == categoryId.Value)
-                    .Select(c => c.Category_Id)
-                    .ToListAsync();
-
-                productsQuery = (IOrderedQueryable<Product>)productsQuery
-                    .Where(p => subCategoryIds.Any() ? subCategoryIds.Contains(p.Category_Id) : p.Category_Id == categoryId.Value);
-            }
-            else
-            {
-                productsQuery = (IOrderedQueryable<Product>)productsQuery
-                    .Where(p => p.IsFeatured);
-            }
-
-            var products = await productsQuery
-                .Take(8)
-                .Select(p => new HomeViewModel
-                {
-                    Product_Id = p.Product_Id,
-                    Product_Name = p.Product_Name,
-                    imgUrl = p.imgUrl,
-                    BrandName = p.Brand != null ? p.Brand.Brand_Name : "Unknown",
-                    IsFeatured = p.IsFeatured,
-                    DateAdded = p.DateAdded,
-                    Product_Rating = p.Product_Rating,
-                    Product_Price = p.Product_Price,
-                    AvailableSizes = p.Stocks
-                        .Where(s => s.Quantity > 0)
-                        .Select(s => s.Size)
-                        .Distinct()
-                        .OrderBy(s => s)
-                        .ToList()
-                })
-                .ToListAsync();
-
-            var newArrivals = await _db.Products
-                .Include(p => p.Brand)
-                .Include(p => p.Category)
-                .OrderByDescending(p => p.Product_Id)
-                .Take(8)
-                .Select(p => new HomeViewModel
-                {
-                    Product_Id = p.Product_Id,
-                    Product_Name = p.Product_Name,
-                    imgUrl = p.imgUrl,
-                    BrandName = p.Brand != null ? p.Brand.Brand_Name : "Unknown",
-                    IsFeatured = p.IsFeatured,
-                    DateAdded = p.DateAdded,
-                    Product_Rating = p.Product_Rating,
-                    Product_Price = p.Product_Price,
-                    AvailableSizes = p.Stocks
-                        .Where(s => s.Quantity > 0)
-                        .Select(s => s.Size)
-                        .Distinct()
-                        .OrderBy(s => s)
-                        .ToList()
-                })
-                .ToListAsync();
-
+            // Prepare categories and brands (static data)
             var specificCategories = new[] { "Bags", "Jackets", "Hats", "Shoes", "Pantalons", "Dresses", "Shorts", "Hoodie" };
-            var categories = await _db.Categories
-                .Where(c => specificCategories.Contains(c.Category_Name) && c.ParentCategoryId != null)
+            var categories = specificCategories
                 .Select(c => new
                 {
-                    Name = c.Category_Name,
-                    ImgUrl = $"/img/categories/{c.Category_Name.ToLower()}.jpg",
-                    Link = Url.Action("ShopByChildCategory", "Home", new { area = "Customer", category = c.Category_Name.ToLower() })
+                    Name = c,
+                    ImgUrl = $"/img/categories/{c.ToLower()}.jpg",
+                    Link = Url.Action("ShopByChildCategory", "Home", new { area = "Customer", category = c.ToLower() })
                 })
-                .ToListAsync();
+                .ToList();
 
             var specificBrands = new[] { "Nike", "Adidas", "Zara", "H&M", "Puma", "Levi's", "Lacoste", "Local Brands" };
             var brands = specificBrands
                 .Select(b => new
                 {
                     Name = b,
-                    ImgUrl = $"/img/brands/{b.ToLower().Replace("'", "").Replace("&", "")}.jpg",
-                    Link = Url.Action("ShopByBrand", "Home", new { area = "Customer", brand = b.ToLower().Replace("'", "").Replace("&", "") })
+                    ImgUrl = $"/img/brands/{b.ToLower().Replace("'", "").Replace("&", "").Replace(" ", "")}.jpg",
+                    Link = Url.Action("ShopByBrand", "Home", new { area = "Customer", brand = b.ToLower().Replace("'", "").Replace("&", "").Replace(" ", "") })
                 })
                 .ToList();
 
@@ -118,19 +73,22 @@ namespace LushThreads.Areas.Customer.Controllers
             ViewBag.Categories = categories;
             ViewBag.Brands = brands;
 
-            var viewModel = new HomeViewModel
-            {
-                FeaturedProducts = products,
-                NewArrivals = newArrivals
-            };
-
             if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
-                return Json(new { products, currentCategoryId = categoryId });
+            {
+                var jsonResult = await _homeService.GetHomeProductsJsonAsync(categoryId);
+                return Json(jsonResult);
+            }
 
             return View(viewModel);
         }
 
-        // Displays paginated shop page with optional category filter
+        #endregion
+
+        #region Shop
+
+        /// <summary>
+        /// Displays paginated shop page with optional category filter.
+        /// </summary>
         public async Task<IActionResult> Shop(int? categoryId = null, int page = 1, int pageSize = 8)
         {
             ViewBag.CartCount = GetCartCount();
@@ -138,47 +96,7 @@ namespace LushThreads.Areas.Customer.Controllers
             page = Math.Max(1, page);
             pageSize = Math.Max(1, Math.Min(pageSize, 100));
 
-            var productsQuery = _db.Products
-                .Include(p => p.Brand)
-                .Include(p => p.Category)
-                .OrderBy(p => p.Product_Id);
-
-            if (categoryId.HasValue && categoryId > 0)
-            {
-                var subCategoryIds = await _db.Categories
-                    .Where(c => c.ParentCategoryId == categoryId.Value)
-                    .Select(c => c.Category_Id)
-                    .ToListAsync();
-
-                productsQuery = (IOrderedQueryable<Product>)productsQuery
-                    .Where(p => subCategoryIds.Any() ? subCategoryIds.Contains(p.Category_Id) : p.Category_Id == categoryId.Value);
-            }
-
-            var totalProducts = await productsQuery.CountAsync();
-            var totalPages = (int)Math.Ceiling((double)totalProducts / pageSize);
-            page = Math.Min(page, Math.Max(1, totalPages));
-
-            var products = await productsQuery
-                .Skip((page - 1) * pageSize)
-                .Take(pageSize)
-                .Select(p => new
-                {
-                    ProductId = p.Product_Id,
-                    ProductName = p.Product_Name,
-                    ImgUrl = p.imgUrl,
-                    BrandName = p.Brand.Brand_Name,
-                    CategoryName = p.Category.Category_Name,
-                    IsFeatured = p.IsFeatured,
-                    ProductRating = p.Product_Rating,
-                    ProductPrice = p.Product_Price,
-                    AvailableSizes = p.Stocks
-                        .Where(s => s.Quantity > 0)
-                        .Select(s => s.Size)
-                        .Distinct()
-                        .OrderBy(s => s)
-                        .ToList()
-                })
-                .ToListAsync();
+            var (products, totalPages, totalProducts) = await _homeService.GetShopProductsAsync(categoryId, page, pageSize);
 
             ViewBag.CurrentPage = page;
             ViewBag.TotalPages = totalPages;
@@ -187,256 +105,153 @@ namespace LushThreads.Areas.Customer.Controllers
             ViewBag.CurrentCategoryId = categoryId;
 
             if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
                 return Json(new { products, currentPage = page, totalPages, pageSize, currentCategoryId = categoryId });
+            }
 
             return View(products);
         }
 
-        // Displays detailed view of a single product
+        #endregion
+
+        #region Product Details
+
+        /// <summary>
+        /// Displays detailed view of a single product.
+        /// </summary>
         public async Task<IActionResult> Details(int id)
         {
             ViewBag.CartCount = GetCartCount();
 
-            var product = await _db.Products
-                .Include(p => p.Category)
-                .Include(p => p.Brand)
-                .Include(p => p.Stocks)
-                .FirstOrDefaultAsync(p => p.Product_Id == id);
+            var product = await _homeService.GetProductDetailsAsync(id);
+            if (product == null)
+                return NotFound();
 
-            return product == null ? NotFound() : View(product);
+            return View(product);
         }
 
+        /// <summary>
+        /// Fetches product details by ID for JSON response.
+        /// </summary>
         [HttpGet]
-        // Fetches product details by ID for JSON response
-        public IActionResult GetProductDetails(int productId)
+        public async Task<IActionResult> GetProductDetails(int productId)
         {
             ViewBag.CartCount = GetCartCount();
 
-            var product = _db.Products
-                .Include(p => p.Brand)
-                .Include(p => p.Category)
-                .Include(p => p.Stocks)
-                .Where(p => p.Product_Id == productId)
-                .Select(p => new
-                {
-                    productId = p.Product_Id,
-                    productName = p.Product_Name,
-                    imgUrl = p.imgUrl,
-                    productRating = p.Product_Rating,
-                    productPrice = p.Product_Price,
-                    description = p.Product_Description,
-                    color = p.Product_Color,
-                    brandName = p.Brand.Brand_Name,
-                    categoryName = p.Category.Category_Name,
-                    availableSizes = p.Stocks
-                        .Where(s => s.Quantity > 0)
-                        .Select(s => s.Size)
-                        .Distinct()
-                        .OrderBy(s => s)
-                        .ToList()
-                })
-                .FirstOrDefault();
+            var product = await _homeService.GetProductDetailsJsonAsync(productId);
+            if (product == null)
+                return Json(new { success = false, message = "Product not found" });
 
-            return product == null
-                ? Json(new { success = false, message = "Product not found" })
-                : Json(new { success = true, product });
+            return Json(new { success = true, product });
         }
 
-        // Displays products by main category
-        public IActionResult ShopByCategory(string category)
-        {
-            ViewBag.CartCount = GetCartCount();
-
-            if (string.IsNullOrEmpty(category))
-                return NotFound();
-
-            // Map URL-friendly category to database category name
-            var categoryName = category switch
-            {
-                "mens-fashion" => "Men's Fashion",
-                "womens-fashion" => "Women's Fashion",
-                "kids-fashion" => "Kids Fashion",
-                "footwear" => "Footwear",
-                "accessories" => "Accessories",
-                "sportswear" => "Sportswear",
-                "luxury-collection" => "Luxury Collection",
-                "summer-essentials" => "Seasonal Collections",
-                _ => null
-            };
-
-            if (categoryName == null)
-                return NotFound();
-
-            var parentCategory = _db.Categories.FirstOrDefault(c => c.Category_Name == categoryName && c.ParentCategoryId == null);
-            if (parentCategory == null)
-                return NotFound();
-
-            var categoryIds = _db.Categories
-                .Where(c => c.ParentCategoryId == parentCategory.Category_Id || c.Category_Id == parentCategory.Category_Id)
-                .Select(c => c.Category_Id)
-                .ToList();
-
-            var products = _db.Products
-                .Include(p => p.Brand)
-                .Include(p => p.Category)
-                .Include(p => p.Stocks)
-                .Where(p => categoryIds.Contains(p.Category_Id))
-                .ToList();
-
-            ViewBag.Category = categoryName;
-            return View(products ?? new List<Product>());
-        }
-
-        // Displays products by child category
-        public IActionResult ShopByChildCategory(string category)
-        {
-            ViewBag.CartCount = GetCartCount();
-
-            if (string.IsNullOrEmpty(category))
-                return NotFound();
-
-            var categoryName = category.ToLower();
-
-            if (categoryName == "shorts" || categoryName == "hoodie")
-            {
-                var parentCategoryIds = _db.Categories
-                    .Where(c => c.Category_Name == "Men's Fashion" || c.Category_Name == "Women's Fashion" || c.Category_Name == "Unisex")
-                    .Select(c => c.Category_Id)
-                    .ToList();
-
-                var childCategoryIds = _db.Categories
-                    .Where(c => c.Category_Name.ToLower() == categoryName && c.ParentCategoryId.HasValue && parentCategoryIds.Contains(c.ParentCategoryId.Value))
-                    .Select(c => c.Category_Id)
-                    .ToList();
-
-                if (!childCategoryIds.Any())
-                    return NotFound();
-
-                var product = _db.Products
-                    .Include(p => p.Brand)
-                    .Include(p => p.Category)
-                    .Include(p => p.Stocks)
-                    .Where(p => childCategoryIds.Contains(p.Category_Id))
-                    .ToList();
-
-                ViewBag.Category = categoryName == "shorts" ? "Shorts" : "Hoodie";
-                return View("ShopByCategory", product ?? new List<Product>());
-            }
-
-            var childCategory = _db.Categories
-                .FirstOrDefault(c => c.Category_Name.ToLower() == categoryName && c.ParentCategoryId != null);
-
-            if (childCategory == null)
-                return NotFound();
-
-            var products = _db.Products
-                .Include(p => p.Brand)
-                .Include(p => p.Category)
-                .Include(p => p.Stocks)
-                .Where(p => p.Category_Id == childCategory.Category_Id)
-                .ToList();
-
-            ViewBag.Category = childCategory.Category_Name;
-            return View("ShopByCategory", products ?? new List<Product>());
-        }
-
-        // Displays products by brand
-        public IActionResult ShopByBrand(string brand)
-        {
-            ViewBag.CartCount = GetCartCount();
-
-            if (string.IsNullOrEmpty(brand))
-                return NotFound();
-
-            var brandLower = brand.ToLower();
-            bool isLocalBrands = brandLower == "local";
-
-            var brandName = isLocalBrands ? null : brandLower switch
-            {
-                "nike" => "Nike",
-                "adidas" => "Adidas",
-                "puma" => "Puma",
-                "zara" => "Zara",
-                "hm" => "H&M",
-                "levis" => "Levi's",
-                "nightbird" => "NightBird",
-                _ => null
-            };
-
-            if (!isLocalBrands && _db.Brands.FirstOrDefault(b => b.Brand_Name == brandName) == null)
-                return NotFound();
-
-            var products = _db.Products
-                .Include(p => p.Brand)
-                .Include(p => p.Category)
-                .Include(p => p.Stocks)
-                .Where(p => isLocalBrands
-                    ? p.Brand != null && !new[] { "Nike", "Adidas", "Puma", "Zara", "H&M", "Levi's", "NightBird" }.Contains(p.Brand.Brand_Name)
-                    : p.Brand.Brand_Name == brandName)
-                .ToList();
-
-            ViewBag.Brand = isLocalBrands ? "Local Brands" : brandName;
-            return View("ShopByBrand", products ?? new List<Product>());
-        }
-
+        /// <summary>
+        /// Fetches available sizes for a product.
+        /// </summary>
         [HttpGet]
-        // Fetches available sizes for a product
         public async Task<IActionResult> GetProductSizes(int productId)
         {
             ViewBag.CartCount = GetCartCount();
 
-            var product = await _db.Products
-                .Include(p => p.Stocks)
-                .FirstOrDefaultAsync(p => p.Product_Id == productId);
-
-            if (product == null)
-                return Json(new { success = false, message = "Product not found" });
-
-            var sizes = product.Stocks?
-                .Where(s => s.Quantity > 0)
-                .Select(s => s.Size)
-                .ToList() ?? new List<string>();
-
+            var sizes = await _homeService.GetProductSizesAsync(productId);
             return Json(new { success = true, sizes });
         }
 
-        // Handles product search by name or description
-        public IActionResult Search(string searchTerm)
+        #endregion
+
+        #region Category & Brand Filtering
+
+        /// <summary>
+        /// Displays products by main category.
+        /// </summary>
+        public async Task<IActionResult> ShopByCategory(string category)
+        {
+            ViewBag.CartCount = GetCartCount();
+
+            var (categoryName, products) = await _homeService.GetProductsByCategoryAsync(category);
+            if (categoryName == null)
+                return NotFound();
+
+            ViewBag.Category = categoryName;
+            return View(products ?? new System.Collections.Generic.List<Product>());
+        }
+
+        /// <summary>
+        /// Displays products by child category.
+        /// </summary>
+        public async Task<IActionResult> ShopByChildCategory(string category)
+        {
+            ViewBag.CartCount = GetCartCount();
+
+            var (categoryName, products) = await _homeService.GetProductsByChildCategoryAsync(category);
+            if (categoryName == null)
+                return NotFound();
+
+            ViewBag.Category = categoryName;
+            return View("ShopByCategory", products ?? new System.Collections.Generic.List<Product>());
+        }
+
+        /// <summary>
+        /// Displays products by brand.
+        /// </summary>
+        public async Task<IActionResult> ShopByBrand(string brand)
+        {
+            ViewBag.CartCount = GetCartCount();
+
+            var (brandName, products) = await _homeService.GetProductsByBrandAsync(brand);
+            if (brandName == null)
+                return NotFound();
+
+            ViewBag.Brand = brandName;
+            return View("ShopByBrand", products ?? new System.Collections.Generic.List<Product>());
+        }
+
+        #endregion
+
+        #region Search
+
+        /// <summary>
+        /// Handles product search by name or description.
+        /// </summary>
+        public async Task<IActionResult> Search(string searchTerm)
         {
             ViewBag.CartCount = GetCartCount();
 
             var viewModel = new SearchViewModel { SearchTerm = searchTerm };
-
-            if (!string.IsNullOrEmpty(searchTerm))
-            {
-                viewModel.Results = _db.Products
-                    .Include(p => p.Brand)
-                    .Where(p => p.Product_Name.Contains(searchTerm) || p.Product_Description.Contains(searchTerm))
-                    .ToList();
-            }
-            else
-            {
-                viewModel.Results = new List<Product>();
-            }
+            viewModel.Results = await _homeService.SearchProductsAsync(searchTerm);
 
             return View(viewModel);
         }
 
-        // Displays the About page
+        #endregion
+
+        #region Static Pages
+
+        /// <summary>
+        /// Displays the About page.
+        /// </summary>
         public IActionResult About()
         {
             ViewBag.CartCount = GetCartCount();
             return View();
         }
 
-        // Displays the Contact page
+        /// <summary>
+        /// Displays the Contact page.
+        /// </summary>
         public IActionResult Contact()
         {
             ViewBag.CartCount = GetCartCount();
             return View();
         }
 
-        // Handles error display
+        #endregion
+
+        #region Error
+
+        /// <summary>
+        /// Handles error display.
+        /// </summary>
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error(int? statusCode = null)
         {
@@ -454,15 +269,26 @@ namespace LushThreads.Areas.Customer.Controllers
             return View(errorViewModel);
         }
 
-        // Retrieves cart item count for authenticated users
+        #endregion
+
+        #region Private Helper
+
+        /// <summary>
+        /// Retrieves cart item count for authenticated users.
+        /// </summary>
         private int GetCartCount()
         {
             if (!User.Identity.IsAuthenticated)
                 return 0;
 
-            var claimsIdentity = (ClaimsIdentity)User.Identity;
-            var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
-            return _db.CartItems.Count(c => c.UserId == userId);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null)
+                return 0;
+
+            // Use repository directly (or inject service if needed)
+            return _cartItemRepository.GetAllAsync(filter: c => c.UserId == userId).Result.Count;
         }
+
+        #endregion
     }
 }

@@ -56,6 +56,7 @@ namespace LushThreads.Infrastructure.Persistence.Repository
             string? includeProperties = null,
             bool isTracking = false,
             Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
+            int? skip = null,
             int? take = null,
             CancellationToken cancellationToken = default)
         {
@@ -90,6 +91,12 @@ namespace LushThreads.Infrastructure.Persistence.Repository
                     _logger.LogDebug("Ordering applied in {OperationName}", operationName);
                 }
 
+                if (skip.HasValue && skip.Value > 0)
+                {
+                    query = query.Skip(skip.Value);
+                    _logger.LogDebug("Skip applied: {SkipValue}", skip.Value);
+                }
+
                 if (take.HasValue && take.Value > 0)
                 {
                     query = query.Take(take.Value);
@@ -116,7 +123,6 @@ namespace LushThreads.Infrastructure.Persistence.Repository
                 throw;
             }
         }
-
         /// <summary>
         /// Retrieves a single entity based on filter criteria
         /// </summary>
