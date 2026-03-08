@@ -50,6 +50,7 @@ builder.Services.AddAuthorization(options =>
 // ==============================
 // 3. MVC (Controllers with Views) and API Services
 // ==============================
+builder.Services.AddControllersWithViews();  // Includes both API and MVC
 builder.Services.AddEndpointsApiExplorer();
 
 // ==============================

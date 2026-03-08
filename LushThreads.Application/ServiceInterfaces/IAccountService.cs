@@ -103,5 +103,10 @@ namespace LushThreads.Application.ServiceInterfaces
         Task LogoutAsync();
 
         #endregion
+
+        #region API Methods (JWT compatible)
+        Task<(bool success, string errorMessage, ApplicationUser user, bool requiresTwoFactor)> ApiValidateLoginAsync(string email, string password);
+        Task<(bool success, string errorMessage, ApplicationUser user)> ApiVerifyTwoFactorAsync(string userId, string code, bool rememberMe, HttpContext httpContext);
+        #endregion
     }
 }
