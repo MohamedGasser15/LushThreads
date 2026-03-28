@@ -1,0 +1,427 @@
+﻿@using LushThreads.Domain.Entites
+@model Product
+
+@{
+    var showSuccessMessage = TempData["AddToCartSuccess"] != null && (bool)TempData["AddToCartSuccess"];
+    var showErrorMessage = TempData["AddToCartError"] != null && (bool)TempData["AddToCartError"];
+    var errorMessage = TempData["ErrorMessage"]?.ToString() ?? "An error occurred while adding to cart";
+
+    // Get available sizes from stock data
+    var availableSizes = Model.Stocks?
+        .Where(s => s.Quantity > 0)
+        .Select(s => s.Size)
+        .Distinct()
+        .OrderBy(s => s);
+}
+
+<title>@Model.Product_Name</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css">
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.0.3/dist/tailwind.min.css" rel="stylesheet">
+
+<style>
+    /* Your existing styles remain the same */
+    .btn-custom {
+        background-color: #088178;
+    }
+
+    .custom-color {
+        color: #088178;
+    }
+
+    .btn-custom:hover {
+        background-color: #0a9a8e;
+    }
+
+    .size-select:focus {
+        border-color: #088178;
+        box-shadow: 0 0 0 1px #088178;
+    }
+
+    /* Notification styles */
+    .notification-container {
+        position: fixed;
+        top: 1.5rem;
+        right: 1.5rem;
+        z-index: 1000;
+    }
+
+    .notification {
+        padding: 1rem 1.5rem;
+        color: white;
+        border-radius: 0.75rem;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        display: flex;
+        align-items: center;
+        transform: translateX(150%);
+        transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        margin-bottom: 1rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+        .notification.success {
+            background-color: #088178;
+        }
+
+        .notification.error {
+            background-color: #ef4444;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.hide {
+            transform: translateX(150%);
+            opacity: 0;
+        }
+
+    .notification-icon {
+        margin-right: 0.75rem;
+        font-size: 1.25rem;
+    }
+
+    .notification-close {
+        margin-left: 1rem;
+        cursor: pointer;
+        opacity: 0.7;
+        transition: opacity 0.2s;
+    }
+
+        .notification-close:hover {
+            opacity: 1;
+        }
+
+    .notification-progress {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        height: 4px;
+        width: 100%;
+        background: rgba(255, 255, 255, 0.3);
+    }
+
+    .notification-progress-bar {
+        height: 100%;
+        width: 100%;
+        background: white;
+        animation: progress 3s linear forwards;
+        transform-origin: left;
+    }
+
+    @@keyframes progress {
+        0% {
+            transform: scaleX(0);
+        }
+
+        100% {
+            transform: scaleX(1);
+        }
+    }
+    /* Bounce animation for cart button */
+    @@keyframes bounce {
+        0%, 20%, 50%, 80%, 100% {
+            transform: translateY(0);
+        }
+
+        40% {
+            transform: translateY(-10px);
+        }
+
+        60% {
+            transform: translateY(-5px);
+        }
+    }
+
+    .bounce-effect {
+        animation: bounce 1s;
+    }
+
+    .size-option {
+        border: 1px solid #cce7d0;
+        background-color: #e8f6ea;
+        color: #088178;
+        border-radius: 0.5rem;
+        padding: 0.5rem 1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+        .size-option:hover {
+            background-color: #088178;
+            color: white;
+            border-color: #088178;
+        }
+
+        .size-option:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(8, 129, 120, 0.3);
+        }
+
+        /* Selected state */
+        .size-option.active {
+            background-color: #088178;
+            color: white;
+            border-color: #088178;
+        }
+
+        /* Out of stock state */
+        .size-option.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            text-decoration: line-through;
+            position: relative;
+        }
+
+            .size-option.disabled::after {
+                content: "×";
+                position: absolute;
+                top: -5px;
+                right: -5px;
+                background: #ef4444;
+                color: white;
+                border-radius: 50%;
+                width: 18px;
+                height: 18px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 12px;
+            }
+</style>
+
+<!-- Notification Container -->
+<div class="notification-container">
+    <!-- Notifications will be added here dynamically -->
+</div>
+
+<!-- Product Details -->
+<section id="product-details" class="section-p1 py-16 px-8">
+    <div class="flex flex-col lg:flex-row gap-16">
+        <!-- Product Image -->
+        <div class="w-full lg:w-1/3 lg:ml-6">
+            <img src="@Model.imgUrl" alt="@Model.Product_Name" class="w-full h-auto object-cover rounded-lg shadow-lg">
+        </div>
+
+        <!-- Product Information -->
+        <div class="w-full lg:w-1/2">
+            <h6 class="text-gray-600 mb-2">Home / <span class="custom-color">@Model.Category.Category_Name</span></h6>
+            <h4 class="text-3xl font-semibold text-gray-900 mb-4 font-bold">@Model.Product_Name</h4>
+            <h2 class="text-2xl custom-color mb-4 font-medium">@Model.Product_Price.ToString("C")</h2>
+            <p class="text-lg text-gray-700 mb-6"><strong>Brand:</strong> @Model.Brand.Brand_Name</p>
+
+            <h4 class="text-xl font-semibold mb-2">Product Details</h4>
+            <p class="text-gray-700 mb-6">@Model.Product_Description</p>
+
+            <!-- Size Selection -->
+            <div class="mb-6">
+                <h4 class="text-lg font-medium text-gray-900 mb-3"> Available Size</h4>
+                <div class="flex flex-wrap gap-2">
+                    @if (availableSizes.Any())
+                    {
+                        foreach (var size in availableSizes)
+                        {
+                            <button type="button" class="size-option" value="@size">@size</button>
+                        }
+                    }
+                    else
+                    {
+                        <p class="text-red-500">This product is currently out of stock</p>
+                    }
+                </div>
+                <input type="hidden" id="selectedSize" name="size" value="">
+            </div>
+
+            <!-- Add to Cart Form -->
+            <form id="addToCartForm" class="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="productId" value="@Model.Product_Id">
+
+                <!-- Quantity -->
+                <div class="mb-4 sm:mb-0">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Quantity</label>
+                    <input type="number" name="quantity" value="1" min="1" max="@(availableSizes.Any() ? Model.Stocks.First(s => s.Size == availableSizes.First()).Quantity : 0)"
+                           class="quantity-input border border-gray-300 rounded-md p-2 w-20 text-center focus:border-custom-color focus:ring-1 focus:ring-custom-color">
+                </div>
+
+                <!-- Add to Cart Button -->
+                <button type="submit" id="addToCartBtn" class="btn-custom text-white font-medium py-2 px-6 rounded-md hover:shadow-md transition duration-300"
+                @(availableSizes.Any() ? "" : "disabled")>
+                    <i class="fas fa-shopping-cart mr-2"></i> Add to Cart
+                </button>
+            </form>
+        </div>
+    </div>
+</section>
+
+<script>
+    // Size selection functionality
+    document.querySelectorAll('.size-option').forEach(button => {
+        button.addEventListener('click', function() {
+            // Remove active class from all buttons
+            document.querySelectorAll('.size-option').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // Add active class to clicked button
+            this.classList.add('active');
+
+            // Set the hidden input value
+            document.getElementById('selectedSize').value = this.value;
+
+            // Update max quantity based on selected size
+            updateMaxQuantity(this.value);
+        });
+    });
+
+    // Function to update max quantity based on selected size
+    function updateMaxQuantity(selectedSize) {
+        // This would need to be implemented based on your stock data
+        // You might need to pass stock data to JavaScript or make an API call
+        // For now, we'll just set a reasonable max
+        const quantityInput = document.querySelector('.quantity-input');
+        quantityInput.max = 10; // Default max
+
+        // If you have the stock data available in JavaScript:
+    @if (Model.Stocks != null)
+    {
+        foreach (var stock in Model.Stocks)
+        {
+            <text>
+                                if (selectedSize === '@stock.Size') {
+                                    quantityInput.max = @stock.Quantity;
+                                    if (quantityInput.value > @stock.Quantity) {
+                                        quantityInput.value = @stock.Quantity;
+                                    }
+                                }
+            </text>
+        }
+    }
+    }
+
+    // AJAX form submission
+    document.getElementById('addToCartForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const form = this;
+        const formData = new FormData(form);
+        const button = form.querySelector('button[type="submit"]');
+        const originalButtonText = button.innerHTML;
+        const selectedSize = document.getElementById('selectedSize').value;
+
+        if (!selectedSize) {
+            showNotification(false, 'Please select a size');
+            return;
+        }
+
+        // Add selected size to form data
+        formData.append('size', selectedSize);
+
+        // Add loading state to button
+        button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Adding...';
+        button.disabled = true;
+
+        fetch('@Url.Action("AddToCart", "Cart")', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+            }
+        })
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            }
+            throw new Error('Network response was not ok.');
+        })
+        .then(data => {
+            if (data.success) {
+                showNotification(true, data.message);
+                button.classList.add('bounce-effect');
+
+                // Update cart count if needed
+                if (data.cartCount) {
+                    updateCartCount(data.cartCount);
+                }
+            } else {
+                showNotification(false, data.message);
+            }
+        })
+        .catch(error => {
+            showNotification(false, 'An error occurred while adding to cart');
+        })
+        .finally(() => {
+            // Reset button state
+            button.innerHTML = originalButtonText;
+            button.disabled = false;
+        });
+    });
+
+    function showNotification(isSuccess, message) {
+        const notificationContainer = document.querySelector('.notification-container');
+        const notificationId = 'notification-' + Date.now();
+        const notificationClass = isSuccess ? 'success' : 'error';
+        const iconClass = isSuccess ? 'fa-check-circle' : 'fa-exclamation-circle';
+
+        const notificationHTML = `
+            <div id="${notificationId}" class="notification ${notificationClass}">
+                <i class="fas ${iconClass} notification-icon"></i>
+                <span>${message}</span>
+                <span class="notification-close" onclick="hideNotification('${notificationId}')">
+                    <i class="fas fa-times"></i>
+                </span>
+                <div class="notification-progress">
+                    <div class="notification-progress-bar"></div>
+                </div>
+            </div>
+        `;
+
+        notificationContainer.insertAdjacentHTML('beforeend', notificationHTML);
+        const notification = document.getElementById(notificationId);
+
+        // Show notification
+        setTimeout(() => {
+            notification.classList.add('show');
+        }, 100);
+
+        // Auto-hide after 3 seconds
+        const autoHide = setTimeout(() => {
+            hideNotification(notificationId);
+        }, 3000);
+
+        // Pause on hover
+        notification.addEventListener('mouseenter', () => {
+            clearTimeout(autoHide);
+            notification.querySelector('.notification-progress-bar').style.animationPlayState = 'paused';
+        });
+
+        notification.addEventListener('mouseleave', () => {
+            const progressBar = notification.querySelector('.notification-progress-bar');
+            const remainingWidth = 1 - (progressBar.offsetWidth / progressBar.parentElement.offsetWidth);
+            const remainingTime = remainingWidth * 3000;
+
+            progressBar.style.animationPlayState = 'running';
+            setTimeout(() => {
+                hideNotification(notificationId);
+            }, remainingTime);
+        });
+    }
+
+    function updateCartCount(count) {
+        // Implement this if you have a cart counter in your UI
+        // Example: document.querySelector('.cart-count').textContent = count;
+    }
+
+    function hideNotification(id) {
+        const notification = document.getElementById(id);
+        if (notification) {
+            notification.classList.remove('show');
+            notification.classList.add('hide');
+
+            setTimeout(() => {
+                notification.remove();
+            }, 500);
+        }
+    }
+</script>

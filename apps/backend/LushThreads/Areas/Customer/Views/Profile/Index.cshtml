@@ -1,0 +1,326 @@
+﻿@using LushThreads.Domain.ViewModels.Profile
+@model ProfileViewModel
+@{
+    Layout = "~/Areas/Customer/Views/Shared/_ProfileLayout.cshtml";
+}
+
+<div class="mb-6 lg:mb-8">
+    <h2 class="text-xl lg:text-2xl font-bold text-gray-800">Personal Information</h2>
+    <p class="text-gray-500 text-sm lg:text-base">View and manage your personal details</p>
+</div>
+
+<div class="space-y-4 lg:space-y-6">
+    <!-- Name Group -->
+    <div class="bg-white p-4 lg:p-6 rounded-xl shadow-sm border border-gray-100">
+        <h3 class="text-lg font-semibold mb-4 flex items-center">
+            <i class="fas fa-user text-primary mr-2"></i>
+            Name
+        </h3>
+        <div class="grid grid-cols-1">
+            <!-- Full Name -->
+            <div class="flex flex-col">
+                <label class="block text-gray-600 text-sm lg:text-base mb-1">Full Name</label>
+                <div class="p-2 lg:p-3 border rounded-lg bg-gray-50 cursor-pointer hover:bg-gray-100 transition-colors"
+                     onclick="showFieldModal('nameModal')">
+                    @if (!string.IsNullOrEmpty(Model.Name))
+                    {
+                        <span class="text-gray-800">@Model.Name</span>
+                    }
+                    else
+                    {
+                        <span class="text-gray-400 italic">Press to add name</span>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contact Group -->
+    <div class="bg-white p-4 lg:p-6 rounded-xl shadow-sm border border-gray-100">
+        <h3 class="text-lg font-semibold mb-4 flex items-center">
+            <i class="fas fa-address-book text-primary mr-2"></i>
+            Contact Information
+        </h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!-- Email -->
+            <div class="flex flex-col">
+                <label class="block text-gray-600 text-sm lg:text-base mb-1">Email</label>
+                <div class="p-2 lg:p-3 border rounded-lg bg-gray-50 cursor-pointer hover:bg-gray-100 transition-colors"
+                     onclick="showFieldModal('emailModal')">
+                    @if (!string.IsNullOrEmpty(Model.Email))
+                    {
+                        <span class="text-gray-800">@Model.Email</span>
+                    }
+                    else
+                    {
+                        <span class="text-gray-400 italic">Press to add email</span>
+                    }
+                </div>
+            </div>
+
+            <!-- Phone Number -->
+            <div class="flex flex-col">
+                <label class="block text-gray-600 text-sm lg:text-base mb-1">Phone Number</label>
+                <div class="p-2 lg:p-3 border rounded-lg bg-gray-50 cursor-pointer hover:bg-gray-100 transition-colors"
+                     onclick="showFieldModal('phoneModal')">
+                    @if (!string.IsNullOrEmpty(Model.PhoneNumber))
+                    {
+                        <span class="text-gray-800">@Model.PhoneNumber</span>
+                    }
+                    else
+                    {
+                        <span class="text-gray-400 italic">Press to add phone</span>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Address Group -->
+    <div class="bg-white p-4 lg:p-6 rounded-xl shadow-sm border border-gray-100">
+        <h3 class="text-lg font-semibold mb-4 flex items-center">
+            <i class="fas fa-map-marker-alt text-primary mr-2"></i>
+            Address Information
+        </h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!-- Street Address -->
+            <div class="flex flex-col">
+                <label class="block text-gray-600 text-sm lg:text-base mb-1">Street Address</label>
+                <div class="p-2 lg:p-3 border rounded-lg bg-gray-50 cursor-pointer hover:bg-gray-100 transition-colors"
+                     onclick="showFieldModal('addressModal')">
+                    @if (!string.IsNullOrEmpty(Model.Address))
+                    {
+                        <span class="text-gray-800">@Model.Address</span>
+                    }
+                    else
+                    {
+                        <span class="text-gray-400 italic">Press to add address</span>
+                    }
+                </div>
+            </div>
+
+            <!-- Postal Code -->
+            <div class="flex flex-col">
+                <label class="block text-gray-600 text-sm lg:text-base mb-1">Postal Code</label>
+                <div class="p-2 lg:p-3 border rounded-lg bg-gray-50 cursor-pointer hover:bg-gray-100 transition-colors"
+                     onclick="showFieldModal('postalModal')">
+                    @if (!string.IsNullOrEmpty(Model.PostalCode))
+                    {
+                        <span class="text-gray-800">@Model.PostalCode</span>
+                    }
+                    else
+                    {
+                        <span class="text-gray-400 italic">Press to add postal code</span>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Country Group -->
+    <div class="bg-white p-4 lg:p-6 rounded-xl shadow-sm border border-gray-100">
+        <h3 class="text-lg font-semibold mb-4 flex items-center">
+            <i class="fas fa-globe text-primary mr-2"></i>
+            Country
+        </h3>
+        <div class="grid grid-cols-1">
+            <!-- Country -->
+            <div class="flex flex-col">
+                <label class="block text-gray-600 text-sm lg:text-base mb-1">Country</label>
+                <div class="p-2 lg:p-3 border rounded-lg bg-gray-50 cursor-pointer hover:bg-gray-100 transition-colors"
+                     onclick="showFieldModal('countryModal')">
+                    @if (!string.IsNullOrEmpty(Model.Country))
+                    {
+                        <span class="text-gray-800">@Model.Country</span>
+                    }
+                    else
+                    {
+                        <span class="text-gray-400 italic">Press to add country</span>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Name Modal -->
+<div id="nameModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+    <div class="bg-white rounded-xl p-6 w-full max-w-md mx-4">
+        <h3 class="text-lg font-semibold mb-4">Edit Full Name</h3>
+        <form asp-action="UpdateName" method="post">
+            @Html.AntiForgeryToken()
+            <div class="space-y-4">
+                <div>
+                    <input asp-for="Name" name="Name"
+                           class="w-full p-3 border border-[1px] rounded-lg focus:outline-none focus:ring-0.5 focus:ring-primary focus:border-primary bg-gray-50"
+                           required>
+                </div>
+            </div>
+            <div class="flex justify-end gap-3 mt-6">
+                <button type="button"
+                        class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
+                        onclick="hideModal('nameModal')">
+                    Cancel
+                </button>
+                <button type="submit"
+                        class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-[#076b63] transition-colors">
+                    Save Changes
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Email Modal -->
+<div id="emailModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+    <div class="bg-white rounded-xl p-6 w-full max-w-md mx-4">
+        <h3 class="text-lg font-semibold mb-4">Edit Email</h3>
+        <form asp-action="UpdateEmail" method="post">
+            @Html.AntiForgeryToken()
+            <div class="space-y-4">
+                <div>
+                    <input asp-for="Email" name="Email"
+                           class="w-full p-3 border border-[1px] rounded-lg focus:outline-none focus:ring-0.5 focus:ring-primary focus:border-primary bg-gray-50"
+                           required>
+                </div>
+            </div>
+            <div class="flex justify-end gap-3 mt-6">
+                <button type="button"
+                        class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
+                        onclick="hideModal('emailModal')">
+                    Cancel
+                </button>
+                <button type="submit"
+                        class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-[#076b63] transition-colors">
+                    Save Changes
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Phone Modal -->
+<div id="phoneModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+    <div class="bg-white rounded-xl p-6 w-full max-w-md mx-4">
+        <h3 class="text-lg font-semibold mb-4">Edit Phone Number</h3>
+        <form asp-action="UpdatePhone" method="post">
+            @Html.AntiForgeryToken()
+            <div class="space-y-4">
+                <div>
+                    <input asp-for="PhoneNumber" name="PhoneNumber"
+                           class="w-full p-3 border border-[1px] rounded-lg focus:outline-none focus:ring-0.5 focus:ring-primary focus:border-primary bg-gray-50"
+                           required>
+                </div>
+            </div>
+            <div class="flex justify-end gap-3 mt-6">
+                <button type="button"
+                        class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
+                        onclick="hideModal('phoneModal')">
+                    Cancel
+                </button>
+                <button type="submit"
+                        class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-[#076b63] transition-colors">
+                    Save Changes
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Address Modal -->
+<div id="addressModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+    <div class="bg-white rounded-xl p-6 w-full max-w-md mx-4">
+        <h3 class="text-lg font-semibold mb-4">Edit Address</h3>
+        <form asp-action="UpdateAddress" method="post">
+            @Html.AntiForgeryToken()
+            <div class="space-y-4">
+                <div>
+                    <input asp-for="Address" name="Address"
+                           class="w-full p-3 border border-[1px] rounded-lg focus:outline-none focus:ring-0.5 focus:ring-primary focus:border-primary bg-gray-50"
+                           required>
+                </div>
+            </div>
+            <div class="flex justify-end gap-3 mt-6">
+                <button type="button"
+                        class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
+                        onclick="hideModal('addressModal')">
+                    Cancel
+                </button>
+                <button type="submit"
+                        class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-[#076b63] transition-colors">
+                    Save Changes
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Postal Code Modal -->
+<div id="postalModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+    <div class="bg-white rounded-xl p-6 w-full max-w-md mx-4">
+        <h3 class="text-lg font-semibold mb-4">Edit Postal Code</h3>
+        <form asp-action="UpdatePostalCode" method="post">
+            @Html.AntiForgeryToken()
+            <div class="space-y-4">
+                <div>
+                    <input asp-for="PostalCode" name="PostalCode"
+                           class="w-full p-3 border border-[1px] rounded-lg focus:outline-none focus:ring-0.5 focus:ring-primary focus:border-primary bg-gray-50"
+                           required>
+                </div>
+            </div>
+            <div class="flex justify-end gap-3 mt-6">
+                <button type="button"
+                        class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
+                        onclick="hideModal('postalModal')">
+                    Cancel
+                </button>
+                <button type="submit"
+                        class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-[#076b63] transition-colors">
+                    Save Changes
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Country Modal -->
+<div id="countryModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+    <div class="bg-white rounded-xl p-6 w-full max-w-md mx-4">
+        <h3 class="text-lg font-semibold mb-4">Edit Country</h3>
+        <form asp-action="UpdateCountry" method="post">
+            @Html.AntiForgeryToken()
+            <div class="space-y-4">
+                <div>
+                    <input asp-for="Country" name="Country"
+                           class="w-full p-3 border border-[1px] rounded-lg focus:outline-none focus:ring-0.5 focus:ring-primary focus:border-primary bg-gray-50"
+                           required>
+                </div>
+            </div>
+            <div class="flex justify-end gap-3 mt-6">
+                <button type="button"
+                        class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
+                        onclick="hideModal('countryModal')">
+                    Cancel
+                </button>
+                <button type="submit"
+                        class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-[#076b63] transition-colors">
+                    Save Changes
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function showFieldModal(modalId) {
+        const modal = document.getElementById(modalId);
+        modal.classList.remove('hidden');
+        document.body.classList.add('overflow-hidden');
+    }
+
+    function hideModal(modalId) {
+        const modal = document.getElementById(modalId);
+        modal.classList.add('hidden');
+        document.body.classList.remove('overflow-hidden');
+    }
+</script>

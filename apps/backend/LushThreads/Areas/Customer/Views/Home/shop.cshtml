@@ -1,0 +1,1614 @@
+﻿@using LushThreads.Domain.ViewModels.Home
+@model IEnumerable<ShopProductViewModel>
+
+@{
+    var showSuccessMessage = TempData["AddToCartSuccess"] != null && (bool)TempData["AddToCartSuccess"];
+    var showErrorMessage = TempData["AddToCartError"] != null && (bool)TempData["AddToCartError"];
+    var errorMessage = TempData["ErrorMessage"]?.ToString() ?? "An error occurred while adding to cart";
+    var currentCategory = ViewBag.CurrentCategory?.ToString() ?? string.Empty;
+    var currentCategoryId = ViewBag.CurrentCategoryId?.ToString() ?? string.Empty;
+}
+
+<style>
+    .modal-header {
+        display: flex;
+        justify-content: space-between; /* This spreads items to edges */
+        align-items: center;
+    }
+
+    .modal-title {
+        margin-left: auto; /* Pushes title to right */
+        padding-right: 180px; /* Space between title and close button */
+        text-align: right; /* Aligns text to right within its container */
+    }
+
+    .confirm-button {
+        background-color: #088178;
+        border: 1px solid #088178;
+        color: white;
+    }
+
+    .quick-view-actions .confirm-button:hover {
+        background-color: #066156; /* Darker teal */
+        transform: scale(1.05); /* Slight scale-up effect */
+        transition: all 0.3s ease; /* Smooth transition */
+    }
+    /* Quick View Modal Styles */
+    .quick-view-modal {
+        background-color: white;
+        border-radius: 0.5rem;
+        width: 90%;
+        max-width: 700px; /* Increased from 600px to fit larger image */
+        padding: 1.5rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .quick-view-content {
+        display: flex;
+        gap: 1.5rem;
+    }
+
+    .quick-view-image {
+        flex: 1;
+    }
+
+
+        .quick-view-image img {
+            width: 100%;
+            max-width: 400px; /* Increase this value as desired */
+            height: auto;
+            border-radius: 0.5rem;
+        }
+
+    .quick-view-details {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .quick-view-rating {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+    }
+
+        .quick-view-rating i {
+            color: #f5c518; /* Gold color for stars */
+            font-size: 0.9rem;
+        }
+
+    .quick-view-price {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #088178; /* Teal color for price */
+    }
+
+    .quick-view-description {
+        font-size: 0.9rem;
+        color: #666;
+        line-height: 1.5;
+    }
+
+    .quick-view-colors,
+    .quick-view-sizes {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .color-label,
+    .size-label {
+        font-weight: 500;
+        color: #333;
+        font-size: 0.95rem;
+    }
+
+    .color-options {
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .color-option {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        cursor: pointer;
+        border: 2px solid transparent;
+        transition: all 0.2s ease;
+    }
+
+        .color-option.selected {
+            border-color: #088178; /* Teal border for selected color */
+            box-shadow: 0 0 0 2px rgba(8, 129, 120, 0.2);
+        }
+
+    .size-options {
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .size-option {
+        border: 1px solid #cce7d0;
+        background-color: #e8f6ea;
+        color: #088178;
+        border-radius: 0.5rem;
+        padding: 0.5rem 1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-align: center;
+        font-size: 0.9rem;
+    }
+
+        .size-option:hover {
+            background-color: #088178;
+            color: white;
+            border-color: #088178;
+        }
+
+        .size-option.selected {
+            background-color: #088178;
+            color: white;
+            border-color: #088178;
+        }
+
+    .quick-view-actions {
+        margin-top: 1rem;
+    }
+
+        .quick-view-actions .confirm-button {
+            width: 100%; /* Full-width button */
+            padding: 0.75rem;
+            font-size: 1rem;
+        }
+
+    #quickViewColorText {
+        font-size: 0.9rem;
+        color: #333; /* Darker color for readability */
+        line-height: 1.5;
+    }
+    /* Product Card Image Zoom Effect */
+    #product1 .pro {
+        position: relative;
+        overflow: hidden;
+    }
+
+    .product-brand,
+    .product-description {
+        transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+        .product-brand:hover,
+        .product-description:hover {
+            color: #088178 !important;
+            transform: translateY(-1px);
+            cursor: pointer;
+            text-decoration: none;
+            text-underline-offset: 2px;
+        }
+
+    .icon-overlay {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px; /* Increased spacing for a cleaner look */
+        opacity: 0; /* Hidden by default */
+        transition: opacity 0.3s ease, transform 0.3s ease; /* Added transform for slide effect */
+        transform: translateX(20px); /* Start slightly off to the right */
+    }
+
+    .pro:hover .icon-overlay {
+        opacity: 1; /* Show icons on hover */
+        transform: translateX(0); /* Slide in from the right */
+    }
+
+    /* Style for the icons */
+    /* Style both a and button in icon-overlay */
+    .icon-overlay a,
+    .icon-overlay button {
+        width: 38px;
+        height: 38px;
+        background-color: #088178;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 16px;
+        border: 2px solid rgba(255, 255, 255, 0.8);
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+        transition: transform 0.2s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+        position: relative;
+        cursor: pointer; /* Ensure button has pointer cursor */
+        padding: 0; /* Remove default button padding */
+        text-decoration: none; /* For a, no underline */
+        border: none; /* Remove default button border */
+    }
+
+        .icon-overlay a:hover,
+        .icon-overlay button:hover {
+            transform: scale(1.15);
+            background-color: #066156;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Tooltip styling */
+        .icon-overlay a::after,
+        .icon-overlay button::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            right: 50px;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: #333;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.2s ease, visibility 0.2s ease;
+            z-index: 10;
+        }
+
+        .icon-overlay a:hover::after,
+        .icon-overlay button:hover::after {
+            opacity: 1;
+            visibility: visible;
+        }
+
+    /*Category Filter*/
+    .filter-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .filter-options {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .filter-btn {
+        padding: 0.5rem 1rem;
+        border: 1px solid #eeeeee;
+        border-radius: 0.25rem;
+        background-color: #eeeeee;
+        color: #454545;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 0.95rem;
+        font-weight: 500;
+    }
+
+        .filter-btn:hover {
+            background-color: #fde1bd;
+            border-color: #fde1bd;
+            transform: translateY(-4px);
+            color: #088178;
+        }
+
+        .filter-btn.active {
+            background-color: #fde1bd;
+            border-color: #fde1bd;
+            color: #088178;
+            font-weight: 600;
+            transform: translateY(-2px);
+        }
+    /* Notification styles */
+    .notification-container {
+        position: fixed;
+        top: 1.5rem;
+        right: 1.5rem;
+        z-index: 1000;
+    }
+
+    .notification {
+        padding: 1rem 1.5rem;
+        color: white;
+        border-radius: 0.75rem;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        display: flex;
+        align-items: center;
+        transform: translateX(150%);
+        transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        margin-bottom: 1rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+        .notification.success {
+            background-color: #088178;
+        }
+
+        .notification.error {
+            background-color: #ef4444;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.hide {
+            transform: translateX(150%);
+            opacity: 0;
+        }
+
+    .notification-icon {
+        margin-right: 0.75rem;
+        font-size: 1.25rem;
+    }
+
+    .notification-close {
+        margin-left: 1rem;
+        cursor: pointer;
+        opacity: 0.7;
+        transition: opacity 0.2s;
+    }
+
+        .notification-close:hover {
+            opacity: 1;
+        }
+
+    .notification-progress {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        height: 4px;
+        width: 100%;
+        background: rgba(255, 255, 255, 0.3);
+    }
+
+    .notification-progress-bar {
+        height: 100%;
+        width: 100%;
+        background: white;
+        animation: progress 3s linear forwards;
+        transform-origin: left;
+    }
+
+    @@keyframes progress {
+        0% {
+            transform: scaleX(0);
+        }
+
+        100% {
+            transform: scaleX(1);
+        }
+    }
+
+    /* Bounce animation for cart button */
+    @@keyframes bounce {
+        0%, 20%, 50%, 80%, 100% {
+            transform: translateY(0);
+        }
+
+        40% {
+            transform: translateY(-10px);
+        }
+
+        60% {
+            transform: translateY(-5px);
+        }
+    }
+
+    .bounce-effect {
+        animation: bounce 1s;
+    }
+
+    /* Size selection modal styles */
+    .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+    }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+    .size-modal {
+        background-color: white;
+        border-radius: 0.5rem;
+        width: 90%;
+        max-width: 400px;
+        padding: 1.5rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+
+    .modal-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #333;
+    }
+
+    .close-modal {
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        cursor: pointer;
+        color: #666;
+    }
+
+    .size-options {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.75rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .size-option {
+        border: 1px solid #cce7d0;
+        background-color: #e8f6ea;
+        color: #088178;
+        border-radius: 0.5rem;
+        padding: 0.5rem 1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-align: center;
+    }
+
+        .size-option:hover {
+            background-color: #088178;
+            color: white;
+            border-color: #088178;
+        }
+
+        .size-option.active {
+            background-color: #088178;
+            color: white;
+            border-color: #088178;
+        }
+
+        .size-option.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            text-decoration: line-through;
+            position: relative;
+        }
+
+            .size-option.disabled::after {
+                content: "×";
+                position: absolute;
+                top: -5px;
+                right: -5px;
+                background: #ef4444;
+                color: white;
+                border-radius: 50%;
+                width: 18px;
+                height: 18px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 12px;
+            }
+
+    .modal-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 0.75rem;
+    }
+
+    .modal-button {
+        padding: 0.5rem 1rem;
+        border-radius: 0.25rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .cancel-button {
+        background-color: #f5f5f5;
+        border: 1px solid #ddd;
+        color: #333;
+    }
+
+    .confirm-button {
+        background-color: #088178;
+        border: 1px solid #088178;
+        color: white;
+    }
+
+        .confirm-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+    /* Existing product styles */
+    .pro:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .pro-cart-button {
+        width: 40px;
+        height: 40px;
+        line-height: 40px;
+        border-radius: 50px;
+        background-color: #e8f6ea;
+        font-weight: 500;
+        color: #088178;
+        border: 1px solid #cce7d0;
+        position: absolute;
+        bottom: 20px;
+        right: 10px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        padding: 0;
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+
+        .pro-cart-button:hover {
+            background-color: #cce7d0;
+            color: #066156;
+            transform: scale(1.05);
+        }
+
+    /* Pagination styles */
+    #pagination {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+        margin: 30px 0;
+        flex-wrap: wrap;
+    }
+
+        #pagination a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 40px;
+            height: 40px;
+            padding: 0 12px;
+            border-radius: 8px;
+            text-decoration: none;
+            color: #088178;
+            font-weight: 500;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            background-color: rgba(232, 246, 234, 0.3);
+            border: 1px solid rgba(8, 129, 120, 0.1);
+        }
+
+            #pagination a:hover:not(.active):not(.disabled) {
+                background-color: rgba(232, 246, 234, 0.7);
+                transform: translateY(-2px);
+                box-shadow: 0 2px 8px rgba(8, 129, 120, 0.15);
+            }
+
+            #pagination a.active {
+                background-color: #088178;
+                color: white;
+                font-weight: 600;
+                box-shadow: 0 4px 12px rgba(8, 129, 120, 0.25);
+                border: none;
+            }
+
+            #pagination a.disabled {
+                color: #c1c1c1;
+                background-color: #f9f9f9;
+                cursor: not-allowed;
+                border-color: #eee;
+            }
+
+        #pagination i {
+            font-size: 1rem;
+            transition: transform 0.3s ease;
+        }
+
+        #pagination a:hover:not(.disabled) i {
+            transform: scale(1.2);
+        }
+
+    /* Loading spinner - Enhanced */
+    .loading-spinner {
+        display: none;
+        text-align: center;
+        padding: 30px 0;
+        margin: 20px 0;
+    }
+
+        .loading-spinner.active {
+            display: block;
+        }
+
+    .spinner {
+        position: relative;
+        width: 40px;
+        height: 40px;
+        margin: 0 auto;
+    }
+
+        .spinner:before,
+        .spinner:after {
+            content: "";
+            position: absolute;
+            border-radius: 50%;
+        }
+
+        .spinner:before {
+            width: 100%;
+            height: 100%;
+            border: 4px solid rgba(232, 246, 234, 0.8);
+        }
+
+        .spinner:after {
+            width: 100%;
+            height: 100%;
+            border: 4px solid transparent;
+            border-top-color: #088178;
+            border-bottom-color: #088178;
+            animation: spin 1s linear infinite;
+        }
+
+    @@keyframes spin {
+        0% {
+            transform: rotate(0deg);
+        }
+
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
+    /* Responsive adjustments */
+    @@media (max-width: 768px) {
+        #pagination {
+            gap: 6px;
+        }
+
+            #pagination a {
+                min-width: 36px;
+                height: 36px;
+                padding: 0 8px;
+                font-size: 0.9rem;
+            }
+
+        .spinner {
+            width: 32px;
+            height: 32px;
+        }
+    }
+    /* Quantity Selector Styles */
+    .quantity-selector {
+        display: flex;
+        align-items: center;
+        margin: 1.5rem 0;
+        justify-content: center;
+    }
+
+    .quantity-label {
+        margin-right: 1rem;
+        font-weight: 500;
+        color: #333;
+        font-size: 0.95rem;
+    }
+
+    .quantity-controls {
+        display: flex;
+        align-items: center;
+        border: 1px solid #cce7d0;
+        border-radius: 0.5rem;
+        overflow: hidden;
+        background-color: #f8f9fa;
+    }
+
+    .quantity-btn {
+        width: 2.5rem;
+        height: 2.5rem;
+        background-color: #e8f6ea;
+        border: none;
+        font-size: 1.2rem;
+        color: #088178;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s ease;
+        padding: 0;
+    }
+
+        .quantity-btn:hover {
+            background-color: #cce7d0;
+        }
+
+    .quantity-input {
+        width: 3.5rem; /* Increased width */
+        height: 2.5rem;
+        text-align: center;
+        border: none;
+        border-left: 1px solid #cce7d0;
+        border-right: 1px solid #cce7d0;
+        font-size: 1rem;
+        font-weight: 500;
+        padding: 0 0.5rem; /* Added padding */
+        -moz-appearance: textfield; /* Hide arrows in Firefox */
+        background-color: white;
+    }
+
+        /* Hide number input arrows in Chrome/Safari */
+        .quantity-input::-webkit-outer-spin-button,
+        .quantity-input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        .quantity-input:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(8, 129, 120, 0.2);
+        }
+
+    /* Modal layout adjustments */
+    .size-modal {
+        padding: 1.5rem 2rem; /* More horizontal padding */
+    }
+
+    .modal-actions {
+        margin-top: 1rem;
+    }
+
+    /* Stock info styles */
+    .stock-info {
+        font-size: 0.85rem;
+        color: #666;
+        margin-top: 0.5rem;
+        text-align: center;
+    }
+
+    /* Size with quantity styles */
+    .size-with-quantity {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    /* Banner styles */
+    .banner-slide {
+        background-size: cover;
+        background-position: center;
+        opacity: 0;
+        z-index: 0;
+        transition: opacity 1s ease-in-out;
+    }
+
+        .banner-slide:first-child {
+            opacity: 1;
+            z-index: 1;
+        }
+
+    @@media (max-width: 768px) {
+        #page-header {
+            height: 30vh;
+        }
+    }
+</style>
+
+<!-- Notification Container -->
+<div class="notification-container">
+    <!-- Notifications will be added here dynamically -->
+</div>
+
+<!-- Quick View Modal -->
+<div class="modal-overlay" id="quickViewModal">
+    <div class="quick-view-modal">
+        <div class="modal-header">
+            <h3 class="modal-title" id="quickViewProductName"></h3>
+            <button class="close-modal" onclick="hideQuickViewModal()">×</button>
+        </div>
+        <div class="quick-view-content">
+            <div class="quick-view-image">
+                <img id="quickViewProductImage" src="" alt="Product Image">
+            </div>
+            <div class="quick-view-details">
+                <div class="quick-view-rating" id="quickViewRating"></div>
+                <h4 class="quick-view-price" id="quickViewPrice"></h4>
+                <p class="quick-view-description" id="quickViewDescription"></p>
+                <div class="quick-view-colors">
+                    <span class="color-label">Color: </span>
+                    <span id="quickViewColorText"></span>
+                </div>
+                <div class="quick-view-sizes">
+                    <span class="size-label">Size:</span>
+                    <div class="size-options" id="quickViewSizes"></div>
+                </div>
+                <div class="quick-view-actions">
+                    <div class="quantity-selector">
+                        <span class="quantity-label">Quantity:</span>
+                        <div class="quantity-controls">
+                            <button class="quantity-btn" id="quickViewDecrementQty">-</button>
+                            <input type="number" id="quickViewQuantityInput" class="quantity-input" value="1" min="1" max="10">
+                            <button class="quantity-btn" id="quickViewIncrementQty">+</button>
+                        </div>
+                    </div>
+                    <button class="modal-button confirm-button" id="quickViewAddToCart">Add to Cart</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Size and Quantity Selection Modal -->
+<div class="modal-overlay" id="sizeModal">
+    <div class="size-modal">
+        <div class="modal-header">
+            <h3 class="modal-title">Select Size & Quantity</h3>
+            <button class="close-modal" onclick="hideSizeModal()">×</button>
+        </div>
+        <div class="size-options" id="sizeOptionsContainer">
+            <!-- Size options populated dynamically -->
+        </div>
+        <div class="quantity-selector">
+            <span class="quantity-label">Quantity:</span>
+            <div class="quantity-controls">
+                <button class="quantity-btn" id="decrementQty">-</button>
+                <input type="number" id="quantityInput" class="quantity-input" value="1" min="1" max="10">
+                <button class="quantity-btn" id="incrementQty">+</button>
+            </div>
+        </div>
+        <div class="stock-info" id="stockInfo"></div>
+        <div class="modal-actions">
+            <button class="modal-button cancel-button" onclick="hideSizeModal()">Cancel</button>
+            <button class="modal-button confirm-button" id="confirmAddToCart" disabled>Add to Cart</button>
+        </div>
+    </div>
+</div>
+
+<!-- Rest of your HTML remains the same -->
+<section id="page-header" class="relative h-[40vh] overflow-hidden">
+    <!-- Banner 1 -->
+    <div class="banner-slide absolute inset-0 flex flex-col justify-center items-center text-center text-white" style="background-image: url('https://images.pexels.com/photos/3965557/pexels-photo-3965557.jpeg');">
+        <div class="relative z-10 px-5 max-w-4xl">
+            <h2 class="text-3xl md:text-4xl font-bold mb-4 drop-shadow-md">#NewSeason</h2>
+            <p class="text-lg md:text-xl mb-6 drop-shadow-sm">Fresh Styles Just Arrived</p>
+        </div>
+        <div class="absolute inset-0 bg-black/40"></div>
+    </div>
+
+    <!-- Banner 2 -->
+    <div class="banner-slide absolute inset-0 flex flex-col justify-center items-center text-center text-white" style="background-image: url('https://images.pexels.com/photos/5632402/pexels-photo-5632402.jpeg');">
+        <div class="relative z-10 px-5 max-w-4xl">
+            <h2 class="text-3xl md:text-4xl font-bold mb-4 drop-shadow-md">#SummerSale</h2>
+            <p class="text-lg md:text-xl mb-6 drop-shadow-sm">Up to 70% Off Summer Essentials</p>
+        </div>
+        <div class="absolute inset-0 bg-black/40"></div>
+    </div>
+
+    <!-- Banner 3 -->
+    <div class="banner-slide absolute inset-0 flex flex-col justify-center items-center text-center text-white" style="background-image: url('https://images.pexels.com/photos/4482900/pexels-photo-4482900.jpeg');">
+        <div class="relative z-10 px-5 max-w-4xl">
+            <h2 class="text-3xl md:text-4xl font-bold mb-4 drop-shadow-md">#LimitedOffer</h2>
+            <p class="text-lg md:text-xl mb-6 drop-shadow-sm">Exclusive Deals for Members</p>
+        </div>
+        <div class="absolute inset-0 bg-black/40"></div>
+    </div>
+
+    <!-- Navigation Dots -->
+    <div class="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex space-x-2 z-10">
+        <button class="banner-dot w-3 h-3 rounded-full bg-white/50 hover:bg-white transition-all duration-300" data-index="0"></button>
+        <button class="banner-dot w-3 h-3 rounded-full bg-white/50 hover:bg-white transition-all duration-300" data-index="1"></button>
+        <button class="banner-dot w-3 h-3 rounded-full bg-white/50 hover:bg-white transition-all duration-300" data-index="2"></button>
+    </div>
+</section>
+
+<section id="product1" class="section-p1">
+    <h2>All Products</h2>
+    <p>Summer Collection New Modern Design</p>
+
+    <!-- Filter Section -->
+    <!-- In your filter section -->
+<!-- Filter Section -->
+<div class="filter-container">
+    <div class="filter-options">
+        <button class="filter-btn @(string.IsNullOrEmpty(currentCategoryId) ? "active" : "")"
+                data-category-id=""
+                data-category="">
+            All Products
+        </button>
+        <button class="filter-btn @(currentCategoryId == "17" ? "active" : "")"
+                data-category-id="17"
+                data-category="Men's Fashion">
+            Men's Fashion
+        </button>
+        <button class="filter-btn @(currentCategoryId == "18" ? "active" : "")"
+                data-category-id="18"
+                data-category="Women's Fashion">
+            Women's Fashion
+        </button>
+        <button class="filter-btn @(currentCategoryId == "19" ? "active" : "")"
+                data-category-id="19"
+                data-category="Kids Fashion">
+            Kids Fashion
+        </button>
+        <button class="filter-btn @(currentCategoryId == "55" ? "active" : "")"
+                data-category-id="55"
+                data-category="Unisex">
+            Unisex
+        </button>
+    </div>
+</div>
+
+    <!-- Product List Container -->
+    <div id="productContainer" class="pro-container">
+        @foreach (var product in Model)
+        {
+            <div class="pro" onclick="window.location.href='@Url.Action("Details", "Home", new { area = "Customer", id = product.ProductId })';">
+                <img src="@product.ImgUrl" alt="@product.ProductName" class="product-img">
+                @if (product.IsFeatured)
+                {
+                    <span class="absolute top-2 left-2 bg-[#088178] text-white text-xs font-bold px-2 py-1 rounded-full shadow-sm">
+                        FEATURED
+                    </span>
+                }
+                <div class="icon-overlay">
+                    <button onclick="event.stopPropagation(); showQuickViewModal(@product.ProductId);" data-tooltip="Quick View"><i class="fas fa-eye"></i></button>
+                </div>
+                <div class="des">
+                    <span class="product-brand">@product.BrandName</span>
+                    <h5 class="product-description">@product.ProductName</h5>
+                    <div class="star">
+                        @for (int i = 0; i < product.ProductRating; i++)
+                        {
+                            <i class="fas fa-star"></i>
+                        }
+                        @for (int i = product.ProductRating; i < 5; i++)
+                        {
+                            <i class="far fa-star"></i>
+                        }
+                    </div>
+                    <h4 class="product-price">$@product.ProductPrice</h4>
+                </div>
+                <div class="pro-cart-button" onclick="event.stopPropagation(); showSizeModal(@product.ProductId)">
+                    <i class="fas fa-shopping-cart"></i>
+                </div>
+                <form class="add-to-cart-form" data-product-id="@product.ProductId" style="display: none;">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="productId" value="@product.ProductId" />
+                    <input type="hidden" name="quantity" id="quantity-@product.ProductId" value="1" />
+                    <input type="hidden" name="size" id="size-@product.ProductId" value="" />
+                </form>
+            </div>
+        }
+    </div>
+
+    <!-- Loading Spinner -->
+    <div class="loading-spinner" id="loadingSpinner">
+        <div class="spinner"></div>
+    </div>
+</section>
+
+<section id="pagination" class="section-p1">
+    <!-- Pagination will be populated dynamically -->
+</section>
+
+<section id="newsletter" class="section-p1 section-m1">
+    <div class="newstext">
+        <h4>Sign Up For Newsletter</h4>
+        <p>Get E-mail updates about our latest shop and <span>special offers</span></p>
+    </div>
+    <div class="form">
+        <input type="text" placeholder="Your Email Address">
+        <button class="normal">Sign Up</button>
+    </div>
+</section>
+
+<script>
+    const pageSize = @ViewBag.PageSize;
+    let currentPage = @ViewBag.CurrentPage;
+    let totalPages = @ViewBag.TotalPages;
+    let currentCategoryId = '@currentCategoryId';
+
+    // Initialize when DOM is loaded
+    document.addEventListener('DOMContentLoaded', function() {
+        // Set up filter buttons
+        document.querySelectorAll('.filter-btn').forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                currentCategoryId = this.dataset.categoryId || '';
+                document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+                this.classList.add('active');
+                loadPage(1);
+            });
+        });
+
+        // Initialize banner slider
+        initializeBannerSlider();
+        renderPagination();
+        // Attach cart button listeners after initial render
+        loadPage(currentPage); // Load initial page to ensure products are rendered
+    });
+
+    // Load products for a specific page
+    function loadPage(page) {
+        const productContainer = document.getElementById('productContainer');
+        const loadingSpinner = document.getElementById('loadingSpinner');
+
+        page = Math.max(1, page);
+        if (totalPages > 0) {
+            page = Math.min(page, totalPages);
+        }
+
+        loadingSpinner.classList.add('active');
+        productContainer.style.opacity = '0.5';
+
+        let url = `@Url.Action("Shop", "Home", new { area = "Customer" })?page=${page}&pageSize=${pageSize}`;
+        if (currentCategoryId) {
+            url += `&categoryId=${currentCategoryId}`;
+        }
+
+        fetch(url, {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => {
+            if (!response.ok) throw new Error('Network response was not ok');
+            return response.json();
+        })
+        .then(data => {
+            if (!data.products || !Array.isArray(data.products)) {
+                throw new Error('Invalid products data received');
+            }
+
+            renderProducts(data.products);
+            currentPage = data.currentPage;
+            totalPages = data.totalPages;
+            renderPagination();
+            attachCartButtonListeners(); // Reattach listeners after rendering
+        })
+        .catch(error => {
+            console.error('Error loading page:', error);
+            showNotification(false, "Error loading products");
+            if (page !== 1) {
+                loadPage(1);
+            }
+        })
+        .finally(() => {
+            loadingSpinner.classList.remove('active');
+            productContainer.style.opacity = '1';
+        });
+    }
+
+    // Render products in the container
+    function renderProducts(products) {
+        const productContainer = document.getElementById('productContainer');
+        const antiForgeryToken = document.querySelector('input[name="__RequestVerificationToken"]')?.value || '';
+
+        productContainer.innerHTML = products
+            .filter(product => product.productId) // Skip products with missing productId
+            .map(product => `
+                <div class="pro" onclick="window.location.href='@Url.Action("Details", "Home", new { area = "Customer" })?id=${product.productId}'">
+                    <img src="${product.imgUrl || ''}" alt="${product.productName || 'Product'}" class="product-img">
+                    ${product.isFeatured ?
+                        '<span class="absolute top-2 left-2 bg-[#088178] text-white text-xs font-bold px-2 py-1 rounded-full shadow-sm">FEATURED</span>'
+                        : ''}
+                    <div class="icon-overlay">
+                        <a href="#" onclick="event.stopPropagation(); showQuickViewModal(${product.productId});" data-tooltip="Quick View"><i class="fas fa-eye"></i></a>
+                    </div>
+                    <div class="des">
+                        <span class="product-brand">${product.brandName || ''}</span>
+                        <h5 class="product-description">${product.productName || ''}</h5>
+                        <div class="star">
+                            ${Array(5).fill().map((_, i) =>
+                                i < (product.productRating || 0) ?
+                                '<i class="fas fa-star"></i>' :
+                                '<i class="far fa-star"></i>'
+                            ).join('')}
+                        </div>
+                        <h4 class="product-price">$${parseFloat(product.productPrice || '0.00').toFixed(2)}</h4>
+                    </div>
+                    <div class="pro-cart-button" data-product-id="${product.productId}">
+                        <i class="fas fa-shopping-cart"></i>
+                    </div>
+                    <form class="add-to-cart-form" data-product-id="${product.productId}" style="display: none;">
+                        <input type="hidden" name="__RequestVerificationToken" value="${antiForgeryToken}" />
+                        <input type="hidden" name="productId" value="${product.productId}" />
+                        <input type="hidden" name="quantity" id="quantity-${product.productId}" value="1" />
+                        <input type="hidden" name="size" id="size-${product.productId}" value="" />
+                    </form>
+                </div>
+            `).join('');
+    }
+
+    // Attach event listeners to cart buttons
+    function attachCartButtonListeners() {
+        document.querySelectorAll('.pro-cart-button').forEach(button => {
+            button.removeEventListener('click', handleCartButtonClick);
+            button.addEventListener('click', handleCartButtonClick);
+        });
+    }
+
+    function handleCartButtonClick(e) {
+        e.stopPropagation();
+        const productId = this.getAttribute('data-product-id');
+        if (productId && productId !== '') {
+            showSizeModal(productId);
+        } else {
+            console.warn('Invalid product ID for cart button:', this);
+            showNotification(false, "Error: Product ID is invalid");
+        }
+    }
+
+    // Add to Cart from Quick View
+    function addToCartFromQuickView(productId) {
+        if (!selectedQuickViewSize) {
+            showNotification(false, "Please select a size");
+            return;
+        }
+
+        const quantity = parseInt(document.getElementById('quickViewQuantityInput').value) || 1;
+        const form = document.querySelector(`.add-to-cart-form[data-product-id="${productId}"]`);
+
+        if (!form) {
+            showNotification(false, "Error: Product form not found");
+            return;
+        }
+
+        const formData = new FormData(form);
+        formData.set('size', selectedQuickViewSize);
+        formData.set('quantity', quantity);
+
+        fetch('@Url.Action("AddToCart", "Cart", new { area = "Customer" })', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            showNotification(data.success, data.message || (data.success ? "Item added to cart" : "Product not found or failed to add item"));
+            if (data.success) {
+                const cartButton = document.querySelector(`.pro-cart-button[data-product-id="${productId}"]`);
+                if (cartButton) {
+                    cartButton.classList.add('bounce-effect');
+                    setTimeout(() => cartButton.classList.remove('bounce-effect'), 1000);
+                }
+                if (data.cartCount !== undefined) {
+                    updateCartCount(data.cartCount);
+                }
+                hideQuickViewModal();
+            }
+        })
+        .catch(error => {
+            showNotification(false, "Error: Unable to add item to cart. Please try again.");
+            console.error('Error adding to cart:', error);
+        });
+    }
+
+    // Rest of the script (unchanged functions)
+    function renderPagination() {
+        const paginationContainer = document.getElementById('pagination');
+        paginationContainer.innerHTML = '';
+
+        if (totalPages <= 1) return;
+
+        const prevLink = document.createElement('a');
+        prevLink.innerHTML = '<i class="fas fa-long-arrow-alt-left"></i>';
+        prevLink.className = currentPage === 1 ? 'disabled' : '';
+        prevLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (currentPage > 1) loadPage(currentPage - 1);
+        });
+        paginationContainer.appendChild(prevLink);
+
+        const startPage = Math.max(1, currentPage - 2);
+        const endPage = Math.min(totalPages, currentPage + 2);
+
+        if (startPage > 1) {
+            const firstPageLink = document.createElement('a');
+            firstPageLink.textContent = '1';
+            firstPageLink.className = currentPage === 1 ? 'active' : '';
+            firstPageLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                loadPage(1);
+            });
+            paginationContainer.appendChild(firstPageLink);
+
+            if (startPage > 2) {
+                const ellipsis = document.createElement('span');
+                ellipsis.textContent = '...';
+                ellipsis.style.padding = '0 10px';
+                paginationContainer.appendChild(ellipsis);
+            }
+        }
+
+        for (let i = startPage; i <= endPage; i++) {
+            const pageLink = document.createElement('a');
+            pageLink.textContent = i;
+            pageLink.className = i === currentPage ? 'active' : '';
+            pageLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                loadPage(i);
+            });
+            paginationContainer.appendChild(pageLink);
+        }
+
+        if (endPage < totalPages) {
+            if (endPage < totalPages - 1) {
+                const ellipsis = document.createElement('span');
+                ellipsis.textContent = '...';
+                ellipsis.style.padding = '0 10px';
+                paginationContainer.appendChild(ellipsis);
+            }
+
+            const lastPageLink = document.createElement('a');
+            lastPageLink.textContent = totalPages;
+            lastPageLink.className = currentPage === totalPages ? 'active' : '';
+            lastPageLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                loadPage(totalPages);
+            });
+            paginationContainer.appendChild(lastPageLink);
+        }
+
+        const nextLink = document.createElement('a');
+        nextLink.innerHTML = '<i class="fas fa-long-arrow-alt-right"></i>';
+        nextLink.className = currentPage === totalPages ? 'disabled' : '';
+        nextLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (currentPage < totalPages) loadPage(currentPage + 1);
+        });
+        paginationContainer.appendChild(nextLink);
+    }
+
+    function initializeBannerSlider() {
+        const banners = document.querySelectorAll('.banner-slide');
+        const dots = document.querySelectorAll('.banner-dot');
+        let currentIndex = 0;
+        let interval;
+
+        function showBanner(index) {
+            banners.forEach((banner, i) => {
+                banner.style.opacity = i === index ? '1' : '0';
+                banner.style.zIndex = i === index ? '1' : '0';
+            });
+
+            dots.forEach((dot, i) => {
+                dot.classList.toggle('bg-white', i === index);
+                dot.classList.toggle('bg-white/50', i !== index);
+            });
+        }
+
+        function nextBanner() {
+            currentIndex = (currentIndex + 1) % banners.length;
+            showBanner(currentIndex);
+        }
+
+        function startInterval() {
+            interval = setInterval(nextBanner, 3000);
+        }
+
+        showBanner(0);
+        startInterval();
+
+        dots.forEach(dot => {
+            dot.addEventListener('click', function() {
+                currentIndex = parseInt(this.getAttribute('data-index'));
+                showBanner(currentIndex);
+                clearInterval(interval);
+                startInterval();
+            });
+        });
+
+        const container = document.getElementById('page-header');
+        container.addEventListener('mouseenter', () => clearInterval(interval));
+        container.addEventListener('mouseleave', startInterval);
+    }
+
+    function showNotification(isSuccess, message) {
+        const notificationContainer = document.querySelector('.notification-container');
+        const notificationId = 'notification-' + Date.now();
+        const notificationClass = isSuccess ? 'success' : 'error';
+        const iconClass = isSuccess ? 'fa-check-circle' : 'fa-exclamation-circle';
+        const duration = isSuccess ? 3000 : 5000;
+
+        const notificationHTML = `
+            <div id="${notificationId}" class="notification ${notificationClass}">
+                <i class="fas ${iconClass} notification-icon"></i>
+                <span>${message}</span>
+                <span class="notification-close" onclick="hideNotification('${notificationId}')">
+                    <i class="fas fa-times"></i>
+                </span>
+                <div class="notification-progress">
+                    <div class="notification-progress-bar"></div>
+                </div>
+            </div>
+        `;
+
+        notificationContainer.insertAdjacentHTML('afterbegin', notificationHTML);
+        const notification = document.getElementById(notificationId);
+        const progressBar = notification.querySelector('.notification-progress-bar');
+
+        setTimeout(() => {
+            notification.classList.add('show');
+            positionNotifications();
+        }, 100);
+
+        setTimeout(() => {
+            hideNotification(notificationId);
+        }, duration);
+
+        notification.addEventListener('mouseenter', () => {
+            progressBar.style.animationPlayState = 'paused';
+        });
+
+        notification.addEventListener('mouseleave', () => {
+            progressBar.style.animationPlayState = 'running';
+        });
+    }
+
+    function positionNotifications() {
+        const notifications = document.querySelectorAll('.notification.show');
+        notifications.forEach((notification, index) => {
+            notification.style.top = `${index * (notification.offsetHeight + 10)}px`;
+        });
+    }
+
+    window.hideNotification = function(id) {
+        const notification = document.getElementById(id);
+        if (notification) {
+            notification.classList.remove('show');
+            notification.classList.add('hide');
+            setTimeout(() => notification.remove(), 500);
+        }
+    };
+
+    let currentProductId = null;
+    let selectedSize = null;
+    let maxQuantity = 10;
+
+    function showSizeModal(productId) {
+        currentProductId = productId;
+        selectedSize = null;
+        document.getElementById('quantityInput').value = 1;
+        document.getElementById('confirmAddToCart').disabled = true;
+        document.getElementById('stockInfo').textContent = '';
+
+        const sizeOptionsContainer = document.getElementById('sizeOptionsContainer');
+        sizeOptionsContainer.innerHTML = '<p>Loading sizes...</p>';
+
+        document.getElementById('sizeModal').classList.add('active');
+
+        fetch(`/Customer/Home/GetProductSizes?productId=${productId}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    updateSizeOptions(data.sizes);
+                } else {
+                    sizeOptionsContainer.innerHTML = `<p>${data.message || 'No sizes available'}</p>`;
+                }
+            })
+            .catch(error => {
+                sizeOptionsContainer.innerHTML = '<p>Error loading sizes</p>';
+                console.error('Error:', error);
+            });
+    }
+
+    function updateSizeOptions(availableSizes) {
+        const sizeOptionsContainer = document.getElementById('sizeOptionsContainer');
+        sizeOptionsContainer.innerHTML = '';
+
+        if (!availableSizes || availableSizes.length === 0) {
+            sizeOptionsContainer.innerHTML = '<p>Currently out of stock</p>';
+            return;
+        }
+
+        const allSizes = ['S', 'M', 'L', 'XL', 'XXL', 'XXXL'];
+        allSizes.forEach(size => {
+            const isAvailable = availableSizes.includes(size);
+            const sizeOption = document.createElement('div');
+            sizeOption.className = `size-option ${isAvailable ? '' : 'disabled'}`;
+            sizeOption.textContent = size;
+            sizeOption.dataset.size = size;
+
+            if (isAvailable) {
+                sizeOption.addEventListener('click', function() {
+                    document.querySelectorAll('.size-option').forEach(opt => opt.classList.remove('active'));
+                    this.classList.add('active');
+                    selectedSize = this.dataset.size;
+                    document.getElementById('confirmAddToCart').disabled = false;
+
+                    maxQuantity = 10;
+                    document.getElementById('quantityInput').max = maxQuantity;
+                    document.getElementById('stockInfo').textContent = `Max ${maxQuantity} available`;
+                });
+            }
+
+            sizeOptionsContainer.appendChild(sizeOption);
+        });
+    }
+
+    function hideSizeModal() {
+        document.getElementById('sizeModal').classList.remove('active');
+    }
+
+    document.getElementById('incrementQty').addEventListener('click', function() {
+        const quantityInput = document.getElementById('quantityInput');
+        let currentValue = parseInt(quantityInput.value);
+        if (currentValue < maxQuantity) {
+            quantityInput.value = currentValue + 1;
+        }
+    });
+
+    document.getElementById('decrementQty').addEventListener('click', function() {
+        const quantityInput = document.getElementById('quantityInput');
+        let currentValue = parseInt(quantityInput.value);
+        if (currentValue > 1) {
+            quantityInput.value = currentValue - 1;
+        }
+    });
+
+    document.getElementById('quantityInput').addEventListener('change', function() {
+        let value = parseInt(this.value);
+        if (isNaN(value) || value < 1) {
+            this.value = 1;
+        } else if (value > maxQuantity) {
+            this.value = maxQuantity;
+        }
+    });
+
+    document.getElementById('confirmAddToCart').addEventListener('click', function() {
+        if (currentProductId && selectedSize) {
+            const quantity = parseInt(document.getElementById('quantityInput').value) || 1;
+
+            document.getElementById(`size-${currentProductId}`).value = selectedSize;
+            document.getElementById(`quantity-${currentProductId}`).value = quantity;
+
+            const form = document.querySelector(`.add-to-cart-form[data-product-id="${currentProductId}"]`);
+            if (!form) {
+                showNotification(false, "Error: Product form not found");
+                return;
+            }
+
+            const formData = new FormData(form);
+
+            hideSizeModal();
+
+            fetch('@Url.Action("AddToCart", "Cart", new { area = "Customer" })', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                showNotification(data.success, data.message || (data.success ? "Item added to cart" : "Product not found or failed to add item"));
+                if (data.success) {
+                    const cartButton = document.querySelector(`.pro-cart-button[data-product-id="${currentProductId}"]`);
+                    if (cartButton) {
+                        cartButton.classList.add('bounce-effect');
+                        setTimeout(() => cartButton.classList.remove('bounce-effect'), 1000);
+                    }
+                    if (data.cartCount !== undefined) {
+                        updateCartCount(data.cartCount);
+                    }
+                }
+            })
+            .catch(error => {
+                showNotification(false, "Error: Unable to add item to cart. Please try again.");
+                console.error('Error:', error);
+            });
+        }
+    });
+
+    function updateCartCount(count) {
+        const cartCountElement = document.querySelector('.cart-count');
+        if (cartCountElement) {
+            cartCountElement.textContent = count;
+            cartCountElement.style.display = count > 0 ? 'inline-block' : 'none';
+        }
+    }
+
+    document.getElementById('sizeModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            hideSizeModal();
+        }
+    });
+
+    let selectedQuickViewColor = null;
+    let selectedQuickViewSize = null;
+
+    function showQuickViewModal(productId) {
+        fetch(`/Customer/Home/GetProductDetails?productId=${productId}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const product = data.product;
+                    document.getElementById('quickViewProductName').textContent = product.productName || 'Product Name';
+                    document.getElementById('quickViewProductImage').src = product.imgUrl || 'https://via.placeholder.com/300';
+                    document.getElementById('quickViewPrice').textContent = `$${parseFloat(product.productPrice || 0).toFixed(2)}`;
+                    document.getElementById('quickViewDescription').textContent = product.description || 'No description available';
+
+                    const ratingContainer = document.getElementById('quickViewRating');
+                    const rating = product.productRating || 0;
+                    ratingContainer.innerHTML = Array(5).fill().map((_, i) =>
+                        i < rating ? '<i class="fas fa-star"></i>' : '<i class="far fa-star"></i>'
+                    ).join('');
+
+                    document.getElementById('quickViewColorText').textContent = product.color || 'Not specified';
+
+                    const quantityInput = document.getElementById('quickViewQuantityInput');
+                    quantityInput.value = 1;
+
+                    const sizes = product.availableSizes || ['S', 'M', 'L'];
+                    const sizeContainer = document.getElementById('quickViewSizes');
+                    sizeContainer.innerHTML = sizes.map(size => `
+                        <div class="size-option" data-size="${size}">${size}</div>
+                    `).join('');
+                    const firstSizeOption = sizeContainer.querySelector('.size-option');
+                    if (firstSizeOption) {
+                        firstSizeOption.classList.add('selected');
+                        selectedQuickViewSize = firstSizeOption.dataset.size;
+                    }
+
+                    document.querySelectorAll('#quickViewSizes .size-option').forEach(option => {
+                        option.addEventListener('click', function () {
+                            document.querySelectorAll('#quickViewSizes .size-option').forEach(opt => opt.classList.remove('selected'));
+                            this.classList.add('selected');
+                            selectedQuickViewSize = this.dataset.size;
+                        });
+                    });
+
+                    // Remove old listeners to prevent duplicates
+                    const incrementBtn = document.getElementById('quickViewIncrementQty');
+                    const decrementBtn = document.getElementById('quickViewDecrementQty');
+                    const newIncrementBtn = incrementBtn.cloneNode(true);
+                    const newDecrementBtn = decrementBtn.cloneNode(true);
+                    incrementBtn.parentNode.replaceChild(newIncrementBtn, incrementBtn);
+                    decrementBtn.parentNode.replaceChild(newDecrementBtn, decrementBtn);
+
+                    newIncrementBtn.addEventListener('click', function() {
+                        let currentValue = parseInt(quantityInput.value);
+                        if (currentValue < 10) {
+                            quantityInput.value = currentValue + 1;
+                        }
+                    });
+
+                    newDecrementBtn.addEventListener('click', function() {
+                        let currentValue = parseInt(quantityInput.value);
+                        if (currentValue > 1) {
+                            quantityInput.value = currentValue - 1;
+                        }
+                    });
+
+                    document.getElementById('quickViewAddToCart').onclick = () => addToCartFromQuickView(productId);
+
+                    document.getElementById('quickViewModal').classList.add('active');
+                } else {
+                    showNotification(false, 'Failed to load product details: ' + data.message);
+                }
+            })
+            .catch(error => {
+                showNotification(false, 'Error loading product details');
+                console.error('Fetch error:', error);
+            });
+    }
+
+    function hideQuickViewModal() {
+        document.getElementById('quickViewModal').classList.remove('active');
+    }
+</script>

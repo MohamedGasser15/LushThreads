@@ -1,0 +1,766 @@
+﻿@using LushThreads.Domain.ViewModels.Home
+@model SearchViewModel
+@{
+    var showSuccessMessage = TempData["AddToCartSuccess"] != null && (bool)TempData["AddToCartSuccess"];
+    var showErrorMessage = TempData["AddToCartError"] != null && (bool)TempData["AddToCartError"];
+    var errorMessage = TempData["ErrorMessage"]?.ToString() ?? "An error occurred while adding to cart";
+}
+<style>
+    /* ========== CUSTOM STYLES ========== */
+    .product-card {
+        transition: all 0.3s ease;
+        border: 1px solid #e5e7eb;
+    }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+    .cart-btn {
+        transition: all 0.3s ease;
+    }
+
+        .cart-btn:hover {
+            background-color: #06615a !important;
+            transform: scale(1.1);
+        }
+
+    .search-highlight {
+        background-color: #f0f9f8;
+        color: #088178;
+        padding: 0.25rem 0.5rem;
+        border-radius: 0.25rem;
+    }
+
+    /* Animation for empty state illustration */
+    @@keyframes float {
+        0%, 100% {
+            transform: translateY(0);
+        }
+
+        50% {
+            transform: translateY(-10px);
+        }
+    }
+
+    .floating-icon {
+        animation: float 3s ease-in-out infinite;
+    }
+
+    /* Notification animations */
+    @@keyframes progress {
+        0% {
+            transform: scaleX(0);
+        }
+
+        100% {
+            transform: scaleX(1);
+        }
+    }
+
+    @@keyframes bounce {
+        0%, 20%, 50%, 80%, 100% {
+            transform: translateY(0);
+        }
+
+        40% {
+            transform: translateY(-10px);
+        }
+
+        60% {
+            transform: translateY(-5px);
+        }
+    }
+
+    .bounce-effect {
+        animation: bounce 1s;
+    }
+
+    .pro-cart-button {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background-color: #e8f6ea;
+        color: #088178;
+        border: 1px solid #cce7d0;
+        position: absolute;
+        bottom: 20px;
+        right: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+        .pro-cart-button:hover {
+            background-color: #088178;
+            color: white;
+        }
+
+    /* Mobile Search Bar Styles */
+    .mobile-search-container {
+        display: none;
+        margin-bottom: 1.5rem;
+    }
+
+    @@media (max-width: 767px) {
+        .mobile-search-container {
+            display: block;
+        }
+
+        .mobile-search-form {
+            position: relative;
+            width: 100%;
+        }
+
+        .mobile-search-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            padding-right: 2.5rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
+
+            .mobile-search-input:focus {
+                outline: none;
+                border-color: #088170;
+                box-shadow: 0 0 0 2px rgba(8, 129, 120, 0.2);
+            }
+
+        .mobile-search-button {
+            position: absolute;
+            right: 0.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: transparent;
+            border: none;
+            color: #088170;
+            cursor: pointer;
+        }
+    }
+
+    /* Size selection modal styles */
+    .notification-container {
+        position: fixed;
+        top: 1.5rem;
+        right: 1.5rem;
+        z-index: 1000;
+    }
+
+    .notification {
+        padding: 1rem 1.5rem;
+        color: white;
+        border-radius: 0.75rem;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        display: flex;
+        align-items: center;
+        transform: translateX(150%);
+        transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        margin-bottom: 1rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+        .notification.success {
+            background-color: #088178;
+        }
+
+        .notification.error {
+            background-color: #ef4444;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.hide {
+            transform: translateX(150%);
+            opacity: 0;
+        }
+
+    .notification-icon {
+        margin-right: 0.75rem;
+        font-size: 1.25rem;
+    }
+
+    .notification-close {
+        margin-left: 1rem;
+        cursor: pointer;
+        opacity: 0.7;
+        transition: opacity 0.2s;
+    }
+
+        .notification-close:hover {
+            opacity: 1;
+        }
+
+    .notification-progress {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        height: 4px;
+        width: 100%;
+        background: rgba(255, 255, 255, 0.3);
+    }
+
+    .notification-progress-bar {
+        height: 100%;
+        width: 100%;
+        background: white;
+        animation: progress 3s linear forwards;
+        transform-origin: left;
+    }
+
+    .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+    }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+    .size-modal {
+        background-color: white;
+        border-radius: 0.5rem;
+        width: 90%;
+        max-width: 400px;
+        padding: 1.5rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+
+    .modal-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #333;
+    }
+
+    .close-modal {
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        cursor: pointer;
+        color: #666;
+    }
+
+    .size-options {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.75rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .size-option {
+        border: 1px solid #cce7d0;
+        background-color: #e8f6ea;
+        color: #088178;
+        border-radius: 0.5rem;
+        padding: 0.5rem 1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-align: center;
+    }
+
+        .size-option:hover {
+            background-color: #088178;
+            color: white;
+            border-color: #088178;
+        }
+
+        .size-option.active {
+            background-color: #088178;
+            color: white;
+            border-color: #088178;
+        }
+
+        .size-option.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            text-decoration: line-through;
+            position: relative;
+        }
+
+            .size-option.disabled::after {
+                content: "×";
+                position: absolute;
+                top: -5px;
+                right: -5px;
+                background: #ef4444;
+                color: white;
+                border-radius: 50%;
+                width: 18px;
+                height: 18px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 12px;
+            }
+
+    .modal-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 0.75rem;
+    }
+
+    .modal-button {
+        padding: 0.5rem 1rem;
+        border-radius: 0.25rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .cancel-button {
+        background-color: #f5f5f5;
+        border: 1px solid #ddd;
+        color: #333;
+    }
+
+    .confirm-button {
+        background-color: #088178;
+        border: 1px solid #088178;
+        color: white;
+    }
+
+        .confirm-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+</style>
+
+<!-- Notification Container -->
+<div class="notification-container">
+    @if (showSuccessMessage)
+    {
+        <div id="successNotification" class="notification success">
+            <i class="fas fa-check-circle notification-icon"></i>
+            <span>Item added to cart successfully!</span>
+            <span class="notification-close" onclick="hideNotification('successNotification')">
+                <i class="fas fa-times"></i>
+            </span>
+            <div class="notification-progress">
+                <div class="notification-progress-bar"></div>
+            </div>
+        </div>
+    }
+
+    @if (showErrorMessage)
+    {
+        <div id="errorNotification" class="notification error">
+            <i class="fas fa-exclamation-circle notification-icon"></i>
+            <span>@errorMessage</span>
+            <span class="notification-close" onclick="hideNotification('errorNotification')">
+                <i class="fas fa-times"></i>
+            </span>
+            <div class="notification-progress">
+                <div class="notification-progress-bar"></div>
+            </div>
+        </div>
+    }
+</div>
+
+<!-- Size Selection Modal -->
+<div class="modal-overlay" id="sizeModal">
+    <div class="size-modal">
+        <div class="modal-header">
+            <h3 class="modal-title">Select Size</h3>
+            <button class="close-modal" onclick="hideSizeModal()">×</button>
+        </div>
+        <div class="size-options" id="sizeOptionsContainer">
+            <!-- Size options will be populated dynamically -->
+        </div>
+        <div class="modal-actions">
+            <button class="modal-button cancel-button" onclick="hideSizeModal()">Cancel</button>
+            <button class="modal-button confirm-button" id="confirmAddToCart" disabled>Add to Cart</button>
+        </div>
+    </div>
+</div>
+
+<div class="min-h-screen bg-gray-50">
+    <div class="py-12 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto">
+            <!-- Mobile Search Bar (only appears on small screens) -->
+            <div class="mobile-search-container">
+                <form asp-controller="Home" asp-action="Search" method="get" class="mobile-search-form">
+                    <input type="text" name="searchTerm" value="@Model.SearchTerm"
+                           class="mobile-search-input w-full px-4 py-2 border rounded-lg focus:!border-[#088170] focus:!ring-[#088170]"
+                           placeholder="Search products...">
+                    <button type="submit" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-[#088170]">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </form>
+            </div>
+
+            <!-- Search Header -->
+            <div class="text-center mb-12">
+                <h1 class="text-3xl font-bold text-gray-900 mb-2">
+                    <i class="fas fa-search mr-2 text-primary"></i> Search Results
+                </h1>
+                @if (!string.IsNullOrEmpty(Model.SearchTerm))
+                {
+                    <p class="text-lg text-gray-600">
+                        You searched for: <span class="font-semibold search-highlight">"@Model.SearchTerm"</span>
+                    </p>
+                }
+            </div>
+
+            @if (!string.IsNullOrEmpty(Model.SearchTerm) && !Model.Results.Any())
+            {
+                <!-- No Results Found Section -->
+                <div class="bg-white rounded-xl shadow-md overflow-hidden max-w-4xl mx-auto">
+                    <div class="p-8 sm:p-10 text-center">
+                        <!-- Illustration -->
+                        <div class="mx-auto w-40 h-40 flex items-center justify-center rounded-full bg-secondary mb-6">
+                            <i class="fas fa-search-minus text-6xl text-primary floating-icon"></i>
+                        </div>
+
+                        <!-- Main Message -->
+                        <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">No matching items found</h2>
+                        <p class="text-gray-600 text-lg mb-8 max-w-2xl mx-auto">
+                            We couldn't find any products matching your search. Try adjusting your search or explore our collection below.
+                        </p>
+
+                        <!-- Search Tips -->
+                        <div class="bg-gray-50 rounded-lg p-6 mb-10 text-left max-w-2xl mx-auto">
+                            <h3 class="text-lg font-medium text-gray-900 mb-4 flex items-center">
+                                <i class="fas fa-lightbulb text-primary mr-2"></i> Search tips:
+                            </h3>
+                            <ul class="space-y-3 text-gray-700">
+                                <li class="flex items-start">
+                                    <span class="bg-primary text-white rounded-full w-5 h-5 flex items-center justify-center mr-3 mt-0.5 flex-shrink-0">
+                                        <i class="fas fa-check text-xs"></i>
+                                    </span>
+                                    <span>Check your spelling or try different keywords</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <span class="bg-primary text-white rounded-full w-5 h-5 flex items-center justify-center mr-3 mt-0.5 flex-shrink-0">
+                                        <i class="fas fa-check text-xs"></i>
+                                    </span>
+                                    <span>Use more general terms (e.g., "shirt" instead of "blue silk shirt")</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <span class="bg-primary text-white rounded-full w-5 h-5 flex items-center justify-center mr-3 mt-0.5 flex-shrink-0">
+                                        <i class="fas fa-check text-xs"></i>
+                                    </span>
+                                    <span>Browse through our categories instead</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="flex flex-col sm:flex-row justify-center gap-4">
+                            <a asp-controller="Home" asp-action="Shop" class="btn-primary px-6 py-3 text-lg font-medium rounded-lg">
+                                <i class="fas fa-tshirt mr-2"></i> Browse All Products
+                            </a>
+                            <a asp-controller="Home" asp-action="Home" class="btn-secondary px-6 py-3 text-lg font-medium rounded-lg border border-primary">
+                                <i class="fas fa-home mr-2"></i> Return Home
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            @if (Model.Results.Any())
+            {
+                <!-- Results Section -->
+                <div class="mb-8">
+                    <p class="text-gray-600 text-lg">
+                        <i class="fas fa-check-circle text-primary mr-2"></i>
+                        Found <span class="font-semibold">@Model.Results.Count</span> matching items
+                    </p>
+                </div>
+
+                <section id="product1" class="section-p1">
+                    <div class="pro-container">
+                        @foreach (var product in Model.Results)
+                        {
+                            <div class="pro" onclick="window.location.href='@Url.Action("Details", "Home", new { id = product.Product_Id })';">
+                                <!-- Product Image -->
+                                <img src="@product.imgUrl" alt="@product.Product_Name" class="product-img">
+
+                                <div class="des">
+                                    <!-- Product Brand -->
+                                    <span class="product-brand">
+                                        @if (product.Brand != null)
+                                        {
+                                            @product.Brand.Brand_Name
+                                        }
+                                        else
+                                        {
+                                            <text>No Brand</text>
+                                        }
+                                    </span>
+
+                                    <!-- Product Name / Description -->
+                                    <h5 class="product-description">@product.Product_Name</h5>
+
+                                    <!-- Product Rating -->
+                                    <div class="star">
+                                        @for (int i = 0; i < product.Product_Rating; i++)
+                                        {
+                                            <i class="fas fa-star"></i>
+                                        }
+                                        @for (int i = product.Product_Rating; i < 5; i++)
+                                        {
+                                            <i class="far fa-star"></i>
+                                        }
+                                    </div>
+
+                                    <!-- Product Price -->
+                                    <h4 class="product-price">$@product.Product_Price</h4>
+                                </div>
+
+                                <!-- Add to Cart Button -->
+                                <div class="pro-cart-button" onclick="event.stopPropagation(); showSizeModal(@product.Product_Id)">
+                                    <i class="fal fa-shopping-cart"></i>
+                                </div>
+                                <form class="add-to-cart-form" data-product-id="@product.Product_Id" style="display: none;">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="productId" value="@product.Product_Id" />
+                                    <input type="hidden" name="quantity" value="1" />
+                                    <input type="hidden" name="size" id="size-@product.Product_Id" value="" />
+                                </form>
+                            </div>
+                        }
+                    </div>
+                </section>
+            }
+        </div>
+    </div>
+</div>
+
+<script>
+    // Size Selection Modal Functions
+    let currentProductId = null;
+    let selectedSize = null;
+
+    function showSizeModal(productId) {
+        currentProductId = productId;
+        selectedSize = null;
+        document.getElementById('confirmAddToCart').disabled = true;
+
+        const sizeOptionsContainer = document.getElementById('sizeOptionsContainer');
+        sizeOptionsContainer.innerHTML = '<p>Loading sizes...</p>';
+
+        document.getElementById('sizeModal').classList.add('active');
+
+        fetch(`/Customer/Home/GetProductSizes?productId=${productId}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    updateSizeOptions(data.sizes);
+                } else {
+                    sizeOptionsContainer.innerHTML = `<p>${data.message || 'Error loading sizes'}</p>`;
+                }
+            })
+            .catch(error => {
+                sizeOptionsContainer.innerHTML = '<p>Error loading sizes</p>';
+            });
+    }
+
+    function updateSizeOptions(availableSizes) {
+        const sizeOptionsContainer = document.getElementById('sizeOptionsContainer');
+        sizeOptionsContainer.innerHTML = '';
+
+        if (!availableSizes || availableSizes.length === 0) {
+            sizeOptionsContainer.innerHTML = '<p>This product is currently out of stock</p>';
+            document.getElementById('confirmAddToCart').disabled = true;
+        } else {
+            const allSizes = ['S', 'M', 'L', 'XL', 'XXL', 'XXXL'];
+            allSizes.forEach(size => {
+                const isAvailable = availableSizes.includes(size);
+                const sizeOption = document.createElement('div');
+                sizeOption.className = `size-option ${isAvailable ? '' : 'disabled'}`;
+                sizeOption.textContent = size;
+                sizeOption.dataset.size = size;
+
+                if (isAvailable) {
+                    sizeOption.addEventListener('click', function() {
+                        document.querySelectorAll('.size-option').forEach(opt => opt.classList.remove('active'));
+                        this.classList.add('active');
+                        selectedSize = this.dataset.size;
+                        document.getElementById('confirmAddToCart').disabled = false;
+                    });
+                }
+
+                sizeOptionsContainer.appendChild(sizeOption);
+            });
+        }
+    }
+
+    function hideSizeModal() {
+        document.getElementById('sizeModal').classList.remove('active');
+    }
+
+    // Add to cart functionality
+    document.getElementById('confirmAddToCart').addEventListener('click', function() {
+        if (currentProductId && selectedSize) {
+            document.getElementById(`size-${currentProductId}`).value = selectedSize;
+            const form = document.querySelector(`.add-to-cart-form[data-product-id="${currentProductId}"]`);
+            const formData = new FormData(form);
+
+            hideSizeModal();
+
+            fetch('@Url.Action("AddToCart", "Cart", new { area = "Customer" })', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                showNotification(data.success, data.message || (data.success ? "Item added to cart" : "Failed to add item"));
+
+                if (data.success) {
+                    // Bounce effect on cart button
+                    const cartButton = document.querySelector(`.pro-cart-button[onclick*="${currentProductId}"]`);
+                    if (cartButton) {
+                        cartButton.classList.add('bounce-effect');
+                        setTimeout(() => cartButton.classList.remove('bounce-effect'), 1000);
+                    }
+
+                    // Update cart count if available
+                    if (data.cartCount !== undefined) {
+                        updateCartCount(data.cartCount);
+                    }
+                }
+            })
+            .catch(error => {
+                showNotification(false, "You must log in to add this item to your cart.");
+            });
+        }
+    });
+
+    // Notification functions
+    function showNotification(isSuccess, message) {
+        const notificationContainer = document.querySelector('.notification-container');
+        const notificationId = 'notification-' + Date.now();
+        const notificationClass = isSuccess ? 'success' : 'error';
+        const iconClass = isSuccess ? 'fa-check-circle' : 'fa-exclamation-circle';
+        const duration = isSuccess ? 3000 : 5000;
+
+        const notificationHTML = `
+            <div id="${notificationId}" class="notification ${notificationClass}">
+                <i class="fas ${iconClass} notification-icon"></i>
+                <span>${message}</span>
+                <span class="notification-close" onclick="hideNotification('${notificationId}')">
+                    <i class="fas fa-times"></i>
+                </span>
+                <div class="notification-progress">
+                    <div class="notification-progress-bar"></div>
+                </div>
+            </div>
+        `;
+
+        notificationContainer.insertAdjacentHTML('afterbegin', notificationHTML);
+        const notification = document.getElementById(notificationId);
+        const progressBar = notification.querySelector('.notification-progress-bar');
+
+        // Reset animation
+        progressBar.style.animation = 'none';
+        void progressBar.offsetWidth; // Trigger reflow
+        progressBar.style.animation = `progress ${duration/1000}s linear forwards`;
+
+        // Show notification
+        setTimeout(() => {
+            notification.classList.add('show');
+            positionNotifications();
+        }, 100);
+
+        // Auto-hide
+        const autoHide = setTimeout(() => {
+            hideNotification(notificationId);
+        }, duration);
+
+        // Pause on hover
+        notification.addEventListener('mouseenter', () => {
+            clearTimeout(autoHide);
+            progressBar.style.animationPlayState = 'paused';
+        });
+
+        notification.addEventListener('mouseleave', () => {
+            const remainingWidth = 1 - (progressBar.offsetWidth / progressBar.parentElement.offsetWidth);
+            const remainingTime = remainingWidth * duration;
+
+            progressBar.style.animationPlayState = 'running';
+            setTimeout(() => {
+                hideNotification(notificationId);
+            }, remainingTime);
+        });
+    }
+
+    function positionNotifications() {
+        const notifications = document.querySelectorAll('.notification.show');
+        let topPosition = 0;
+
+        notifications.forEach(notification => {
+            notification.style.top = `${topPosition}px`;
+            topPosition += notification.offsetHeight + 10;
+        });
+    }
+
+    window.hideNotification = function(id) {
+        const notification = document.getElementById(id);
+        if (notification) {
+            notification.classList.remove('show');
+            notification.classList.add('hide');
+
+            setTimeout(() => {
+                notification.remove();
+                positionNotifications();
+            }, 500);
+        }
+    };
+
+    // Function to update cart count in navbar
+    function updateCartCount(count) {
+        const cartCountElement = document.querySelector('.cart-count');
+        if (cartCountElement) {
+            cartCountElement.textContent = count;
+            cartCountElement.style.display = count > 0 ? 'inline-block' : 'none';
+        }
+    }
+
+    // Close modal when clicking outside
+    document.getElementById('sizeModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            hideSizeModal();
+        }
+    });
+
+    // Show initial notifications from server
+    document.addEventListener('DOMContentLoaded', function() {
+    @if (showSuccessMessage)
+    {
+        @:showNotification(true, "Item added to cart successfully!");
+    }
+
+    @if (showErrorMessage)
+    {
+        @:showNotification(false, "@errorMessage");
+    }
+    });
+</script>

@@ -1,0 +1,377 @@
+﻿@functions {
+    public string IsActive(string controller, params string[] actions)
+    {
+        var currentController = ViewContext.RouteData.Values["controller"].ToString();
+        var currentAction = ViewContext.RouteData.Values["action"].ToString();
+
+        return currentController == controller && actions.Contains(currentAction)
+            ? "block py-2 px-4 text-primary bg-gray-100 font-medium"
+            : "block py-2 px-4 text-gray-600 hover:bg-gray-100";
+    }
+}
+@using LushThreads.Domain.Entites
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<ApplicationUser> UserManager
+
+@{
+    var user = await UserManager.GetUserAsync(User);
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile</title>
+    <script src="https://kit.fontawesome.com/87ba71bd3b.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" type="image/png" href="~/img/favicon.png">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#088178',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .mobile-menu {
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+        }
+
+            .mobile-menu.active {
+                transform: translateX(0);
+            }
+
+        .profile-img {
+            width: 32px;
+            height: 32px;
+        }
+
+        @@media (min-width: 1024px) {
+            .profile-img {
+                width: 40px;
+                height: 40px;
+            }
+        }
+
+        .notification-container {
+            position: fixed;
+            top: 1.5rem;
+            right: 1.5rem;
+            z-index: 1000;
+        }
+
+        .notification {
+            padding: 1rem 1.5rem;
+            color: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
+            transform: translateX(150%);
+            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            margin-bottom: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .notification.success {
+                background-color: #088178;
+            }
+
+            .notification.error {
+                background-color: #ef4444;
+            }
+
+            .notification.show {
+                transform: translateX(0);
+            }
+
+            .notification.hide {
+                transform: translateX(150%);
+                opacity: 0;
+            }
+
+        .notification-icon {
+            margin-right: 0.75rem;
+            font-size: 1.25rem;
+        }
+
+        .notification-close {
+            margin-left: 1rem;
+            cursor: pointer;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+
+            .notification-close:hover {
+                opacity: 1;
+            }
+
+        .notification-progress {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 4px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .notification-progress-bar {
+            height: 100%;
+            width: 100%;
+            background: white;
+            animation: progress 5s linear forwards;
+            transform-origin: left;
+        }
+
+        @@keyframes progress {
+            0% {
+                transform: scaleX(0);
+            }
+
+            100% {
+                transform: scaleX(1);
+            }
+        }
+
+        /* Loading animation styles from Layout.cshtml */
+        #loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #ffffff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+
+            #loading.hidden {
+                opacity: 0;
+                pointer-events: none;
+            }
+
+        .loading-text {
+            color: #088178;
+            font-size: 1.25rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            background: #088178;
+            border-radius: 50%;
+            margin: 0 6px;
+            animation: jump 0.8s infinite alternate;
+        }
+
+            .dot:nth-child(2) {
+                animation-delay: 0.2s;
+            }
+
+            .dot:nth-child(3) {
+                animation-delay: 0.4s;
+            }
+
+            .dot:nth-child(4) {
+                animation-delay: 0.6s;
+            }
+
+        @@keyframes jump {
+            0% {
+                transform: translateY(0);
+            }
+
+            100% {
+                transform: translateY(-15px);
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <div id="loading">
+        <span class="loading-text">Loading</span>
+        <div class="flex">
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+        </div>
+    </div>
+
+    <div class="lg:hidden bg-white shadow p-4 flex justify-between items-center">
+        <h1 class="text-xl font-bold text-primary">My Profile</h1>
+        <button id="menuToggle" class="text-gray-600" aria-expanded="false" aria-controls="mobileMenu">
+            <i class="fas fa-bars text-2xl"></i>
+        </button>
+    </div>
+
+    <div class="flex flex-col lg:flex-row h-screen">
+        <div id="mobileMenu" class="mobile-menu lg:transform-none fixed lg:static inset-y-0 left-0 w-64 bg-white shadow-lg z-50 lg:z-auto">
+            <div class="p-4 border-b border-gray-200 flex items-center space-x-3">
+                @if (user != null)
+                {
+                    <img src="https://api.dicebear.com/7.x/initials/svg?seed=@(user.Name)&backgroundColor=088178&textColor=ffffff"
+                         class="rounded-full w-9 h-9 object-cover"
+                         width="36" height="36" alt="User">
+                    <div>
+                        <p class="font-medium">@user?.Name</p>
+                        <p class="text-sm text-gray-500 truncate">@user?.Email</p>
+                    </div>
+                }
+            </div>
+
+            <nav class="mt-4">
+                <a asp-controller="Profile" asp-action="Index" class="@IsActive("Profile","Index")">
+                    <i class="fas fa-user mr-2"></i> Profile
+                </a>
+                <a asp-controller="Profile" asp-action="Security" class="@IsActive("Profile","Security","ManageDevices","ChangePassword","Enable2FA","VerifyEmailCode")">
+                    <i class="fas fa-lock mr-2"></i> Login & Security
+                </a>
+                <a asp-controller="Profile" asp-action="Payments" class="@IsActive("Profile","Payments")">
+                    <i class="fas fa-credit-card mr-2"></i> Your Payments
+                </a>
+                <a asp-controller="Profile" asp-action="Orders" class="@IsActive("Profile","Orders")">
+                    <i class="fas fa-box mr-2"></i> Your Orders
+                </a>
+                <a asp-controller="Profile" asp-action="ContactUs" class="@IsActive("Profile","ContactUs")">
+                    <i class="fas fa-envelope mr-2"></i> Contact Us
+                </a>
+                <a asp-area="Customer" asp-controller="Home" asp-action="Home" class="@IsActive("Home","Home")">
+                    <i class="fas fa-house mr-2"></i> Homepage
+                </a>
+            </nav>
+        </div>
+
+        <div id="overlay" class="hidden fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"></div>
+        <div class="flex-1 p-8 overflow-y-auto">
+            <div class="notification-container">
+                @if (TempData["SuccessMessage"] != null)
+                {
+                    <div id="successNotification" class="notification success">
+                        <i class="fas fa-check-circle notification-icon"></i>
+                        <span>@TempData["SuccessMessage"]</span>
+                        <span class="notification-close" onclick="hideNotification('successNotification')">
+                            <i class="fas fa-times"></i>
+                        </span>
+                        <div class="notification-progress">
+                            <div class="notification-progress-bar"></div>
+                        </div>
+                    </div>
+                }
+                @if (TempData["ErrorMessage"] != null)
+                {
+                    <div id="errorNotification" class="notification error">
+                        <i class="fas fa-exclamation-circle notification-icon"></i>
+                        <span>@TempData["ErrorMessage"]</span>
+                        <span class="notification-close" onclick="hideNotification('errorNotification')">
+                            <i class="fas fa-times"></i>
+                        </span>
+                        <div class="notification-progress">
+                            <div class="notification-progress-bar"></div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="max-w-4xl mx-auto">
+                @RenderBody()
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const menuToggle = document.getElementById('menuToggle');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const overlay = document.getElementById('overlay');
+
+        menuToggle.addEventListener('click', () => {
+            const isExpanded = mobileMenu.classList.toggle('active');
+            overlay.classList.toggle('hidden');
+            menuToggle.setAttribute('aria-expanded', isExpanded);
+        });
+
+        overlay.addEventListener('click', () => {
+            mobileMenu.classList.remove('active');
+            overlay.classList.add('hidden');
+            menuToggle.setAttribute('aria-expanded', 'false');
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Show success notification if exists
+            const successNotification = document.getElementById('successNotification');
+            if (successNotification) {
+                showNotification(successNotification);
+            }
+
+            // Show error notification if exists
+            const errorNotification = document.getElementById('errorNotification');
+            if (errorNotification) {
+                showNotification(errorNotification, 5000);
+            }
+
+            // Loading animation on refresh
+            window.addEventListener('load', function () {
+                setTimeout(() => {
+                    document.getElementById('loading').classList.add('hidden');
+                }, 1000);
+            });
+        });
+
+        function showNotification(notification, duration = 3000) {
+            notification.classList.add('show');
+
+            // Reset animation
+            const progressBar = notification.querySelector('.notification-progress-bar');
+            progressBar.style.animation = 'none';
+            void progressBar.offsetWidth; // Trigger reflow
+            progressBar.style.animation = `progress ${duration/1000}s linear forwards`;
+
+            // Auto-hide
+            const autoHide = setTimeout(() => {
+                hideNotification(notification.id);
+            }, duration);
+
+            // Pause on hover
+            notification.addEventListener('mouseenter', () => {
+                clearTimeout(autoHide);
+                progressBar.style.animationPlayState = 'paused';
+            });
+
+            notification.addEventListener('mouseleave', () => {
+                const remainingWidth = 1 - (progressBar.offsetWidth / progressBar.parentElement.offsetWidth);
+                const remainingTime = remainingWidth * duration;
+
+                progressBar.style.animationPlayState = 'running';
+                setTimeout(() => {
+                    hideNotification(notification.id);
+                }, remainingTime);
+            });
+        }
+
+        window.hideNotification = function(id) {
+            const notification = document.getElementById(id);
+            if (notification) {
+                notification.classList.remove('show');
+                notification.classList.add('hide');
+
+                setTimeout(() => {
+                    notification.remove();
+                }, 500);
+            }
+        };
+    </script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
