@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/constants/app_routes.dart';
@@ -11,278 +12,378 @@ class OnboardingScreen extends StatefulWidget {
 }
 
 class _OnboardingScreenState extends State<OnboardingScreen>
-    with TickerProviderStateMixin {
+    with SingleTickerProviderStateMixin {
   final PageController _pageCtrl = PageController();
+  late AnimationController _progressCtrl;
   int _currentPage = 0;
+  bool _isAnimating = false;
 
-  late AnimationController _contentCtrl;
-  late Animation<double> _contentFade;
-  late Animation<Offset> _contentSlide;
+  static const _duration = Duration(seconds: 4);
 
   static const _pages = [
     _OnboardingPage(
       emoji: '🛍️',
-      bgColor: Color(0xFFE1F5EE),
-      accentColor: AppColors.primary,
       title: 'Discover Premium Fashion',
-      subtitle:
-          'Browse thousands of styles from top brands like Zara, H&M, and Adidas — all in one place.',
+      subtitle: 'Browse thousands of styles from top brands like Zara, H&M, and Adidas — all in one place.',
     ),
     _OnboardingPage(
       emoji: '⚡',
-      bgColor: Color(0xFFFFF9E6),
-      accentColor: Color(0xFFD4AF37),
       title: 'Exclusive Deals Daily',
-      subtitle:
-          'Get up to 70% off on seasonal collections. New offers drop every day — never miss a deal.',
+      subtitle: 'Get up to 70% off on seasonal collections. New offers drop every day — never miss a deal.',
     ),
     _OnboardingPage(
       emoji: '❤️',
-      bgColor: Color(0xFFFFEEF3),
-      accentColor: Color(0xFFFF2D87),
       title: 'Save Your Wishlist',
-      subtitle:
-          'Heart any item you love and save it for later. Your wishlist is always just a tap away.',
+      subtitle: 'Heart any item you love and save it for later. Your wishlist is always just a tap away.',
     ),
     _OnboardingPage(
       emoji: '📦',
-      bgColor: Color(0xFFE8F4FD),
-      accentColor: Color(0xFF1565C0),
       title: 'Track Every Order',
-      subtitle:
-          'From checkout to your doorstep — track your orders in real time and get notified instantly.',
+      subtitle: 'From checkout to your doorstep — track your orders in real time and get notified instantly.',
     ),
   ];
 
   @override
   void initState() {
     super.initState();
-    _contentCtrl = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 400));
-    _contentFade = Tween<double>(begin: 0.0, end: 1.0)
-        .animate(CurvedAnimation(parent: _contentCtrl, curve: Curves.easeOut));
-    _contentSlide = Tween<Offset>(
-            begin: const Offset(0.0, 0.12), end: Offset.zero)
-        .animate(
-            CurvedAnimation(parent: _contentCtrl, curve: Curves.easeOut));
-    _contentCtrl.forward();
+    _progressCtrl = AnimationController(vsync: this, duration: _duration);
+    WidgetsBinding.instance.addPostFrameCallback((_) => _startPage(0));
   }
 
-  @override
-  void dispose() {
-    _pageCtrl.dispose();
-    _contentCtrl.dispose();
-    super.dispose();
+  void _startPage(int page) {
+    if (!mounted) return;
+    _progressCtrl.reset();
+    _progressCtrl.forward().then((_) {
+      if (mounted && page == _currentPage) _goNext();
+    });
   }
 
-  void _next() {
+  void _goNext() {
+    if (_isAnimating) return;
     if (_currentPage < _pages.length - 1) {
-      _pageCtrl.nextPage(
-        duration: const Duration(milliseconds: 350),
-        curve: Curves.easeInOut,
-      );
+      _animateTo(_currentPage + 1);
     } else {
       _finish();
     }
   }
 
-  void _skip() => _finish();
+  void _goPrev() {
+    if (_isAnimating || _currentPage == 0) return;
+    _animateTo(_currentPage - 1);
+  }
+
+  void _animateTo(int page) {
+    if (_isAnimating) return;
+    _isAnimating = true;
+    _progressCtrl.stop();
+    _pageCtrl.animateToPage(
+      page,
+      duration: const Duration(milliseconds: 400),
+      curve: Curves.easeInOut,
+    ).then((_) {
+      if (!mounted) return;
+      setState(() {
+        _currentPage = page;
+        _isAnimating = false;
+      });
+      _startPage(page);
+    });
+  }
+
+  void _jumpTo(int page) {
+    if (_isAnimating || page == _currentPage) return;
+    _animateTo(page);
+  }
 
   void _finish() {
     AppState.instance.completeOnboarding();
     Navigator.pushReplacementNamed(context, AppRoutes.login);
   }
 
-  void _onPageChanged(int page) {
-    setState(() => _currentPage = page);
-    _contentCtrl.reset();
-    _contentCtrl.forward();
+  @override
+  void dispose() {
+    _pageCtrl.dispose();
+    _progressCtrl.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final page = _pages[_currentPage];
-
     return Scaffold(
-      backgroundColor: page.bgColor,
+      backgroundColor: AppColors.background,
       body: SafeArea(
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 400),
-          color: page.bgColor,
-          child: Column(
-            children: [
-              // ── Skip button ─────────────────────────────────────────────
-              Align(
-                alignment: Alignment.topRight,
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 12, 20, 0),
-                  child: GestureDetector(
-                    onTap: _skip,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 8),
-                      decoration: BoxDecoration(
-                        color: Colors.black.withOpacity(0.06),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: const Text('Skip',
-                          style: TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w600,
-                              color: Color(0xFF4A4A4A))),
+        child: Column(
+          children: [
+            // ── Story progress bar ──────────────────────────────────────────
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
+              child: _StoryProgressBar(
+                currentPage: _currentPage,
+                totalPages: _pages.length,
+                progressCtrl: _progressCtrl,
+                onTap: _jumpTo,
+              ),
+            ),
+            const SizedBox(height: 8),
+
+            // ── Page content ────────────────────────────────────────────────
+            Expanded(
+              child: Stack(
+                children: [
+                  PageView.builder(
+                    controller: _pageCtrl,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: _pages.length,
+                    itemBuilder: (_, i) => _PageContent(page: _pages[i]),
+                  ),
+                  // Left tap → prev
+                  Positioned(
+                    left: 0, top: 0, bottom: 0,
+                    child: GestureDetector(
+                      behavior: HitTestBehavior.translucent,
+                      onTap: _goPrev,
+                      child: const SizedBox(width: 90),
                     ),
                   ),
-                ),
-              ),
-
-              // ── PageView ───────────────────────────────────────────────
-              Expanded(
-                child: PageView.builder(
-                  controller: _pageCtrl,
-                  onPageChanged: _onPageChanged,
-                  itemCount: _pages.length,
-                  itemBuilder: (_, i) => _buildPageContent(_pages[i]),
-                ),
-              ),
-
-              // ── Bottom area ─────────────────────────────────────────────
-              Padding(
-                padding: const EdgeInsets.fromLTRB(32, 0, 32, 40),
-                child: Column(
-                  children: [
-                    // Dots
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: List.generate(_pages.length, (i) {
-                        final active = i == _currentPage;
-                        return AnimatedContainer(
-                          duration: const Duration(milliseconds: 300),
-                          margin: const EdgeInsets.symmetric(horizontal: 4),
-                          width: active ? 24 : 8,
-                          height: 8,
-                          decoration: BoxDecoration(
-                            color: active
-                                ? page.accentColor
-                                : page.accentColor.withOpacity(0.25),
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                        );
-                      }),
+                  // Right tap → next
+                  Positioned(
+                    right: 0, top: 0, bottom: 0,
+                    child: GestureDetector(
+                      behavior: HitTestBehavior.translucent,
+                      onTap: _goNext,
+                      child: const SizedBox(width: 90),
                     ),
-                    const SizedBox(height: 32),
+                  ),
+                ],
+              ),
+            ),
 
-                    // Next / Get Started button
-                    SizedBox(
-                      width: double.infinity,
-                      child: GestureDetector(
-                        onTap: _next,
-                        child: AnimatedContainer(
-                          duration: const Duration(milliseconds: 300),
-                          height: 56,
-                          decoration: BoxDecoration(
-                            color: page.accentColor,
-                            borderRadius: BorderRadius.circular(28),
-                            boxShadow: [
-                              BoxShadow(
-                                color: page.accentColor.withOpacity(0.35),
-                                blurRadius: 20,
-                                offset: const Offset(0, 8),
-                              ),
-                            ],
-                          ),
-                          child: Center(
-                            child: Text(
-                              _currentPage == _pages.length - 1
-                                  ? 'Get Started'
-                                  : 'Next',
-                              style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w700,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        ),
+            // ── Bottom buttons ──────────────────────────────────────────────
+            Padding(
+              padding: const EdgeInsets.fromLTRB(28, 0, 28, 40),
+              child: Column(
+                children: [
+                  // Get Started / Next
+                  SizedBox(
+                    width: double.infinity,
+                    height: 56,
+                    child: ElevatedButton(
+                      onPressed: _currentPage == _pages.length - 1 ? _finish : _goNext,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.primary,
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(28)),
+                        elevation: 0,
+                        shadowColor: Colors.transparent,
+                      ),
+                      child: Text(
+                        _currentPage == _pages.length - 1 ? 'Get Started' : 'Next',
+                        style: const TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.w700),
                       ),
                     ),
-
-                    // Login link
-                    if (_currentPage == _pages.length - 1) ...[
-                      const SizedBox(height: 16),
-                      GestureDetector(
-                        onTap: () {
-                          AppState.instance.completeOnboarding();
-                          AppState.instance.loginAsGuest();
-                          Navigator.pushReplacementNamed(
-                              context, AppRoutes.home);
-                        },
-                        child: Text(
-                          'Continue as Guest',
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                            color: page.accentColor,
-                          ),
-                        ),
+                  ),
+                  const SizedBox(height: 14),
+                  // Continue as Guest
+                  GestureDetector(
+                    onTap: () {
+                      AppState.instance.completeOnboarding();
+                      AppState.instance.loginAsGuest();
+                      Navigator.pushReplacementNamed(context, AppRoutes.home);
+                    },
+                    child: const Text(
+                      'Continue as Guest',
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.textMuted,
                       ),
-                    ],
-                  ],
-                ),
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
   }
+}
 
-  Widget _buildPageContent(_OnboardingPage page) {
-    return SlideTransition(
-      position: _contentSlide,
-      child: FadeTransition(
-        opacity: _contentFade,
+// ─── Story Progress Bar ───────────────────────────────────────────────────────
+class _StoryProgressBar extends StatefulWidget {
+  final int currentPage;
+  final int totalPages;
+  final AnimationController progressCtrl;
+  final Function(int) onTap;
+
+  const _StoryProgressBar({
+    required this.currentPage,
+    required this.totalPages,
+    required this.progressCtrl,
+    required this.onTap,
+  });
+
+  @override
+  State<_StoryProgressBar> createState() => _StoryProgressBarState();
+}
+
+class _StoryProgressBarState extends State<_StoryProgressBar> {
+  late Animation<double> _anim;
+
+  @override
+  void initState() {
+    super.initState();
+    _rebuildAnim();
+  }
+
+  @override
+  void didUpdateWidget(_StoryProgressBar old) {
+    super.didUpdateWidget(old);
+    if (old.currentPage != widget.currentPage) _rebuildAnim();
+  }
+
+  void _rebuildAnim() {
+    _anim = Tween<double>(begin: 0, end: 1).animate(
+      CurvedAnimation(parent: widget.progressCtrl, curve: Curves.linear),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: List.generate(widget.totalPages, (i) {
+        return Expanded(
+          child: GestureDetector(
+            onTap: () => widget.onTap(i),
+            child: Container(
+              margin: const EdgeInsets.symmetric(horizontal: 3),
+              height: 3,
+              decoration: BoxDecoration(
+                color: AppColors.primary.withOpacity(0.15),
+                borderRadius: BorderRadius.circular(2),
+              ),
+              child: Stack(children: [
+                // completed
+                if (i < widget.currentPage)
+                  Container(
+                    decoration: BoxDecoration(
+                      color: AppColors.primary,
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                  ),
+                // active — animated
+                if (i == widget.currentPage)
+                  AnimatedBuilder(
+                    animation: _anim,
+                    builder: (_, __) => FractionallySizedBox(
+                      alignment: Alignment.centerLeft,
+                      widthFactor: _anim.value,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: AppColors.primary,
+                          borderRadius: BorderRadius.circular(2),
+                        ),
+                      ),
+                    ),
+                  ),
+              ]),
+            ),
+          ),
+        );
+      }),
+    );
+  }
+}
+
+// ─── Single page content ──────────────────────────────────────────────────────
+class _PageContent extends StatefulWidget {
+  final _OnboardingPage page;
+  const _PageContent({required this.page});
+
+  @override
+  State<_PageContent> createState() => _PageContentState();
+}
+
+class _PageContentState extends State<_PageContent>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _ctrl;
+  late Animation<double> _scale;
+  late Animation<double> _fade;
+  late Animation<Offset> _slide;
+
+  @override
+  void initState() {
+    super.initState();
+    _ctrl = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 500));
+    _scale = Tween<double>(begin: 0.7, end: 1.0).animate(
+        CurvedAnimation(parent: _ctrl, curve: Curves.elasticOut));
+    _fade = Tween<double>(begin: 0.0, end: 1.0).animate(
+        CurvedAnimation(parent: _ctrl, curve: const Interval(0, 0.5)));
+    _slide = Tween<Offset>(
+            begin: const Offset(0, 0.1), end: Offset.zero)
+        .animate(CurvedAnimation(parent: _ctrl, curve: Curves.easeOut));
+    _ctrl.forward();
+  }
+
+  @override
+  void dispose() {
+    _ctrl.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FadeTransition(
+      opacity: _fade,
+      child: SlideTransition(
+        position: _slide,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 32),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Emoji illustration
-              Container(
-                width: 200,
-                height: 200,
-                decoration: BoxDecoration(
-                  color: page.accentColor.withOpacity(0.12),
-                  shape: BoxShape.circle,
-                ),
-                child: Center(
-                  child: Text(page.emoji,
-                      style: const TextStyle(fontSize: 90)),
+              // Emoji circle
+              ScaleTransition(
+                scale: _scale,
+                child: Container(
+                  width: 200, height: 200,
+                  decoration: BoxDecoration(
+                    color: AppColors.primaryLight,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Center(
+                    child: Text(widget.page.emoji,
+                        style: const TextStyle(fontSize: 88)),
+                  ),
                 ),
               ),
               const SizedBox(height: 48),
 
               // Title
               Text(
-                page.title,
+                widget.page.title,
                 textAlign: TextAlign.center,
                 style: const TextStyle(
-                  fontSize: 28,
+                  fontSize: 26,
                   fontWeight: FontWeight.w800,
-                  color: Color(0xFF1A1A1A),
+                  color: AppColors.textMain,
                   height: 1.2,
                 ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 14),
 
               // Subtitle
               Text(
-                page.subtitle,
+                widget.page.subtitle,
                 textAlign: TextAlign.center,
                 style: const TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.w400,
-                  color: Color(0xFF4A4A4A),
-                  height: 1.6,
+                  color: AppColors.textMuted,
+                  height: 1.65,
                 ),
               ),
             ],
@@ -293,17 +394,14 @@ class _OnboardingScreenState extends State<OnboardingScreen>
   }
 }
 
+// ─── Data class ───────────────────────────────────────────────────────────────
 class _OnboardingPage {
   final String emoji;
-  final Color bgColor;
-  final Color accentColor;
   final String title;
   final String subtitle;
 
   const _OnboardingPage({
     required this.emoji,
-    required this.bgColor,
-    required this.accentColor,
     required this.title,
     required this.subtitle,
   });

@@ -17,7 +17,6 @@ void main() => runApp(const LushThreadsApp());
 class LushThreadsApp extends StatelessWidget {
   const LushThreadsApp({super.key});
 
-  // ── Page map ──────────────────────────────────────────────────────────────
   static final Map<String, WidgetBuilder> _pages = {
     AppRoutes.splash:        (_) => const SplashScreen(),
     AppRoutes.onboarding:    (_) => const OnboardingScreen(),
@@ -39,7 +38,6 @@ class LushThreadsApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light,
       initialRoute: AppRoutes.splash,
-      // ── Smooth transitions on ALL routes ──────────────────────────────────
       onGenerateRoute: (settings) {
         final builder = _pages[settings.name];
         if (builder == null) return null;
