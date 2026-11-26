@@ -1,13 +1,13 @@
-﻿using LushThreads.Domain.Entites;
-using LushThreads.Domain.ViewModels.OrderAnalytics;
-using LushThreads.Domain.ViewModels.ProductAnalytics;
+using LushThreads.Domain.Entites;
+using LushThreads.Application.ViewModels.OrderAnalytics;
+using LushThreads.Application.ViewModels.ProductAnalytics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LushThreads.Infrastructure.Persistence.IRepository
+namespace LushThreads.Application.Interfaces
 {
     /// <summary>
     /// Interface for OrderDetail repository.

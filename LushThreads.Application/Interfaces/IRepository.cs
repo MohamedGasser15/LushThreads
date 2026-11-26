@@ -1,6 +1,6 @@
-﻿using System.Linq.Expressions;
+using System.Linq.Expressions;
 
-namespace LushThreads.Infrastructure.Persistence.IRepository
+namespace LushThreads.Application.Interfaces
 {
     public interface IRepository<T> where T : class
     {

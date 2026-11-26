@@ -1,11 +1,11 @@
-﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LushThreads.Infrastructure.Persistence.IRepository
+namespace LushThreads.Application.Interfaces
 {
     /// <summary>
     /// Repository interface for IdentityRole operations.

@@ -1,12 +1,12 @@
-﻿using LushThreads.Domain.Entites;
-using LushThreads.Domain.ViewModels.OrderAnalytics;
+using LushThreads.Domain.Entites;
+using LushThreads.Application.ViewModels.OrderAnalytics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LushThreads.Infrastructure.Persistence.IRepository
+namespace LushThreads.Application.Interfaces
 {
     /// <summary>
     /// Repository interface for Order-specific operations.

@@ -1,7 +1,7 @@
-﻿using LushThreads.Domain.Entites;
+using LushThreads.Domain.Entites;
 using System.Threading.Tasks;
 
-namespace LushThreads.Infrastructure.Persistence.IRepository
+namespace LushThreads.Application.Interfaces
 {
     /// <summary>
     /// Repository interface for UserDevice entity.

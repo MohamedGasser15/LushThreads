@@ -1,6 +1,6 @@
-﻿using LushThreads.Domain.Entites;
+using LushThreads.Domain.Entites;
 
-namespace LushThreads.Infrastructure.Persistence.IRepository
+namespace LushThreads.Application.Interfaces
 {
     public interface IProductRepository : IRepository<Product>
     {

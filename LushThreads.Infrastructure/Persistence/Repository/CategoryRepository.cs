@@ -1,6 +1,6 @@
-﻿using LushThreads.Infrastructure.Data;
+using LushThreads.Infrastructure.Data;
 using LushThreads.Domain.Entites;
-using LushThreads.Infrastructure.Persistence.IRepository;
+using LushThreads.Application.Interfaces;
 using Microsoft.Extensions.Logging; // Added for ILogger if needed, but not present in original
 
 namespace LushThreads.Infrastructure.Persistence.Repository

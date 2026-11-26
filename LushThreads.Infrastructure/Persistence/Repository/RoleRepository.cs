@@ -1,5 +1,5 @@
-﻿using LushThreads.Infrastructure.Data;
-using LushThreads.Infrastructure.Persistence.IRepository;
+using LushThreads.Infrastructure.Data;
+using LushThreads.Application.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;

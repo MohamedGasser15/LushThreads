@@ -1,8 +1,8 @@
-﻿using LushThreads.Domain.Entites;
-using LushThreads.Domain.ViewModels.OrderAnalytics;
-using LushThreads.Domain.ViewModels.ProductAnalytics;
+using LushThreads.Domain.Entites;
+using LushThreads.Application.ViewModels.OrderAnalytics;
+using LushThreads.Application.ViewModels.ProductAnalytics;
 using LushThreads.Infrastructure.Data;
-using LushThreads.Infrastructure.Persistence.IRepository;
+using LushThreads.Application.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;

@@ -1,6 +1,6 @@
-﻿using LushThreads.Domain.Entites;
+using LushThreads.Domain.Entites;
 using LushThreads.Infrastructure.Data;
-using LushThreads.Infrastructure.Persistence.IRepository;
+using LushThreads.Application.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
