@@ -1,10 +1,10 @@
-﻿using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using MailKit.Net.Smtp;
 using MimeKit;
 using MimeKit.Text;
 using Microsoft.Extensions.Configuration;
 
-namespace LushThreads.Application.Services
+namespace LushThreads.Infrastructure.Services
 {
     public class EmailSender : IEmailSender
     {

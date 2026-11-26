@@ -7,21 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MailKit" Version="4.12.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.Facebook" Version="8.0.14" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="8.0.14" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.14" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.14" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.14">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="MimeKit" Version="4.15.1" />
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Stripe.net" Version="48.0.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\LushThreads.Infrastructure\LushThreads.Infrastructure.csproj" />
     <ProjectReference Include="..\LushThreads.Domain\LushThreads.Domain.csproj" />
   </ItemGroup>
 

@@ -1,8 +1,10 @@
-﻿using LushThreads.Domain.Entites;
+using LushThreads.Domain.Entites;
 using LushThreads.Infrastructure.Data;
-using LushThreads.Infrastructure.Persistence.IRepository;
+using LushThreads.Application.Interfaces;
 using LushThreads.Infrastructure.Persistence.Repository;
+using LushThreads.Infrastructure.Services;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -61,6 +63,7 @@ namespace LushThreads.Infrastructure.Configurations
             services.AddScoped<IPaymentMethodRepository, PaymentMethodRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IRoleRepository, RoleRepository>();
+            services.AddTransient<IEmailSender, EmailSender>();
             return services;
         }
     }

@@ -1,6 +1,5 @@
 ﻿using LushThreads.Application.ServiceInterfaces;
 using LushThreads.Application.Services;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace LushThreads.Application.Configurations
@@ -15,7 +14,6 @@ namespace LushThreads.Application.Configurations
 
             // Register application services (business logic)
             services.AddScoped<IBrandService, BrandService>();
-            services.AddTransient<IEmailSender, EmailSender>();
             services.AddScoped<IUserAnalyticsService, UserAnalyticsService>();
             services.AddScoped<IOrderAnalyticsService, OrderAnalyticsService>();
             services.AddScoped<IProductAnalyticsService, ProductAnalyticsService>();
