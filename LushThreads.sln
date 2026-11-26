@@ -19,8 +19,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LushThreads.Infrastructure"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LushThreads.Application", "LushThreads.Application\LushThreads.Application.csproj", "{B1A9ECB1-0449-4728-B966-CA19F94C7CE5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LushThreads.Api", "LushThreads.Api\LushThreads.Api.csproj", "{5B137D30-7F3D-418E-A9C4-72FDCC90EA8B}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -43,10 +41,6 @@ Global
 		{B1A9ECB1-0449-4728-B966-CA19F94C7CE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B1A9ECB1-0449-4728-B966-CA19F94C7CE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B1A9ECB1-0449-4728-B966-CA19F94C7CE5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5B137D30-7F3D-418E-A9C4-72FDCC90EA8B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5B137D30-7F3D-418E-A9C4-72FDCC90EA8B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5B137D30-7F3D-418E-A9C4-72FDCC90EA8B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5B137D30-7F3D-418E-A9C4-72FDCC90EA8B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
