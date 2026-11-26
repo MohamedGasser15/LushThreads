@@ -1,9 +1,8 @@
-﻿using LushThreads.Application.ServiceInterfaces;
+using LushThreads.Application.ServiceInterfaces;
 using LushThreads.Domain.Entites;
-using LushThreads.Infrastructure.Persistence.IRepository;
+using LushThreads.Application.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -52,7 +51,6 @@ namespace LushThreads.Application.Services
         /// </summary>
         private async Task PopulateUserRolesAsync(IEnumerable<ApplicationUser> users)
         {
-            var allRoles = await _roleManager.Roles.ToDictionaryAsync(r => r.Id, r => r.Name);
             foreach (var user in users)
             {
                 var userRoles = await _userManager.GetRolesAsync(user);
@@ -63,14 +61,15 @@ namespace LushThreads.Application.Services
         /// <summary>
         /// Gets a list of all roles as SelectListItem for dropdowns.
         /// </summary>
-        private async Task<IEnumerable<SelectListItem>> GetRoleListAsync()
+        private Task<IEnumerable<SelectListItem>> GetRoleListAsync()
         {
-            var roles = await _roleManager.Roles.ToListAsync();
-            return roles.Select(r => new SelectListItem
+            var roles = _roleManager.Roles.ToList();
+            IEnumerable<SelectListItem> result = roles.Select(r => new SelectListItem
             {
                 Text = r.Name,
                 Value = r.Id
             }).ToList();
+            return Task.FromResult(result);
         }
 
         #endregion
@@ -81,7 +80,7 @@ namespace LushThreads.Application.Services
         public async Task<IEnumerable<ApplicationUser>> GetAllUsersAsync()
         {
             _logger.LogDebug("Retrieving all users.");
-            var users = await _userManager.Users.ToListAsync();
+            var users = _userManager.Users.ToList();
             await PopulateUserRolesAsync(users);
             _logger.LogDebug("Retrieved {Count} users.", users.Count);
             return users;

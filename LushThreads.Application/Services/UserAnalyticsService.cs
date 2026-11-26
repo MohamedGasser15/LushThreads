@@ -1,7 +1,7 @@
-﻿using LushThreads.Application.ServiceInterfaces;
+using LushThreads.Application.ServiceInterfaces;
 using LushThreads.Domain.Entites;
-using LushThreads.Domain.ViewModels.UserAnalytics;
-using LushThreads.Infrastructure.Persistence.IRepository;
+using LushThreads.Application.ViewModels.UserAnalytics;
+using LushThreads.Application.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;

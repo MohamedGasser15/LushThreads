@@ -1,8 +1,8 @@
-﻿using LushThreads.Application.ServiceInterfaces;
+using LushThreads.Application.ServiceInterfaces;
 using LushThreads.Domain.Constants;
 using LushThreads.Domain.Entites;
-using LushThreads.Domain.ViewModels.Auth;
-using LushThreads.Domain.ViewModels.Profile;
+using LushThreads.Application.ViewModels.Auth;
+using LushThreads.Application.ViewModels.Profile;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;

@@ -1,4 +1,4 @@
-ï»¿@using LushThreads.Domain.ViewModels.Home
+@using LushThreads.Application.ViewModels.Home
 @model IEnumerable<ShopProductViewModel>
 
 @{
@@ -496,7 +496,7 @@
         }
 
             .size-option.disabled::after {
-                content: "Ã—";
+                content: "×";
                 position: absolute;
                 top: -5px;
                 right: -5px;
@@ -823,7 +823,7 @@
     <div class="quick-view-modal">
         <div class="modal-header">
             <h3 class="modal-title" id="quickViewProductName"></h3>
-            <button class="close-modal" onclick="hideQuickViewModal()">Ã—</button>
+            <button class="close-modal" onclick="hideQuickViewModal()">×</button>
         </div>
         <div class="quick-view-content">
             <div class="quick-view-image">
@@ -861,7 +861,7 @@
     <div class="size-modal">
         <div class="modal-header">
             <h3 class="modal-title">Select Size & Quantity</h3>
-            <button class="close-modal" onclick="hideSizeModal()">Ã—</button>
+            <button class="close-modal" onclick="hideSizeModal()">×</button>
         </div>
         <div class="size-options" id="sizeOptionsContainer">
             <!-- Size options populated dynamically -->

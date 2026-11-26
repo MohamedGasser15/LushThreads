@@ -1,8 +1,7 @@
-﻿using LushThreads.Application.ServiceInterfaces;
+using LushThreads.Application.ServiceInterfaces;
 using LushThreads.Domain.Entites;
-using LushThreads.Domain.ViewModels.Products;
-using LushThreads.Infrastructure.Persistence.IRepository;
-using LushThreads.Infrastructure.Persistence.Repository;
+using LushThreads.Application.ViewModels.Products;
+using LushThreads.Application.Interfaces;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;

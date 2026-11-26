@@ -1,8 +1,8 @@
-﻿using LushThreads.Application.ServiceInterfaces;
+using LushThreads.Application.ServiceInterfaces;
 using LushThreads.Domain.Constants;
 using LushThreads.Domain.Entites;
-using LushThreads.Domain.ViewModels.Cart;
-using LushThreads.Domain.ViewModels.Products;
+using LushThreads.Application.ViewModels.Cart;
+using LushThreads.Application.ViewModels.Products;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;

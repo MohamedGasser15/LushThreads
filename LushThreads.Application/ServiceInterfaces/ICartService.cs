@@ -1,5 +1,5 @@
-﻿using LushThreads.Domain.Entites;
-using LushThreads.Domain.ViewModels.Cart;
+using LushThreads.Domain.Entites;
+using LushThreads.Application.ViewModels.Cart;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;

@@ -1,6 +1,6 @@
-﻿using LushThreads.Domain.Entites;
-using LushThreads.Domain.ViewModels.Products;
-using LushThreads.Domain.ViewModels.Profile;
+using LushThreads.Domain.Entites;
+using LushThreads.Application.ViewModels.Products;
+using LushThreads.Application.ViewModels.Profile;
 using System;
 using System.Collections.Generic;
 using System.Linq;

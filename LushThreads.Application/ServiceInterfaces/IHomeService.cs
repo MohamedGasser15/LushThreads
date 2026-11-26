@@ -1,5 +1,5 @@
-﻿using LushThreads.Domain.Entites;
-using LushThreads.Domain.ViewModels.Home;
+using LushThreads.Domain.Entites;
+using LushThreads.Application.ViewModels.Home;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -1,8 +1,8 @@
-ï»¿using LushThreads.Application.ServiceInterfaces;
+using LushThreads.Application.ServiceInterfaces;
 using LushThreads.Domain.Constants;
 using LushThreads.Domain.Entites;
-using LushThreads.Domain.ViewModels.Products;
-using LushThreads.Infrastructure.Persistence.IRepository;
+using LushThreads.Application.ViewModels.Products;
+using LushThreads.Application.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.Extensions.Logging;
@@ -273,14 +273,14 @@ namespace LushThreads.Application.Services
             if (order == null)
                 throw new InvalidOperationException("Order not found or not eligible for removal.");
 
-            // Ø­Ø°Ù ØªÙØ§ØµÙŠÙ„ Ø§Ù„Ø·Ù„Ø¨ Ø£ÙˆÙ„Ø§Ù‹
+            // ÍĞİ ÊİÇÕíá ÇáØáÈ ÃæáÇğ
             var orderDetails = await _orderRepository.GetOrderDetailsAsync(orderId);
             if (orderDetails.Any())
             {
                 await _orderDetailRepository.DeleteRangeAsync(orderDetails);
             }
 
-            // Ø«Ù… Ø­Ø°Ù Ø§Ù„Ø·Ù„Ø¨ Ù†ÙØ³Ù‡
+            // Ëã ÍĞİ ÇáØáÈ äİÓå
             await _orderRepository.DeleteAsync(order);
             _logger.LogInformation("Order {OrderId} removed successfully.", orderId);
         }

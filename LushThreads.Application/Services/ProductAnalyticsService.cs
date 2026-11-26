@@ -1,6 +1,6 @@
-ï»¿using LushThreads.Application.ServiceInterfaces;
-using LushThreads.Domain.ViewModels.ProductAnalytics;
-using LushThreads.Infrastructure.Persistence.IRepository;
+using LushThreads.Application.ServiceInterfaces;
+using LushThreads.Application.ViewModels.ProductAnalytics;
+using LushThreads.Application.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -90,7 +90,7 @@ namespace LushThreads.Application.Services
                 TopSellingProduct = topProduct?.ProductName ?? "N/A",
                 TopProductSales = topProduct?.SalesCount ?? 0,
                 InventoryValue = inventoryValue,
-                InventoryChange = 0, // ÙŠÙ…ÙƒÙ† Ø­Ø³Ø§Ø¨ Ø§Ù„ØªØºÙŠÙŠØ± Ù„Ø§Ø­Ù‚Ù‹Ø§
+                InventoryChange = 0, // íãßä ÍÓÇÈ ÇáÊÛííÑ áÇÍÞðÇ
                 LowStockItems = lowStockCount
             };
         }

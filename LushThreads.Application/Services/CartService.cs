@@ -1,10 +1,9 @@
-ï»¿using LushThreads.Application.ServiceInterfaces;
+using LushThreads.Application.ServiceInterfaces;
 using LushThreads.Domain.Constants;
 using LushThreads.Domain.Entites;
-using LushThreads.Domain.ViewModels.Cart;
-using LushThreads.Infrastructure.Persistence.IRepository;
+using LushThreads.Application.ViewModels.Cart;
+using LushThreads.Application.Interfaces;
 using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Stripe;
 using Stripe.Checkout;
@@ -258,7 +257,7 @@ namespace LushThreads.Application.Services
                     OrderTotal = total,
                     OrderStatus = SD.StatusPending,
                     PaymentStatus = SD.PaymentStatusPending
-                    // Ø¨Ø§Ù‚ÙŠ Ø§Ù„Ø­Ù‚ÙˆÙ„ Ø³ØªÙ…Ù„Ø£ Ù…Ù† Ø§Ù„Ù€ User ÙÙŠ Ø§Ù„Ù€ Controller
+                    // ÈÇŞí ÇáÍŞæá ÓÊãáÃ ãä ÇáÜ User İí ÇáÜ Controller
                 }
             };
         }

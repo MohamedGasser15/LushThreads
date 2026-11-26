@@ -1,13 +1,12 @@
-﻿using LushThreads.Application.ServiceInterfaces;
+using LushThreads.Application.ServiceInterfaces;
 using LushThreads.Domain.Constants;
 using LushThreads.Domain.Entites;
-using LushThreads.Domain.ViewModels.Products;
-using LushThreads.Domain.ViewModels.Profile;
-using LushThreads.Infrastructure.Persistence.IRepository;
+using LushThreads.Application.ViewModels.Products;
+using LushThreads.Application.ViewModels.Profile;
+using LushThreads.Application.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Stripe;
 using System;

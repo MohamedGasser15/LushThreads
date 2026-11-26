@@ -1,4 +1,4 @@
-﻿using LushThreads.Domain.ViewModels.OrderAnalytics;
+using LushThreads.Application.ViewModels.OrderAnalytics;
 using System;
 using System.Threading.Tasks;
 

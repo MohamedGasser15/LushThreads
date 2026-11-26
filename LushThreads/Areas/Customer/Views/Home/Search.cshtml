@@ -1,4 +1,4 @@
-ï»¿@using LushThreads.Domain.ViewModels.Home
+@using LushThreads.Application.ViewModels.Home
 @model SearchViewModel
 @{
     var showSuccessMessage = TempData["AddToCartSuccess"] != null && (bool)TempData["AddToCartSuccess"];
@@ -304,7 +304,7 @@
         }
 
             .size-option.disabled::after {
-                content: "Ã—";
+                content: "×";
                 position: absolute;
                 top: -5px;
                 right: -5px;
@@ -386,7 +386,7 @@
     <div class="size-modal">
         <div class="modal-header">
             <h3 class="modal-title">Select Size</h3>
-            <button class="close-modal" onclick="hideSizeModal()">Ã—</button>
+            <button class="close-modal" onclick="hideSizeModal()">×</button>
         </div>
         <div class="size-options" id="sizeOptionsContainer">
             <!-- Size options will be populated dynamically -->

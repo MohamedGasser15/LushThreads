@@ -1,4 +1,4 @@
-﻿@using LushThreads.Domain.ViewModels.Products
+@using LushThreads.Application.ViewModels.Products
 @model OrderVM
 
 <script src="https://cdn.tailwindcss.com"></script>
@@ -14,7 +14,7 @@
             </div>
             <h1 class="mt-4 text-3xl font-bold text-gray-900">Order Confirmed!</h1>
             <p class="mt-2 text-lg text-gray-600">Thank you for your purchase</p>
-            <p class="mt-2 text-sm text-gray-500">Order #@Model.OrderHeader.Id • @Model.OrderHeader.OrderDate.ToString("MMMM dd, yyyy")</p>
+            <p class="mt-2 text-sm text-gray-500">Order #@Model.OrderHeader.Id � @Model.OrderHeader.OrderDate.ToString("MMMM dd, yyyy")</p>
         </div>
 
         <!-- Order Details Card -->

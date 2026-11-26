@@ -1,5 +1,5 @@
-ï»¿@using LushThreads.Domain.Constants
-@using LushThreads.Domain.ViewModels.Products
+@using LushThreads.Domain.Constants
+@using LushThreads.Application.ViewModels.Products
 @model List<OrderVM>
 @{
     Layout = "~/Areas/Customer/Views/Shared/_ProfileLayout.cshtml";
@@ -402,7 +402,7 @@ else
                                                 <i class="fab fa-cc-visa text-gray-500"></i>
                                             </div>
                                             <div>
-                                                <p class="text-sm text-gray-800">Ending in â€¢â€¢â€¢â€¢ 4242</p>
+                                                <p class="text-sm text-gray-800">Ending in •••• 4242</p>
                                                 <p class="text-xs text-gray-500">
                                                     @if (orderVM.OrderHeader.PaymentDate != default)
                                                     {

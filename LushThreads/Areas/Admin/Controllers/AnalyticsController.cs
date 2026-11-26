@@ -1,6 +1,6 @@
 using System.Diagnostics;
 using LushThreads.Domain.Constants;
-using LushThreads.Domain.ViewModels.OrderAnalytics;
+using LushThreads.Application.ViewModels.OrderAnalytics;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using LushThreads.Application.ServiceInterfaces;
