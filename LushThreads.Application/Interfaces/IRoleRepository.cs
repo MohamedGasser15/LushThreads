@@ -16,5 +16,10 @@ namespace LushThreads.Application.Interfaces
         /// Gets all role names.
         /// </summary>
         Task<List<string>> GetAllRoleNamesAsync();
+
+        /// <summary>
+        /// Gets a mapping of userId to their primary role name in a single query.
+        /// </summary>
+        Task<Dictionary<string, string>> GetUserRolesMapAsync();
     }
 }

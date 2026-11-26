@@ -56,6 +56,24 @@ namespace LushThreads.Infrastructure.Persistence.Repository
             }
         }
 
+        /// <inheritdoc />
+        public async Task<Dictionary<string, string>> GetUserRolesMapAsync()
+        {
+            var rows = await (
+                from ur in _db.UserRoles.AsNoTracking()
+                join r in _db.Roles.AsNoTracking() on ur.RoleId equals r.Id
+                where r.Name != null
+                select new { ur.UserId, RoleName = r.Name! }
+            ).ToListAsync();
+
+            var map = new Dictionary<string, string>();
+            foreach (var row in rows)
+            {
+                map.TryAdd(row.UserId, row.RoleName);
+            }
+            return map;
+        }
+
         #endregion
     }
 }

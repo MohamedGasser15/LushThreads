@@ -1,4 +1,4 @@
-@using LushThreads.Application.ViewModels.Home
+ï»¿@using LushThreads.Application.ViewModels.Home
 @model IEnumerable<ShopProductViewModel>
 
 @{
@@ -496,7 +496,7 @@
         }
 
             .size-option.disabled::after {
-                content: "×";
+                content: "ï¿½";
                 position: absolute;
                 top: -5px;
                 right: -5px;
@@ -823,7 +823,7 @@
     <div class="quick-view-modal">
         <div class="modal-header">
             <h3 class="modal-title" id="quickViewProductName"></h3>
-            <button class="close-modal" onclick="hideQuickViewModal()">×</button>
+            <button class="close-modal" onclick="hideQuickViewModal()">ï¿½</button>
         </div>
         <div class="quick-view-content">
             <div class="quick-view-image">
@@ -861,7 +861,7 @@
     <div class="size-modal">
         <div class="modal-header">
             <h3 class="modal-title">Select Size & Quantity</h3>
-            <button class="close-modal" onclick="hideSizeModal()">×</button>
+            <button class="close-modal" onclick="hideSizeModal()">ï¿½</button>
         </div>
         <div class="size-options" id="sizeOptionsContainer">
             <!-- Size options populated dynamically -->
@@ -957,11 +957,11 @@
 </div>
 
     <!-- Product List Container -->
-    <div id="productContainer" class="pro-container">
+    <div id="productContainer" class="pro-container shop-grid">
         @foreach (var product in Model)
         {
             <div class="pro" onclick="window.location.href='@Url.Action("Details", "Home", new { area = "Customer", id = product.ProductId })';">
-                <img src="@product.ImgUrl" alt="@product.ProductName" class="product-img">
+                <img src="@product.ImgUrl" alt="@product.ProductName" class="product-img" loading="lazy">
                 @if (product.IsFeatured)
                 {
                     <span class="absolute top-2 left-2 bg-[#088178] text-white text-xs font-bold px-2 py-1 rounded-full shadow-sm">
@@ -1106,7 +1106,7 @@
             .filter(product => product.productId) // Skip products with missing productId
             .map(product => `
                 <div class="pro" onclick="window.location.href='@Url.Action("Details", "Home", new { area = "Customer" })?id=${product.productId}'">
-                    <img src="${product.imgUrl || ''}" alt="${product.productName || 'Product'}" class="product-img">
+                    <img src="${product.imgUrl || ''}" alt="${product.productName || 'Product'}" class="product-img" loading="lazy">
                     ${product.isFeatured ?
                         '<span class="absolute top-2 left-2 bg-[#088178] text-white text-xs font-bold px-2 py-1 rounded-full shadow-sm">FEATURED</span>'
                         : ''}

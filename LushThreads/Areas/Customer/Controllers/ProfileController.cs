@@ -227,9 +227,9 @@ namespace LushThreads.Web.Areas.Customer.Controllers
         /// Displays page to input email verification code.
         /// </summary>
         [HttpGet]
-        public IActionResult VerifyEmailCode(string userId)
+        public async Task<IActionResult> VerifyEmailCode(string userId)
         {
-            var user = _userManager.FindByIdAsync(userId).Result;
+            var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
                 return NotFound();
 

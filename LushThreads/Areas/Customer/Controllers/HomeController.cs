@@ -44,7 +44,7 @@ namespace LushThreads.Web.Areas.Customer.Controllers
         /// </summary>
         public async Task<IActionResult> Home(int? categoryId = null)
         {
-            ViewBag.CartCount = GetCartCount();
+            ViewBag.CartCount = await GetCartCountAsync();
 
             var viewModel = await _homeService.GetHomeViewModelAsync(categoryId);
 
@@ -89,9 +89,9 @@ namespace LushThreads.Web.Areas.Customer.Controllers
         /// <summary>
         /// Displays paginated shop page with optional category filter.
         /// </summary>
-        public async Task<IActionResult> Shop(int? categoryId = null, int page = 1, int pageSize = 8)
+        public async Task<IActionResult> Shop(int? categoryId = null, int page = 1, int pageSize = 18)
         {
-            ViewBag.CartCount = GetCartCount();
+            ViewBag.CartCount = await GetCartCountAsync();
 
             page = Math.Max(1, page);
             pageSize = Math.Max(1, Math.Min(pageSize, 100));
@@ -121,7 +121,7 @@ namespace LushThreads.Web.Areas.Customer.Controllers
         /// </summary>
         public async Task<IActionResult> Details(int id)
         {
-            ViewBag.CartCount = GetCartCount();
+            ViewBag.CartCount = await GetCartCountAsync();
 
             var product = await _homeService.GetProductDetailsAsync(id);
             if (product == null)
@@ -136,7 +136,7 @@ namespace LushThreads.Web.Areas.Customer.Controllers
         [HttpGet]
         public async Task<IActionResult> GetProductDetails(int productId)
         {
-            ViewBag.CartCount = GetCartCount();
+            ViewBag.CartCount = await GetCartCountAsync();
 
             var product = await _homeService.GetProductDetailsJsonAsync(productId);
             if (product == null)
@@ -151,7 +151,7 @@ namespace LushThreads.Web.Areas.Customer.Controllers
         [HttpGet]
         public async Task<IActionResult> GetProductSizes(int productId)
         {
-            ViewBag.CartCount = GetCartCount();
+            ViewBag.CartCount = await GetCartCountAsync();
 
             var sizes = await _homeService.GetProductSizesAsync(productId);
             return Json(new { success = true, sizes });
@@ -166,7 +166,7 @@ namespace LushThreads.Web.Areas.Customer.Controllers
         /// </summary>
         public async Task<IActionResult> ShopByCategory(string category)
         {
-            ViewBag.CartCount = GetCartCount();
+            ViewBag.CartCount = await GetCartCountAsync();
 
             var (categoryName, products) = await _homeService.GetProductsByCategoryAsync(category);
             if (categoryName == null)
@@ -181,7 +181,7 @@ namespace LushThreads.Web.Areas.Customer.Controllers
         /// </summary>
         public async Task<IActionResult> ShopByChildCategory(string category)
         {
-            ViewBag.CartCount = GetCartCount();
+            ViewBag.CartCount = await GetCartCountAsync();
 
             var (categoryName, products) = await _homeService.GetProductsByChildCategoryAsync(category);
             if (categoryName == null)
@@ -196,7 +196,7 @@ namespace LushThreads.Web.Areas.Customer.Controllers
         /// </summary>
         public async Task<IActionResult> ShopByBrand(string brand)
         {
-            ViewBag.CartCount = GetCartCount();
+            ViewBag.CartCount = await GetCartCountAsync();
 
             var (brandName, products) = await _homeService.GetProductsByBrandAsync(brand);
             if (brandName == null)
@@ -215,7 +215,7 @@ namespace LushThreads.Web.Areas.Customer.Controllers
         /// </summary>
         public async Task<IActionResult> Search(string searchTerm)
         {
-            ViewBag.CartCount = GetCartCount();
+            ViewBag.CartCount = await GetCartCountAsync();
 
             var viewModel = new SearchViewModel { SearchTerm = searchTerm };
             viewModel.Results = await _homeService.SearchProductsAsync(searchTerm);
@@ -230,18 +230,18 @@ namespace LushThreads.Web.Areas.Customer.Controllers
         /// <summary>
         /// Displays the About page.
         /// </summary>
-        public IActionResult About()
+        public async Task<IActionResult> About()
         {
-            ViewBag.CartCount = GetCartCount();
+            ViewBag.CartCount = await GetCartCountAsync();
             return View();
         }
 
         /// <summary>
         /// Displays the Contact page.
         /// </summary>
-        public IActionResult Contact()
+        public async Task<IActionResult> Contact()
         {
-            ViewBag.CartCount = GetCartCount();
+            ViewBag.CartCount = await GetCartCountAsync();
             return View();
         }
 
@@ -252,6 +252,7 @@ namespace LushThreads.Web.Areas.Customer.Controllers
         /// <summary>
         /// Handles error display.
         /// </summary>
+        [Route("/Home/Error/{statusCode?}")]
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error(int? statusCode = null)
         {
@@ -276,7 +277,7 @@ namespace LushThreads.Web.Areas.Customer.Controllers
         /// <summary>
         /// Retrieves cart item count for authenticated users.
         /// </summary>
-        private int GetCartCount()
+        private async Task<int> GetCartCountAsync()
         {
             if (!User.Identity.IsAuthenticated)
                 return 0;
@@ -285,8 +286,8 @@ namespace LushThreads.Web.Areas.Customer.Controllers
             if (userId == null)
                 return 0;
 
-            // Use repository directly (or inject service if needed)
-            return _cartItemRepository.GetAllAsync(filter: c => c.UserId == userId).Result.Count;
+            var items = await _cartItemRepository.GetAllAsync(filter: c => c.UserId == userId);
+            return items.Count;
         }
 
         #endregion

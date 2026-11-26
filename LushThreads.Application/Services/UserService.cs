@@ -20,6 +20,7 @@ namespace LushThreads.Application.Services
 
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly IRoleRepository _roleRepository;
         private readonly IUserDeviceRepository _userDeviceRepository; // Assuming UserDevice exists
         private readonly IAdminActivityService _adminActivityService;
         private readonly ILogger<UserService> _logger;
@@ -31,12 +32,14 @@ namespace LushThreads.Application.Services
         public UserService(
             UserManager<ApplicationUser> userManager,
             RoleManager<IdentityRole> roleManager,
+            IRoleRepository roleRepository,
             IUserDeviceRepository userDeviceRepository,
             IAdminActivityService adminActivityService,
             ILogger<UserService> logger)
         {
             _userManager = userManager;
             _roleManager = roleManager;
+            _roleRepository = roleRepository;
             _userDeviceRepository = userDeviceRepository;
             _adminActivityService = adminActivityService;
             _logger = logger;
@@ -51,10 +54,10 @@ namespace LushThreads.Application.Services
         /// </summary>
         private async Task PopulateUserRolesAsync(IEnumerable<ApplicationUser> users)
         {
+            var rolesMap = await _roleRepository.GetUserRolesMapAsync();
             foreach (var user in users)
             {
-                var userRoles = await _userManager.GetRolesAsync(user);
-                user.Role = userRoles.FirstOrDefault() ?? "None";
+                user.Role = rolesMap.TryGetValue(user.Id, out var role) ? role : "None";
             }
         }
 
