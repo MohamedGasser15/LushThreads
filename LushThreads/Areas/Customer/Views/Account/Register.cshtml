@@ -1,5 +1,5 @@
-﻿@using LushThreads.Domain.Entites
-@using LushThreads.Domain.ViewModels.Auth
+@using LushThreads.Domain.Entites
+@using LushThreads.Application.ViewModels.Auth
 @using Microsoft.AspNetCore.Identity
 
 @model RegisterViewModel
@@ -81,7 +81,7 @@
         </div>
         @if (loginProviders.Count > 0)
         {
-            <form asp-action="ExternalLogin" asp-controller="Account" method="post" class="flex flex-col gap-3">
+            <form asp-action="ExternalLogin" asp-controller="Account" method="post" data-external-login-popup="true" class="flex flex-col gap-3">
                 @foreach (var provider in loginProviders)
                 {
                     @if (provider.Name == "Google")
@@ -111,6 +111,7 @@
         </p>
     </div>
 
+    <script src="~/js/external-login-popup.js"></script>
     <script>
         // Prevent double submit and show loading spinner
         document.getElementById('registerForm').addEventListener('submit', function () {

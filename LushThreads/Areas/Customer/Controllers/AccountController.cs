@@ -1,7 +1,7 @@
-﻿using LushThreads.Application.ServiceInterfaces;
+using LushThreads.Application.ServiceInterfaces;
 using LushThreads.Domain.Constants;
 using LushThreads.Domain.Entites;
-using LushThreads.Domain.ViewModels.Auth;
+using LushThreads.Application.ViewModels.Auth;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
@@ -360,67 +360,63 @@ namespace LushThreads.Web.Areas.Customer.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult ExternalLogin(string provider, string returnUrl = null)
+        public IActionResult ExternalLogin(string provider, string returnUrl = null, bool isPopup = false)
         {
-            var redirectUrl = Url.Action("ExternalLoginCallback", "Account", new { returnUrl });
+            var redirectUrl = Url.Action("ExternalLoginCallback", "Account", new { returnUrl, isPopup });
             var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
             return Challenge(properties, provider);
         }
 
         [HttpGet]
-        public async Task<IActionResult> ExternalLoginCallback(string returnUrl = null, string remoteError = null)
+        public async Task<IActionResult> ExternalLoginCallback(string returnUrl = null, string remoteError = null, bool isPopup = false)
         {
             returnUrl = returnUrl ?? Url.Content("~/");
 
             var (success, errorMessage, user, provider, callbackReturnUrl) = await _accountService.HandleExternalLoginCallbackAsync(returnUrl, remoteError);
 
-            if (!success)
+            if (!success || user == null)
             {
-                TempData["ErrorMessage"] = errorMessage;
+                TempData["ErrorMessage"] = errorMessage ?? "External login failed.";
+                if (isPopup)
+                {
+                    return PopupCallbackResult("external-login-error", Url.Action("Login", "Account"));
+                }
                 return RedirectToAction("Login");
             }
 
-            if (user != null)
+            await _accountService.TrackUserDeviceAsync(user, HttpContext);
+            var safeReturnUrl = Url.IsLocalUrl(callbackReturnUrl) ? callbackReturnUrl : Url.Content("~/");
+
+            if (isPopup)
             {
-                // User already exists and signed in
-                await _accountService.TrackUserDeviceAsync(user, HttpContext);
-                return LocalRedirect(callbackReturnUrl);
+                return PopupCallbackResult("external-login-success", safeReturnUrl);
             }
 
-            // New user, need to complete registration
-            var email = (await _signInManager.GetExternalLoginInfoAsync())?.Principal.FindFirstValue(ClaimTypes.Email);
-            return RedirectToAction("ExternalLoginConfirmation", new { returnUrl, email });
+            return LocalRedirect(safeReturnUrl);
         }
 
-        [HttpGet]
-        public IActionResult ExternalLoginConfirmation(string returnUrl, string email)
+        private ContentResult PopupCallbackResult(string messageType, string redirectUrl)
         {
-            returnUrl = returnUrl ?? Url.Content("~/");
-            return View(new ExternalLoginConfirmationViewModel { Email = email });
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ExternalLoginConfirmation(ExternalLoginConfirmationViewModel model, string returnUrl = null)
-        {
-            returnUrl = returnUrl ?? Url.Content("~/");
-
-            if (!ModelState.IsValid)
-            {
-                ViewData["ReturnUrl"] = returnUrl;
-                return View(model);
-            }
-
-            var (success, errorMessage, user) = await _accountService.ConfirmExternalLoginAsync(model, returnUrl, HttpContext);
-
-            if (!success)
-            {
-                ModelState.AddModelError(string.Empty, errorMessage);
-                ViewData["ReturnUrl"] = returnUrl;
-                return View(model);
-            }
-
-            return LocalRedirect(returnUrl);
+            var safeJsonUrl = System.Text.Json.JsonSerializer.Serialize(redirectUrl ?? "/");
+            var safeJsonType = System.Text.Json.JsonSerializer.Serialize(messageType);
+            var html = $@"<!DOCTYPE html>
+<html>
+<head><title>Signing in...</title></head>
+<body>
+<script>
+(function() {{
+    var payload = {{ type: {safeJsonType}, redirectUrl: {safeJsonUrl} }};
+    if (window.opener && !window.opener.closed) {{
+        window.opener.postMessage(payload, window.location.origin);
+        window.close();
+    }} else {{
+        window.location.href = {safeJsonUrl};
+    }}
+}})();
+</script>
+</body>
+</html>";
+            return Content(html, "text/html");
         }
 
         #endregion

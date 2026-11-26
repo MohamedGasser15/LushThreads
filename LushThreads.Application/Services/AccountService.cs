@@ -1,8 +1,8 @@
 ﻿using LushThreads.Application.ServiceInterfaces;
 using LushThreads.Domain.Constants;
 using LushThreads.Domain.Entites;
-using LushThreads.Domain.ViewModels.Auth;
-using LushThreads.Infrastructure.Persistence.IRepository;
+using LushThreads.Application.ViewModels.Auth;
+using LushThreads.Application.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
@@ -114,7 +114,7 @@ namespace LushThreads.Application.Services
             _logger.LogInformation("Initiating 2FA login for user {UserId}", user.Id);
 
             var code = GenerateRandomCode();
-            var verificationLink = Generate2FALink(user, code); // نحتاج إلى URL، لكننا سنمررها من الـ Controller
+            var verificationLink = Generate2FALink(user, code); // ����� ��� URL� ����� ������� �� ��� Controller
 
             // Store code and rememberMe in user claims or session (will be handled by controller with session)
             await AddOrUpdateClaimAsync(user, "2FA_Code", code);
@@ -271,7 +271,7 @@ namespace LushThreads.Application.Services
             var requestTime = DateTime.UtcNow;
 
             // Generate password reset link (will be built in controller with UrlHelper)
-            var resetLink = string.Empty; // سنمرره من الـ Controller
+            var resetLink = string.Empty; // ������ �� ��� Controller
 
             var emailBody = _emailTemplateService.GenerateForgotPasswordEmail(user, ipAddress, deviceName, requestTime, resetCode, resetLink);
             await _emailSender.SendEmailAsync(user.Email, "Password Reset Code", emailBody);
@@ -318,7 +318,7 @@ namespace LushThreads.Application.Services
                 UserId = user.Id,
                 ActivityType = "PasswordChange",
                 Description = "Password changed via forgot password",
-                IpAddress = null // يمكن تمريرها من الـ Controller
+                IpAddress = null // ���� ������� �� ��� Controller
             };
             await _securityActivityRepository.CreateAsync(activity);
 
@@ -374,57 +374,73 @@ namespace LushThreads.Application.Services
             var user = await _userManager.FindByLoginAsync(info.LoginProvider, info.ProviderKey);
             if (user != null)
             {
-                var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false);
-                if (result.Succeeded)
+                var signInResult = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false);
+                if (signInResult.Succeeded)
                 {
+                    await _signInManager.UpdateExternalAuthenticationTokensAsync(info);
                     return (true, null, user, info.LoginProvider, returnUrl);
                 }
+
+                if (signInResult.IsLockedOut)
+                    return (false, "Your account is locked. Please try again later.", null, null, null);
+
+                return (false, "External login failed.", null, null, null);
             }
 
-            // New user, need confirmation
+            // Get email and name from external provider claims (e.g. Google / Facebook)
             var email = info.Principal.FindFirstValue(ClaimTypes.Email);
-            return (true, null, null, info.LoginProvider, returnUrl);
-        }
+            if (string.IsNullOrWhiteSpace(email))
+                return (false, "Email not provided by external provider.", null, null, null);
 
-        public async Task<(bool success, string errorMessage, ApplicationUser user)> ConfirmExternalLoginAsync(ExternalLoginConfirmationViewModel model, string returnUrl, HttpContext httpContext)
-        {
-            _logger.LogInformation("Confirming external login for email {Email}", model.Email);
+            var name = info.Principal.FindFirstValue(ClaimTypes.Name)
+                       ?? info.Principal.FindFirstValue(ClaimTypes.GivenName)
+                       ?? email.Split('@')[0];
 
-            var info = await _signInManager.GetExternalLoginInfoAsync();
-            if (info == null)
-                return (false, "External login information not found.", null);
-
-            // Check if email is already registered
-            var existingUser = await _userManager.FindByEmailAsync(model.Email);
+            // If email is already registered, link the external login and sign in directly
+            var existingUser = await _userManager.FindByEmailAsync(email);
             if (existingUser != null)
-                return (false, "Email already registered.", null);
-
-            // Create new user
-            var user = new ApplicationUser
             {
-                Name = model.Name,
-                Email = model.Email,
-                UserName = model.Email
+                if (await _userManager.IsLockedOutAsync(existingUser))
+                    return (false, "Your account is locked. Please try again later.", null, null, null);
+
+                var addExistingLoginResult = await _userManager.AddLoginAsync(existingUser, info);
+                if (!addExistingLoginResult.Succeeded)
+                    return (false, string.Join(", ", addExistingLoginResult.Errors.Select(e => e.Description)), null, null, null);
+
+                if (!existingUser.EmailConfirmed)
+                {
+                    existingUser.EmailConfirmed = true;
+                    await _userManager.UpdateAsync(existingUser);
+                }
+
+                await _signInManager.SignInAsync(existingUser, isPersistent: false);
+                await _signInManager.UpdateExternalAuthenticationTokensAsync(info);
+                return (true, null, existingUser, info.LoginProvider, returnUrl);
+            }
+
+            // Create new user directly using Google/Facebook profile info
+            var newUser = new ApplicationUser
+            {
+                Name = name,
+                Email = email,
+                UserName = email,
+                EmailConfirmed = true
             };
 
-            var createResult = await _userManager.CreateAsync(user);
+            var createResult = await _userManager.CreateAsync(newUser);
             if (!createResult.Succeeded)
-                return (false, string.Join(", ", createResult.Errors.Select(e => e.Description)), null);
+                return (false, string.Join(", ", createResult.Errors.Select(e => e.Description)), null, null, null);
 
-            await _userManager.AddToRoleAsync(user, SD.User);
+            await _userManager.AddToRoleAsync(newUser, SD.User);
 
-            var addLoginResult = await _userManager.AddLoginAsync(user, info);
+            var addLoginResult = await _userManager.AddLoginAsync(newUser, info);
             if (!addLoginResult.Succeeded)
-                return (false, string.Join(", ", addLoginResult.Errors.Select(e => e.Description)), null);
+                return (false, string.Join(", ", addLoginResult.Errors.Select(e => e.Description)), null, null, null);
 
-            user.EmailConfirmed = true;
-            await _userManager.UpdateAsync(user);
-
-            await _signInManager.SignInAsync(user, isPersistent: false);
-            await TrackUserDeviceAsync(user, httpContext);
+            await _signInManager.SignInAsync(newUser, isPersistent: false);
             await _signInManager.UpdateExternalAuthenticationTokensAsync(info);
 
-            return (true, null, user);
+            return (true, null, newUser, info.LoginProvider, returnUrl);
         }
 
         #endregion

@@ -1,5 +1,5 @@
-﻿@using LushThreads.Domain.Entites
-@using LushThreads.Domain.ViewModels.Auth
+@using LushThreads.Domain.Entites
+@using LushThreads.Application.ViewModels.Auth
 @using Microsoft.AspNetCore.Identity
 
 @model LoginViewModel
@@ -76,7 +76,7 @@
         </div>
         @if (loginProviders.Count > 0)
         {
-            <form asp-action="ExternalLogin" asp-controller="Account" method="post" class="flex flex-col gap-3">
+            <form asp-action="ExternalLogin" asp-controller="Account" method="post" data-external-login-popup="true" class="flex flex-col gap-3">
                 <!-- Added gap-3 -->
                 @foreach (var provider in loginProviders)
                 {
@@ -111,6 +111,7 @@
     </div>
 
     <script src="~/js/login.js"></script>
+    <script src="~/js/external-login-popup.js"></script>
     @section Scripts {
         @{
             await Html.RenderPartialAsync("_ValidationScriptsPartial");

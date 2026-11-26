@@ -1,5 +1,5 @@
-﻿using LushThreads.Domain.Entites;
-using LushThreads.Domain.ViewModels.Auth;
+using LushThreads.Domain.Entites;
+using LushThreads.Application.ViewModels.Auth;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
@@ -82,11 +82,6 @@ namespace LushThreads.Application.ServiceInterfaces
         /// Handles external login callback.
         /// </summary>
         Task<(bool success, string errorMessage, ApplicationUser user, string provider, string returnUrl)> HandleExternalLoginCallbackAsync(string returnUrl, string remoteError);
-
-        /// <summary>
-        /// Confirms external login and creates local user if needed.
-        /// </summary>
-        Task<(bool success, string errorMessage, ApplicationUser user)> ConfirmExternalLoginAsync(ExternalLoginConfirmationViewModel model, string returnUrl, HttpContext httpContext);
 
         #endregion
 
