@@ -18,7 +18,7 @@ Complete reference of the persistence and domain model in `LushThreads.Domain`, 
 
 ```
 LushThreads.Domain/
-├── LushThreads.Domain.csproj        # net8.0 + Microsoft.AspNetCore.App FrameworkReference
+├── LushThreads.Domain.csproj        # net10.0 + Microsoft.AspNetCore.App FrameworkReference
 ├── Constants/
 │   └── SD.cs                        # 54 lines — Roles, TempData keys, Order/Payment statuses
 └── Entites/                         # 13 files (12 EF Core entities + ErrorViewModel)

@@ -22,7 +22,7 @@ Allow instant environment bootstrapping on empty databases (with 77 real clothin
 | Aspect | Value |
 |---|---|
 | Output Type | `Exe` (Console Application) |
-| Target Framework | `net8.0` |
+| Target Framework | `net10.0` |
 | References | `LushThreads.Infrastructure`, `LushThreads.Application`, `LushThreads.Domain` |
 | Configuration Source | Reads `LushThreads/appsettings.json`, `appsettings.Development.json`, and Environment Variables (`Program.cs:13-18`) |
 

@@ -4,7 +4,7 @@
 
   <br/><br/>
 
-  [![.NET 8](https://img.shields.io/badge/.NET%208.0-512BD4?style=for-the-badge&logo=dotnet&logoColor=white)](https://dotnet.microsoft.com)
+  [![.NET 10](https://img.shields.io/badge/.NET%2010.0-512BD4?style=for-the-badge&logo=dotnet&logoColor=white)](https://dotnet.microsoft.com)
   [![ASP.NET Core MVC](https://img.shields.io/badge/ASP.NET%20Core%20MVC-512BD4?style=for-the-badge&logo=dotnet&logoColor=white)](https://dotnet.microsoft.com/apps/aspnet/mvc)
   [![Clean Architecture](https://img.shields.io/badge/Architecture-Clean%20Architecture-088178?style=for-the-badge)](#-solution-architecture)
   [![SQL Server](https://img.shields.io/badge/Database-SQL%20Server%20%2B%20EF%20Core%208-CC292B?style=for-the-badge&logo=microsoftsqlserver&logoColor=white)](https://www.microsoft.com/sql-server)
@@ -42,7 +42,7 @@ LushThreads/
 ├── LushThreads.Seeder/           # 🌱 Standalone CLI Database Seeder (Real JSON catalog + scaled demo analytics)
 ├── LushThreads.Tests/            # 🧪 55 xUnit + Moq 4.21 + EF Core InMemory tests across all 5 source projects
 ├── Documentation/                # 📚 Exhaustive per-controller, architecture, seeder & test specifications (21 docs)
-└── LushThreads.sln               # Unified .NET 8 solution file
+└── LushThreads.sln               # Unified .NET 10 solution file
 ```
 
 ---
@@ -103,9 +103,9 @@ LushThreads/
 
 | Layer / Area | Technology | Version / Notes |
 |:---|:---|:---|
-| **Runtime & Framework** | .NET / ASP.NET Core MVC | `net8.0`, Customer & Admin Areas |
-| **ORM & Database** | Entity Framework Core + SQL Server | `8.0.14`, Code-First Migrations |
-| **Identity & OAuth** | ASP.NET Core Identity + Google & Facebook OAuth | `8.0.14`, Roles (`Admin`, `User`), Email 2FA |
+| **Runtime & Framework** | .NET / ASP.NET Core MVC | `net10.0`, Customer & Admin Areas |
+| **ORM & Database** | Entity Framework Core + SQL Server | `10.0.15`, Code-First Migrations |
+| **Identity & OAuth** | ASP.NET Core Identity + Google & Facebook OAuth | `10.0.15`, Roles (`Admin`, `User`), Email 2FA |
 | **Payments** | `Stripe.net` | `48.0.0` (Hosted Checkout & `RefundService`) |
 | **Email Transport** | `MailKit` | `4.16.0` (Gmail SMTP HTML notifications) |
 | **Frontend & Styling** | Razor Views + Tailwind CSS + Custom CSS + JS | 64 `.cshtml` files (52 views + 12 layouts/partials), 5 JS modules, 3 CSS sheets |
@@ -116,7 +116,7 @@ LushThreads/
 ## 🚀 Quick Start & Setup
 
 ### 1. Prerequisites
-- [.NET 8.0 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
+- [.NET 10.0 SDK](https://dotnet.microsoft.com/download/dotnet/10.0)
 - [SQL Server](https://www.microsoft.com/sql-server) (LocalDB, Express, or Developer Edition)
 - Visual Studio 2022+ or VS Code
 

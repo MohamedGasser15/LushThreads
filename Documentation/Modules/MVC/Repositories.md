@@ -10,7 +10,7 @@ Complete reference of the persistence, database seeding, SMTP email engine, and 
 ### Architecture Boundaries
 - Depends on `LushThreads.Domain` and `LushThreads.Application`.
 - Registered via `AddInfrastructureServices(IConfiguration)` (`InfrastructureContainer.cs:26-69`).
-- Target engine: **SQL Server** via `Microsoft.EntityFrameworkCore.SqlServer 8.0.14` (and `InMemory 8.0.14` in `LushThreads.Tests`).
+- Target engine: **SQL Server** via `Microsoft.EntityFrameworkCore.SqlServer 10.0.15` (and `InMemory 10.0.15` in `LushThreads.Tests`).
 
 ---
 

@@ -13,7 +13,7 @@ Complete startup and hosting reference for `LushThreads.Web` (`LushThreads/Progr
 
 ```
 LushThreads/
-├── LushThreads.Web.csproj               # net8.0, Nullable=enable, UserSecretsId configured
+├── LushThreads.Web.csproj               # net10.0, Nullable=enable, UserSecretsId configured
 ├── Program.cs                           # 68 lines — Host builder, 3 DI containers, middleware, routes, DbInitializer
 ├── appsettings.json                     # Placeholder configuration schema (no real secrets)
 ├── appsettings.Development.json         # Development placeholder & logging overrides

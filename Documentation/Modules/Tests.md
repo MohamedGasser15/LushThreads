@@ -16,10 +16,10 @@ Provide a fast (<1s), self-contained regression gate verifying business logic, C
 
 | Aspect | Value |
 |---|---|
-| Target Framework | `net8.0` |
+| Target Framework | `net10.0` |
 | Test Framework | **xUnit** (`[Fact]` × 55) |
 | Mocking | **Moq `4.21.0`** |
-| In-Memory Database | **Microsoft.EntityFrameworkCore.InMemory `8.0.14`** |
+| In-Memory Database | **Microsoft.EntityFrameworkCore.InMemory `10.0.15`** |
 | Project References | `Domain`, `Application`, `Infrastructure`, `Web`, `Seeder` |
 
 **Run Commands:**
