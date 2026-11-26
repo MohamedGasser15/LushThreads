@@ -37,7 +37,8 @@ namespace LushThreads.Infrastructure.Configurations
             // Configure Identity options (password rules, user settings)
             services.Configure<IdentityOptions>(options =>
             {
-                options.Password.RequireDigit = false;
+                options.Password.RequiredLength = 8;
+                options.Password.RequireDigit = true;
                 options.Password.RequireLowercase = false;
                 options.Password.RequireNonAlphanumeric = false;
                 options.Password.RequireUppercase = false;

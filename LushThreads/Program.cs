@@ -19,22 +19,33 @@ var app = builder.Build();
 // Configure middleware pipeline
 if (app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Home/Error");
-    app.UseStatusCodePagesWithReExecute("/Home/Error/{0}");
+    app.UseDeveloperExceptionPage();
 }
 else
 {
     app.UseExceptionHandler("/Home/Error");
     app.UseStatusCodePagesWithReExecute("/Home/Error/{0}");
     app.UseHsts();
+    app.UseResponseCompression();
 }
 
 app.UseHttpsRedirection();
+
+// Add basic security headers
+app.Use(async (context, next) =>
+{
+    context.Response.Headers.TryAdd("X-Content-Type-Options", "nosniff");
+    context.Response.Headers.TryAdd("X-Frame-Options", "SAMEORIGIN");
+    context.Response.Headers.TryAdd("Referrer-Policy", "strict-origin-when-cross-origin");
+    await next();
+});
+
 app.UseStaticFiles();
 
 StripeConfiguration.ApiKey = builder.Configuration.GetSection("Stripe:SecretKey").Get<string>();
 
 app.UseRouting();
+app.UseRateLimiter();
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseSession();

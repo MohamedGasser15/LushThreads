@@ -1,6 +1,10 @@
 ﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Threading.RateLimiting;
 
 namespace LushThreads.Web.Configurations
 {
@@ -34,9 +38,38 @@ namespace LushThreads.Web.Configurations
                     googleOptions.ClientSecret = configuration.GetSection("Google:ClientSecret").Value;
                 });
 
-            // Add distributed memory cache and session services
+            // Add distributed memory cache and hardened session services
             services.AddDistributedMemoryCache();
-            services.AddSession();
+            services.AddSession(options =>
+            {
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+                options.Cookie.SameSite = SameSiteMode.Lax;
+                options.IdleTimeout = TimeSpan.FromMinutes(30);
+            });
+
+            // Add response compression
+            services.AddResponseCompression(options =>
+            {
+                options.EnableForHttps = true;
+            });
+
+            // Add rate limiting for authentication endpoints
+            services.AddRateLimiter(options =>
+            {
+                options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+                options.AddPolicy("auth", context =>
+                    RateLimitPartition.GetFixedWindowLimiter(
+                        partitionKey: context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+                        factory: _ => new FixedWindowRateLimiterOptions
+                        {
+                            PermitLimit = 10,
+                            Window = TimeSpan.FromMinutes(1),
+                            QueueLimit = 0
+                        }));
+            });
+
             services.AddHttpContextAccessor();
 
             return services;
