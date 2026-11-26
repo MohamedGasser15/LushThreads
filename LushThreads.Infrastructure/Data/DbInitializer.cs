@@ -32,9 +32,10 @@ namespace LushThreads.Infrastructure.Data
                 await SeedRolesAsync(roleManager, logger);
                 await SeedAdminUserAsync(userManager, roleManager, logger);
 
-                // Seed sample brands and categories
+                // Seed sample brands, categories, products, and stocks
                 await SeedBrandsAsync(context, logger);
                 await SeedCategoriesAsync(context, logger);
+                await CatalogSeeder.SeedCatalogAsync(context, logger);
             }
             catch (Exception ex)
             {

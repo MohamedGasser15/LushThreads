@@ -1,0 +1,3156 @@
+﻿{
+    "Brands":  [
+                   {
+                       "Brand_Id":  1,
+                       "Brand_Name":  "Nike"
+                   },
+                   {
+                       "Brand_Id":  2,
+                       "Brand_Name":  "Adidas"
+                   },
+                   {
+                       "Brand_Id":  3,
+                       "Brand_Name":  "Puma"
+                   },
+                   {
+                       "Brand_Id":  4,
+                       "Brand_Name":  "Zara"
+                   },
+                   {
+                       "Brand_Id":  5,
+                       "Brand_Name":  "H\u0026M"
+                   },
+                   {
+                       "Brand_Id":  6,
+                       "Brand_Name":  "Reebok"
+                   },
+                   {
+                       "Brand_Id":  7,
+                       "Brand_Name":  "Levi\u0027s"
+                   },
+                   {
+                       "Brand_Id":  8,
+                       "Brand_Name":  "Lacoste"
+                   },
+                   {
+                       "Brand_Id":  9,
+                       "Brand_Name":  "Columbia"
+                   },
+                   {
+                       "Brand_Id":  10,
+                       "Brand_Name":  "Converse"
+                   },
+                   {
+                       "Brand_Id":  11,
+                       "Brand_Name":  "Prada"
+                   },
+                   {
+                       "Brand_Id":  12,
+                       "Brand_Name":  "Gucci"
+                   },
+                   {
+                       "Brand_Id":  13,
+                       "Brand_Name":  "The North Face"
+                   },
+                   {
+                       "Brand_Id":  15,
+                       "Brand_Name":  "NightBird"
+                   },
+                   {
+                       "Brand_Id":  16,
+                       "Brand_Name":  "Rieker"
+                   },
+                   {
+                       "Brand_Id":  17,
+                       "Brand_Name":  "New Balance"
+                   }
+               ],
+    "Categories":  [
+                       {
+                           "Category_Id":  1,
+                           "Category_Name":  "T-Shirts",
+                           "ParentCategoryId":  17
+                       },
+                       {
+                           "Category_Id":  2,
+                           "Category_Name":  "Pantalon",
+                           "ParentCategoryId":  17
+                       },
+                       {
+                           "Category_Id":  3,
+                           "Category_Name":  "Shorts",
+                           "ParentCategoryId":  17
+                       },
+                       {
+                           "Category_Id":  4,
+                           "Category_Name":  "Shoes",
+                           "ParentCategoryId":  17
+                       },
+                       {
+                           "Category_Id":  5,
+                           "Category_Name":  "Jackets",
+                           "ParentCategoryId":  17
+                       },
+                       {
+                           "Category_Id":  6,
+                           "Category_Name":  "Coats",
+                           "ParentCategoryId":  17
+                       },
+                       {
+                           "Category_Id":  7,
+                           "Category_Name":  "Jeans",
+                           "ParentCategoryId":  17
+                       },
+                       {
+                           "Category_Id":  8,
+                           "Category_Name":  "Coats",
+                           "ParentCategoryId":  18
+                       },
+                       {
+                           "Category_Id":  9,
+                           "Category_Name":  "Sneakers",
+                           "ParentCategoryId":  20
+                       },
+                       {
+                           "Category_Id":  10,
+                           "Category_Name":  "Dresses",
+                           "ParentCategoryId":  18
+                       },
+                       {
+                           "Category_Id":  11,
+                           "Category_Name":  "Hoodies",
+                           "ParentCategoryId":  17
+                       },
+                       {
+                           "Category_Id":  12,
+                           "Category_Name":  "Sweatshirts",
+                           "ParentCategoryId":  17
+                       },
+                       {
+                           "Category_Id":  13,
+                           "Category_Name":  "Hats",
+                           "ParentCategoryId":  14
+                       },
+                       {
+                           "Category_Id":  14,
+                           "Category_Name":  "Accessories",
+                           "ParentCategoryId":  null
+                       },
+                       {
+                           "Category_Id":  15,
+                           "Category_Name":  "Home Decor",
+                           "ParentCategoryId":  14
+                       },
+                       {
+                           "Category_Id":  17,
+                           "Category_Name":  "Men\u0027s Fashion",
+                           "ParentCategoryId":  null
+                       },
+                       {
+                           "Category_Id":  18,
+                           "Category_Name":  "Women\u0027s Fashion",
+                           "ParentCategoryId":  null
+                       },
+                       {
+                           "Category_Id":  19,
+                           "Category_Name":  "Kids Fashion",
+                           "ParentCategoryId":  null
+                       },
+                       {
+                           "Category_Id":  20,
+                           "Category_Name":  "Footwear",
+                           "ParentCategoryId":  null
+                       },
+                       {
+                           "Category_Id":  21,
+                           "Category_Name":  "Sportswear",
+                           "ParentCategoryId":  null
+                       },
+                       {
+                           "Category_Id":  22,
+                           "Category_Name":  "Seasonal Collections",
+                           "ParentCategoryId":  null
+                       },
+                       {
+                           "Category_Id":  23,
+                           "Category_Name":  "Luxury Collection",
+                           "ParentCategoryId":  null
+                       },
+                       {
+                           "Category_Id":  24,
+                           "Category_Name":  "Boys Clothing",
+                           "ParentCategoryId":  19
+                       },
+                       {
+                           "Category_Id":  25,
+                           "Category_Name":  "Tops",
+                           "ParentCategoryId":  18
+                       },
+                       {
+                           "Category_Id":  26,
+                           "Category_Name":  "Jeans",
+                           "ParentCategoryId":  18
+                       },
+                       {
+                           "Category_Id":  27,
+                           "Category_Name":  "Skirts",
+                           "ParentCategoryId":  18
+                       },
+                       {
+                           "Category_Id":  28,
+                           "Category_Name":  "Jackets",
+                           "ParentCategoryId":  18
+                       },
+                       {
+                           "Category_Id":  29,
+                           "Category_Name":  "Sweaters",
+                           "ParentCategoryId":  18
+                       },
+                       {
+                           "Category_Id":  30,
+                           "Category_Name":  "Girls Clothing",
+                           "ParentCategoryId":  19
+                       },
+                       {
+                           "Category_Id":  31,
+                           "Category_Name":  "Baby Clothes",
+                           "ParentCategoryId":  19
+                       },
+                       {
+                           "Category_Id":  32,
+                           "Category_Name":  "School Uniforms",
+                           "ParentCategoryId":  19
+                       },
+                       {
+                           "Category_Id":  33,
+                           "Category_Name":  "Sports Shoes",
+                           "ParentCategoryId":  20
+                       },
+                       {
+                           "Category_Id":  34,
+                           "Category_Name":  "Formal Shoes",
+                           "ParentCategoryId":  20
+                       },
+                       {
+                           "Category_Id":  35,
+                           "Category_Name":  "Sandals",
+                           "ParentCategoryId":  20
+                       },
+                       {
+                           "Category_Id":  36,
+                           "Category_Name":  "Boots",
+                           "ParentCategoryId":  20
+                       },
+                       {
+                           "Category_Id":  37,
+                           "Category_Name":  "Gym Wear",
+                           "ParentCategoryId":  21
+                       },
+                       {
+                           "Category_Id":  38,
+                           "Category_Name":  "Running Gear",
+                           "ParentCategoryId":  21
+                       },
+                       {
+                           "Category_Id":  39,
+                           "Category_Name":  "Yoga Clothing",
+                           "ParentCategoryId":  21
+                       },
+                       {
+                           "Category_Id":  40,
+                           "Category_Name":  "Team Sports",
+                           "ParentCategoryId":  21
+                       },
+                       {
+                           "Category_Id":  41,
+                           "Category_Name":  "Swimwear",
+                           "ParentCategoryId":  21
+                       },
+                       {
+                           "Category_Id":  42,
+                           "Category_Name":  "Designer Apparel",
+                           "ParentCategoryId":  23
+                       },
+                       {
+                           "Category_Id":  43,
+                           "Category_Name":  "Premium Accessories",
+                           "ParentCategoryId":  23
+                       },
+                       {
+                           "Category_Id":  44,
+                           "Category_Name":  "Limited Editions",
+                           "ParentCategoryId":  23
+                       },
+                       {
+                           "Category_Id":  45,
+                           "Category_Name":  "Summer Essentials ",
+                           "ParentCategoryId":  22
+                       },
+                       {
+                           "Category_Id":  46,
+                           "Category_Name":  "Winter Collection",
+                           "ParentCategoryId":  22
+                       },
+                       {
+                           "Category_Id":  47,
+                           "Category_Name":  "Spring Collection",
+                           "ParentCategoryId":  22
+                       },
+                       {
+                           "Category_Id":  48,
+                           "Category_Name":  "Fall Collection",
+                           "ParentCategoryId":  22
+                       },
+                       {
+                           "Category_Id":  49,
+                           "Category_Name":  "bags",
+                           "ParentCategoryId":  18
+                       },
+                       {
+                           "Category_Id":  50,
+                           "Category_Name":  "Shorts",
+                           "ParentCategoryId":  18
+                       },
+                       {
+                           "Category_Id":  51,
+                           "Category_Name":  "Shirts",
+                           "ParentCategoryId":  17
+                       },
+                       {
+                           "Category_Id":  52,
+                           "Category_Name":  "Shirts",
+                           "ParentCategoryId":  18
+                       },
+                       {
+                           "Category_Id":  53,
+                           "Category_Name":  "Hoodie",
+                           "ParentCategoryId":  17
+                       },
+                       {
+                           "Category_Id":  54,
+                           "Category_Name":  "Hoodies",
+                           "ParentCategoryId":  18
+                       },
+                       {
+                           "Category_Id":  55,
+                           "Category_Name":  "Unisex",
+                           "ParentCategoryId":  null
+                       },
+                       {
+                           "Category_Id":  56,
+                           "Category_Name":  "Hoodie",
+                           "ParentCategoryId":  55
+                       },
+                       {
+                           "Category_Id":  57,
+                           "Category_Name":  "Shorts",
+                           "ParentCategoryId":  55
+                       },
+                       {
+                           "Category_Id":  58,
+                           "Category_Name":  "T-Shirts",
+                           "ParentCategoryId":  55
+                       },
+                       {
+                           "Category_Id":  59,
+                           "Category_Name":  "Shirts",
+                           "ParentCategoryId":  55
+                       },
+                       {
+                           "Category_Id":  60,
+                           "Category_Name":  "Sneakers",
+                           "ParentCategoryId":  17
+                       },
+                       {
+                           "Category_Id":  61,
+                           "Category_Name":  "Shoes",
+                           "ParentCategoryId":  55
+                       },
+                       {
+                           "Category_Id":  66,
+                           "Category_Name":  "dsds",
+                           "ParentCategoryId":  17
+                       }
+                   ],
+    "Products":  [
+                     {
+                         "Product_Id":  12,
+                         "Product_Name":  "Abstract Floral Short Sleeve Shirt",
+                         "Product_Description":  "A vibrant and colorful short sleeve shirt featuring an abstract floral pattern. Perfect for summer vibes and casual outings.",
+                         "Product_Price":  29.99,
+                         "Product_Rating":  0,
+                         "imgUrl":  "\\img\\products\\c00ebab0-bf99-43e2-a06d-aef885210963.jpg",
+                         "Product_Color":  "Multicolor",
+                         "Category_Id":  1,
+                         "Brand_Id":  4,
+                         "IsFeatured":  true,
+                         "DateAdded":  "2025-02-27T19:41:43.9500000"
+                     },
+                     {
+                         "Product_Id":  13,
+                         "Product_Name":  "Colorful Floral Leather Sandals",
+                         "Product_Description":  "Handcrafted leather sandals featuring intricate floral cutouts and a multicolor design. Comfortable and stylish, ideal for casual wear or summer outfits.",
+                         "Product_Price":  49.99,
+                         "Product_Rating":  0,
+                         "imgUrl":  "\\img\\products\\f6dd635e-6917-4726-bf1c-cdbd31beb09b.jpg",
+                         "Product_Color":  "Multicolor",
+                         "Category_Id":  27,
+                         "Brand_Id":  5,
+                         "IsFeatured":  true,
+                         "DateAdded":  "2025-02-27T19:41:43.9500000"
+                     },
+                     {
+                         "Product_Id":  19,
+                         "Product_Name":  "Beige Casual Sport Sneakers",
+                         "Product_Description":  "Lightweight and breathable beige sneakers with a unique tree embroidery. Designed for comfort and style, perfect for daily wear or light activity.",
+                         "Product_Price":  59.99,
+                         "Product_Rating":  0,
+                         "imgUrl":  "\\img\\products\\9ecf63ad-8a71-4f45-b976-3e0922e98049.jpg",
+                         "Product_Color":  "Beige",
+                         "Category_Id":  9,
+                         "Brand_Id":  2,
+                         "IsFeatured":  true,
+                         "DateAdded":  "2025-02-27T19:41:43.9500000"
+                     },
+                     {
+                         "Product_Id":  20,
+                         "Product_Name":  "Mushroom Pattern Shirt",
+                         "Product_Description":  " Add a whimsical touch to your wardrobe with this Mushroom Print Short-Sleeve Shirt. Featuring a vibrant all-over mushroom design in various colors, this shirt is perfect for casual outings or a fun, nature-inspired look. Made from lightweight, breathable fabric with a classic collar and button-down front. Rolled-up sleeves add a relaxed vibe.",
+                         "Product_Price":  29.99,
+                         "Product_Rating":  0,
+                         "imgUrl":  "\\img\\products\\8c609ad7-2049-4265-bd38-88a1139c0350.jpg",
+                         "Product_Color":  "Beige with Multicolor Print",
+                         "Category_Id":  1,
+                         "Brand_Id":  5,
+                         "IsFeatured":  false,
+                         "DateAdded":  "2025-02-27T19:41:43.9500000"
+                     },
+                     {
+                         "Product_Id":  21,
+                         "Product_Name":  "Floral Pattern Shirt",
+                         "Product_Description":  "Embrace nature with this Floral Blossom Short-Sleeve Shirt, featuring a delicate white base with vibrant green leaves and white flowers accented by orange centers. This lightweight shirt offers a relaxed fit, a classic collar, and a button-down front, making it ideal for casual summer days or a tropical getaway.",
+                         "Product_Price":  34.99,
+                         "Product_Rating":  0,
+                         "imgUrl":  "\\img\\products\\0da88a78-4c84-4b63-968c-ba9bfac64b95.jpg",
+                         "Product_Color":  "White with Green and Orange Floral Print",
+                         "Category_Id":  1,
+                         "Brand_Id":  4,
+                         "IsFeatured":  false,
+                         "DateAdded":  "2025-02-27T19:41:43.9500000"
+                     },
+                     {
+                         "Product_Id":  22,
+                         "Product_Name":  "Floral Graphic V-Neck T-Shirt",
+                         "Product_Description":  "Elevate your casual style with this Floral Graphic V-Neck T-Shirt. The white tee features a stunning floral print with shades of green, orange, and pink, adding a pop of color to your everyday look. Made from soft, comfortable fabric, this V-neck shirt is perfect for a laid-back day out.",
+                         "Product_Price":  19.99,
+                         "Product_Rating":  0,
+                         "imgUrl":  "\\img\\products\\0a51887e-47af-41c7-920d-e22190c48b97.jpg",
+                         "Product_Color":  "White with Multicolor Floral Print",
+                         "Category_Id":  1,
+                         "Brand_Id":  5,
+                         "IsFeatured":  true,
+                         "DateAdded":  "2025-02-27T19:41:43.9500000"
+                     },
+                     {
+                         "Product_Id":  23,
+                         "Product_Name":  "Forever Young Yellow Crossbody Bag",
+                         "Product_Description":  "Stay stylish and organized with this Forever Young Yellow Crossbody Bag. Crafted from premium faux leather, this compact bag features a mustard yellow finish with a subtle logo print, a detachable strap, and multiple compartments for your essentials. Perfect for daily use or a chic accessory for outings",
+                         "Product_Price":  39.99,
+                         "Product_Rating":  0,
+                         "imgUrl":  "\\img\\products\\352e9b91-9955-401d-bf88-8191ec7484d3.jpg",
+                         "Product_Color":  "Mustard Yellow",
+                         "Category_Id":  14,
+                         "Brand_Id":  4,
+                         "IsFeatured":  true,
+                         "DateAdded":  "2025-02-27T19:41:43.9500000"
+                     },
+                     {
+                         "Product_Id":  25,
+                         "Product_Name":  "Tropical Floral Throw Pillow",
+                         "Product_Description":  "Bring a touch of the tropics to your home with this Tropical Floral Throw Pillow. Featuring a vibrant print of green leaves, purple orchids, and white flowers, this pillow adds a fresh, botanical vibe to any space. Made from soft, durable fabric, perfect for your living room or bedroom.",
+                         "Product_Price":  24.99,
+                         "Product_Rating":  0,
+                         "imgUrl":  "\\img\\products\\ddad9fca-c78f-4e67-af19-425073ebcf98.jpeg",
+                         "Product_Color":  "White with Multicolor Tropical Print",
+                         "Category_Id":  15,
+                         "Brand_Id":  5,
+                         "IsFeatured":  false,
+                         "DateAdded":  "2025-02-27T19:41:43.9500000"
+                     },
+                     {
+                         "Product_Id":  26,
+                         "Product_Name":  "Bohemian Multicolor Wedge Sandals",
+                         "Product_Description":  "Step out in style with these Bohemian Multicolor Wedge Sandals. Featuring intricate patterns in shades of teal, yellow, and pink, these sandals are adorned with floral accents and cut-out designs. The low wedge heel provides comfort and support, making them perfect for summer outings or festivals.",
+                         "Product_Price":  49.99,
+                         "Product_Rating":  0,
+                         "imgUrl":  "\\img\\products\\25b550f1-a315-4aff-9315-64bb38ab8adb.jpg",
+                         "Product_Color":  "Teal with Multicolor Accents",
+                         "Category_Id":  4,
+                         "Brand_Id":  4,
+                         "IsFeatured":  true,
+                         "DateAdded":  "2025-02-27T19:41:43.9500000"
+                     },
+                     {
+                         "Product_Id":  27,
+                         "Product_Name":  "Bohemian Floral Beanie",
+                         "Product_Description":  "Add a boho touch to your outfit with this Bohemian Floral Beanie. Featuring a vibrant mix of floral and geometric patterns in shades of blue, pink, and yellow, this soft beanie is perfect for keeping warm while staying stylish. Ideal for cooler days or festival looks.",
+                         "Product_Price":  14.99,
+                         "Product_Rating":  0,
+                         "imgUrl":  "\\img\\products\\e22de3aa-70a8-4d9b-8dea-398de11527d7.jpg",
+                         "Product_Color":  "Navy Blue with Multicolor Print",
+                         "Category_Id":  13,
+                         "Brand_Id":  5,
+                         "IsFeatured":  true,
+                         "DateAdded":  "2025-02-27T19:41:43.9500000"
+                     },
+                     {
+                         "Product_Id":  28,
+                         "Product_Name":  "Blue Floral Short-Sleeve Shirt",
+                         "Product_Description":  "Step into elegance with this Blue Floral Short-Sleeve Shirt. The white base is adorned with intricate blue floral patterns, creating a timeless look. Crafted from lightweight fabric, this shirt features a classic collar and button-down front, perfect for casual or semi-formal occasions.",
+                         "Product_Price":  32.99,
+                         "Product_Rating":  0,
+                         "imgUrl":  "\\img\\products\\c02e013a-cb79-48c2-afbc-92251c8e1886.jpg",
+                         "Product_Color":  "White with Blue Floral Print",
+                         "Category_Id":  1,
+                         "Brand_Id":  4,
+                         "IsFeatured":  true,
+                         "DateAdded":  "2025-02-27T19:41:43.9500000"
+                     },
+                     {
+                         "Product_Id":  50,
+                         "Product_Name":  "It’s Not a Bug, It’s a Feature",
+                         "Product_Description":  "Perfect for tech enthusiasts, this “It’s Not a Bug, It’s a Feature” Graphic T-Shirt features a playful design with a cute bug illustration and bold text in teal and yellow. Made from soft, comfortable fabric, this black T-shirt is ideal for casual wear, coding sessions, or tech meetups.",
+                         "Product_Price":  19.99,
+                         "Product_Rating":  0,
+                         "imgUrl":  "\\img\\products\\881ba22f-ba71-4afb-897d-4756047c75ab.jpeg",
+                         "Product_Color":  "Black with Teal and Yellow Print",
+                         "Category_Id":  1,
+                         "Brand_Id":  15,
+                         "IsFeatured":  false,
+                         "DateAdded":  "2025-02-27T19:41:43.9500000"
+                     },
+                     {
+                         "Product_Id":  51,
+                         "Product_Name":  "Beast Mode Activated",
+                         "Product_Description":  "Get motivated with this “Beast Mode Activated” Graphic T-Shirt, featuring a bold barbell design and white text with red accents on a charcoal gray base. Perfect for gym sessions or casual wear, this T-shirt is made from breathable, durable fabric to keep you comfortable during your workouts.",
+                         "Product_Price":  22.99,
+                         "Product_Rating":  0,
+                         "imgUrl":  "\\img\\products\\a60a25ac-f4e3-4e55-b06a-f28850f799a0.jpeg",
+                         "Product_Color":  "Charcoal Gray with White and Red Print",
+                         "Category_Id":  1,
+                         "Brand_Id":  15,
+                         "IsFeatured":  false,
+                         "DateAdded":  "2025-02-27T19:41:43.9500000"
+                     },
+                     {
+                         "Product_Id":  52,
+                         "Product_Name":  "Civil Engineer",
+                         "Product_Description":  "Celebrate your engineering pride with this “Civil Engineer” Skyline Graphic T-Shirt. The navy blue tee features a city skyline integrated into the text, making it a stylish choice for civil engineers. Crafted from soft, comfortable fabric, this T-shirt is perfect for casual outings or professional meetups.",
+                         "Product_Price":  21.99,
+                         "Product_Rating":  0,
+                         "imgUrl":  "\\img\\products\\137976ad-7f14-44b6-b516-01d81c52e2e1.jpeg",
+                         "Product_Color":  "Navy Blue with White Print",
+                         "Category_Id":  1,
+                         "Brand_Id":  15,
+                         "IsFeatured":  false,
+                         "DateAdded":  "2025-02-27T19:41:43.9500000"
+                     },
+                     {
+                         "Product_Id":  53,
+                         "Product_Name":  "Doctor in Progress",
+                         "Product_Description":  "For aspiring doctors, this “Loading… Be Patient, Doctor in Progress” Graphic T-Shirt is a fun way to show your journey. The black tee features a loading bar design with teal text, perfect for med students or doctors-to-be. Made from soft, comfortable fabric for all-day wear.",
+                         "Product_Price":  19.99,
+                         "Product_Rating":  0,
+                         "imgUrl":  "\\img\\products\\be7d0799-cc9d-4c9f-8c15-8d09fe7f3553.jpeg",
+                         "Product_Color":  "Black with Teal Print",
+                         "Category_Id":  1,
+                         "Brand_Id":  15,
+                         "IsFeatured":  false,
+                         "DateAdded":  "2025-02-27T19:41:43.9500000"
+                     },
+                     {
+                         "Product_Id":  54,
+                         "Product_Name":  "I’m an Electrical Engineer",
+                         "Product_Description":  "Show off your electrical engineering pride with this “I’m an Electrical Engineer” Graphic T-Shirt. Featuring a clenched fist holding wires and the bold text “Nothing Can Shock Me” in yellow and red, this navy blue tee is perfect for engineers with a sense of humor. Made from soft, durable fabric.",
+                         "Product_Price":  21.99,
+                         "Product_Rating":  0,
+                         "imgUrl":  "\\img\\products\\c4d666a1-5222-481a-bcaa-2fc928f67ce6.jpeg",
+                         "Product_Color":  "Navy Blue with White, Yellow, and Red Print",
+                         "Category_Id":  1,
+                         "Brand_Id":  15,
+                         "IsFeatured":  false,
+                         "DateAdded":  "2025-02-27T19:41:43.9500000"
+                     },
+                     {
+                         "Product_Id":  55,
+                         "Product_Name":  "Follow Your Dreams",
+                         "Product_Description":  "Inspire your wanderlust with this “Follow Your Dreams” World Map T-Shirt. The navy blue tee features a world map design with an airplane and teal text, encouraging you to chase your dreams. Made from soft, comfortable fabric, this T-shirt is perfect for travelers and dreamers alike.",
+                         "Product_Price":  20.99,
+                         "Product_Rating":  0,
+                         "imgUrl":  "\\img\\products\\473bcd68-9347-475c-8ce7-bd5f88aabae2.jpeg",
+                         "Product_Color":  "Navy Blue with Teal and Green Print",
+                         "Category_Id":  1,
+                         "Brand_Id":  15,
+                         "IsFeatured":  false,
+                         "DateAdded":  "2025-02-27T19:41:43.9500000"
+                     },
+                     {
+                         "Product_Id":  56,
+                         "Product_Name":  "I’m an English Teacher",
+                         "Product_Description":  "For the witty educator, this “I’m an English Teacher” Graphic T-Shirt features the playful text “I will fight you with words that you never heard of” in green and white on a navy blue base. Perfect for teachers with a sense of humor, this tee is made from soft, comfortable fabric for all-day wear.",
+                         "Product_Price":  21.99,
+                         "Product_Rating":  0,
+                         "imgUrl":  "\\img\\products\\ab804f7e-869d-4b4b-917f-45fceffb70da.jpeg",
+                         "Product_Color":  "Navy Blue with Green and White Print",
+                         "Category_Id":  1,
+                         "Brand_Id":  15,
+                         "IsFeatured":  false,
+                         "DateAdded":  "2025-02-27T19:41:43.9500000"
+                     },
+                     {
+                         "Product_Id":  57,
+                         "Product_Name":  "I’m the Danger",
+                         "Product_Description":  "Channel your inner Heisenberg with this “I’m Not in Danger, I’m the Danger” Breaking Bad T-Shirt. Featuring a bold design with a character graphic and text in blue and red, this black tee is perfect for fans of the iconic show. Made from soft, comfortable fabric for everyday wear.",
+                         "Product_Price":  22.99,
+                         "Product_Rating":  0,
+                         "imgUrl":  "\\img\\products\\3d18acf2-737c-43d7-b5f8-b0774d733330.jpeg",
+                         "Product_Color":  "Black with Blue and Red Print",
+                         "Category_Id":  1,
+                         "Brand_Id":  15,
+                         "IsFeatured":  false,
+                         "DateAdded":  "2025-02-27T19:41:43.9500000"
+                     },
+                     {
+                         "Product_Id":  58,
+                         "Product_Name":  "Mechanical Engineer",
+                         "Product_Description":  "Show off your mechanical engineering pride with this “Mechanical Engineer” Gear Graphic T-Shirt. Featuring a bold design with gear illustrations in gray and red, paired with striking yellow text on a black base, this tee is perfect for engineers who love to wear their profession on their sleeve. Made from soft, comfortable fabric for everyday wear.",
+                         "Product_Price":  21.99,
+                         "Product_Rating":  0,
+                         "imgUrl":  "\\img\\products\\3078732c-e753-4dce-bcae-22cc543bb587.jpeg",
+                         "Product_Color":  "Black with Yellow, Gray, and Red Print",
+                         "Category_Id":  1,
+                         "Brand_Id":  15,
+                         "IsFeatured":  false,
+                         "DateAdded":  "2025-02-27T19:41:43.9500000"
+                     },
+                     {
+                         "Product_Id":  59,
+                         "Product_Name":  "Batman",
+                         "Product_Description":  "Celebrate the Dark Knight with this “Batman” Skyline Graphic T-Shirt. Featuring the iconic Batman logo above the word “BATMAN” with a Gotham City skyline integrated into the text, this white tee is perfect for fans of the superhero. Made from soft, comfortable fabric for everyday wear.",
+                         "Product_Price":  22.99,
+                         "Product_Rating":  0,
+                         "imgUrl":  "\\img\\products\\f88a7fe9-029a-4eb2-b513-f9af5babef48.jpeg",
+                         "Product_Color":  "White with Black and Gray Print",
+                         "Category_Id":  1,
+                         "Brand_Id":  15,
+                         "IsFeatured":  false,
+                         "DateAdded":  "2025-02-27T19:41:43.9500000"
+                     },
+                     {
+                         "Product_Id":  60,
+                         "Product_Name":  "I Don’t Need Google, My Wife Knows Everything",
+                         "Product_Description":  "Add some humor to your wardrobe with this “I Don’t Need Google, My Wife Knows Everything” Graphic T-Shirt. The white tee features a playful design with the word “GOOGLE” in its iconic multicolored font and a mock search bar, perfect for a lighthearted gift or casual wear. Made from soft, comfortable fabric.",
+                         "Product_Price":  19.99,
+                         "Product_Rating":  0,
+                         "imgUrl":  "\\img\\products\\cd213379-55db-4493-b70c-7658063d87de.jpeg",
+                         "Product_Color":  "White with Multicolor Print",
+                         "Category_Id":  1,
+                         "Brand_Id":  15,
+                         "IsFeatured":  false,
+                         "DateAdded":  "2025-02-27T19:41:43.9500000"
+                     },
+                     {
+                         "Product_Id":  61,
+                         "Product_Name":  "Good Vibes Only",
+                         "Product_Description":  "Spread positivity with this “Good Vibes Only” Graphic T-Shirt. Featuring bold text in black and gray against a striking red circular background, this white tee is perfect for casual outings or to brighten up your day. Made from soft, comfortable fabric for all-day wear.",
+                         "Product_Price":  19.99,
+                         "Product_Rating":  0,
+                         "imgUrl":  "\\img\\products\\27733a34-e07b-4d51-8be3-11cdfe16f2e3.jpeg",
+                         "Product_Color":  "White with Black, Gray, and Red Print",
+                         "Category_Id":  1,
+                         "Brand_Id":  15,
+                         "IsFeatured":  false,
+                         "DateAdded":  "2025-02-27T19:41:43.9500000"
+                     },
+                     {
+                         "Product_Id":  62,
+                         "Product_Name":  "Red Casual Lounge Shorts",
+                         "Product_Description":  "Stay comfortable in these Red Casual Lounge Shorts, perfect for lounging or casual outings. Featuring a vibrant red color, side pockets, and a soft elastic waistband, these shorts are made from breathable fabric to keep you cool and relaxed all day.",
+                         "Product_Price":  14.99,
+                         "Product_Rating":  0,
+                         "imgUrl":  "\\img\\products\\cb3232e2-b82d-4b0c-b261-32d1cd95ee00.jpeg",
+                         "Product_Color":  "Red",
+                         "Category_Id":  50,
+                         "Brand_Id":  5,
+                         "IsFeatured":  false,
+                         "DateAdded":  "2025-02-27T19:41:43.9500000"
+                     },
+                     {
+                         "Product_Id":  63,
+                         "Product_Name":  "Light Gray Casual Lounge Shorts",
+                         "Product_Description":  "Keep it simple and comfortable with these Light Gray Casual Lounge Shorts. Featuring a soft elastic waistband and side pockets, these shorts are ideal for lounging, casual outings, or light activities. Made from breathable fabric to ensure all-day comfort in a versatile light gray color.",
+                         "Product_Price":  14.99,
+                         "Product_Rating":  0,
+                         "imgUrl":  "\\img\\products\\cf8b1d9c-4599-4a17-aec5-89cbd492de76.jpeg",
+                         "Product_Color":  "Light Gray",
+                         "Category_Id":  50,
+                         "Brand_Id":  5,
+                         "IsFeatured":  false,
+                         "DateAdded":  "2025-02-27T19:41:43.9500000"
+                     },
+                     {
+                         "Product_Id":  64,
+                         "Product_Name":  "Medium-Wash Flared Jeans",
+                         "Product_Description":  "Step back in time with these Medium-Wash Flared Jeans. Featuring a high-waisted design with a flared leg silhouette, these jeans have a vintage-inspired faded wash for a timeless look. Crafted from durable denim with front and back pockets, they’re perfect for casual outings or a retro-styled outfit.",
+                         "Product_Price":  49.99,
+                         "Product_Rating":  0,
+                         "imgUrl":  "\\img\\products\\4a3600ed-49ac-49fc-8ae3-eced7832639f.jpeg",
+                         "Product_Color":  "Medium Blue Wash",
+                         "Category_Id":  26,
+                         "Brand_Id":  7,
+                         "IsFeatured":  false,
+                         "DateAdded":  "2025-02-27T19:41:43.9500000"
+                     },
+                     {
+                         "Product_Id":  65,
+                         "Product_Name":  "Skull and Roses Button-Up Shirt",
+                         "Product_Description":  "Make a bold statement with this Skull and Roses Button-Up Shirt. Featuring an all-over print of decorated skulls and vibrant red roses on a dark background, this long-sleeve shirt has a gothic, Day of the Dead-inspired design. With a classic collar and button-down front, it’s perfect for edgy, casual looks.",
+                         "Product_Price":  34.99,
+                         "Product_Rating":  0,
+                         "imgUrl":  "\\img\\products\\1343bc02-2072-494f-ae7f-5b30a88387b4.jpeg",
+                         "Product_Color":  "Black with Red and White Print",
+                         "Category_Id":  51,
+                         "Brand_Id":  4,
+                         "IsFeatured":  false,
+                         "DateAdded":  "2025-02-27T19:41:43.9500000"
+                     },
+                     {
+                         "Product_Id":  66,
+                         "Product_Name":  "Shiba Inu Puppies Button-Up Shirt",
+                         "Product_Description":  "Celebrate your love for Shiba Inus with this Shiba Inu Puppies Button-Up Shirt. Featuring a playful all-over print of Shiba Inu faces, paw prints, stars, and the text “SHIBA INU PUPPIES,” this white long-sleeve shirt is perfect for dog lovers. With a classic collar and button-down front, it’s ideal for casual, fun outings.",
+                         "Product_Price":  32.99,
+                         "Product_Rating":  0,
+                         "imgUrl":  "\\img\\products\\b680eda3-eb0d-4f38-9003-3927ea691a7b.jpeg",
+                         "Product_Color":  "White with Multicolor Print",
+                         "Category_Id":  51,
+                         "Brand_Id":  5,
+                         "IsFeatured":  false,
+                         "DateAdded":  "2025-02-27T19:41:43.9500000"
+                     },
+                     {
+                         "Product_Id":  67,
+                         "Product_Name":  "Floral and Cat Print Button-Up Shirt",
+                         "Product_Description":  "Add a touch of elegance to your wardrobe with this Floral and Cat Print Button-Up Shirt. Featuring a delicate navy blue floral pattern with subtle cat motifs on a light pink background, this long-sleeve shirt has a relaxed fit with a pleated back detail. Perfect for casual outings or semi-formal occasions.",
+                         "Product_Price":  29.99,
+                         "Product_Rating":  0,
+                         "imgUrl":  "\\img\\products\\c962a572-20b5-4a2d-92f2-58386c9bf441.webp",
+                         "Product_Color":  "Light Pink with Navy Blue Print",
+                         "Category_Id":  52,
+                         "Brand_Id":  4,
+                         "IsFeatured":  false,
+                         "DateAdded":  "2025-02-27T19:41:43.9500000"
+                     },
+                     {
+                         "Product_Id":  68,
+                         "Product_Name":  "Cat Print Button-Up Shirt",
+                         "Product_Description":  "Embrace your love for cats with this Cat Print Button-Up Shirt. Featuring a whimsical all-over print of cartoon-style cats on a light pink background, this long-sleeve shirt has a relaxed fit with a classic collar and button-down front. Ideal for casual, fun outings or as a playful addition to your wardrobe.",
+                         "Product_Price":  29.99,
+                         "Product_Rating":  0,
+                         "imgUrl":  "\\img\\products\\f07e921e-9a4e-4b53-9fe8-e78eaa421b47.jpeg",
+                         "Product_Color":  "Light Pink with Black Print",
+                         "Category_Id":  52,
+                         "Brand_Id":  5,
+                         "IsFeatured":  false,
+                         "DateAdded":  "2025-02-27T19:41:43.9500000"
+                     },
+                     {
+                         "Product_Id":  69,
+                         "Product_Name":  "Cat Print V-Neck Tunic",
+                         "Product_Description":  "Show off your quirky side with this Cat Print V-Neck Tunic. Featuring an all-over print of cartoon-style cats with black and white patterns on a muted purple background, this long-sleeve tunic has a loose, flowing fit and a V-neckline. Perfect for casual wear or as a fun statement piece for cat lovers.",
+                         "Product_Price":  27.99,
+                         "Product_Rating":  0,
+                         "imgUrl":  "\\img\\products\\c8660650-18f2-4321-9690-08c6285cc19e.jpeg",
+                         "Product_Color":  "Muted Purple with Black and White Print",
+                         "Category_Id":  52,
+                         "Brand_Id":  5,
+                         "IsFeatured":  false,
+                         "DateAdded":  "2025-02-27T19:41:43.9500000"
+                     },
+                     {
+                         "Product_Id":  71,
+                         "Product_Name":  "Adidas Brown Logo T-Shirt",
+                         "Product_Description":  "Show off your sporty style with this Adidas Brown Logo T-Shirt. Featuring the iconic Adidas three-stripe mountain logo in gold above the brand name in a distressed font, this brown short-sleeve tee is perfect for casual wear or light activities. Made from soft, breathable fabric for all-day comfort.",
+                         "Product_Price":  24.99,
+                         "Product_Rating":  0,
+                         "imgUrl":  "\\img\\products\\f8fd0b00-1153-4139-8966-fd256ca59615.webp",
+                         "Product_Color":  "Brown with Gold Print",
+                         "Category_Id":  1,
+                         "Brand_Id":  2,
+                         "IsFeatured":  false,
+                         "DateAdded":  "2025-02-27T19:41:43.9500000"
+                     },
+                     {
+                         "Product_Id":  73,
+                         "Product_Name":  "Adidas White Logo T-Shirt",
+                         "Product_Description":  "Keep it classic with this Adidas White Logo T-Shirt. Featuring the iconic Adidas three-stripe mountain logo in teal above the brand name in black, this white short-sleeve tee is perfect for casual outings or athletic activities. Crafted from soft, breathable fabric for a comfortable fit.",
+                         "Product_Price":  24.99,
+                         "Product_Rating":  0,
+                         "imgUrl":  "\\img\\products\\db0279ed-e035-4064-b11a-9f52c59c81c2.webp",
+                         "Product_Color":  "White with Teal and Black Print",
+                         "Category_Id":  1,
+                         "Brand_Id":  2,
+                         "IsFeatured":  false,
+                         "DateAdded":  "2025-02-27T19:41:43.9500000"
+                     },
+                     {
+                         "Product_Id":  74,
+                         "Product_Name":  "The North Face Navy Logo T-Shirt",
+                         "Product_Description":  "Embrace the outdoors with this The North Face Navy Logo T-Shirt. Featuring a scenic mountain and ocean graphic with the brand’s signature half-dome logo and “THE NORTH FACE” text in white, this navy short-sleeve tee is perfect for casual wear or outdoor adventures. Made from soft, durable fabric for all-day comfort.",
+                         "Product_Price":  29.99,
+                         "Product_Rating":  0,
+                         "imgUrl":  "\\img\\products\\210f13d4-dead-4ebb-91af-4640ce334f1d.jpeg",
+                         "Product_Color":  "Navy Blue with White Print",
+                         "Category_Id":  1,
+                         "Brand_Id":  13,
+                         "IsFeatured":  false,
+                         "DateAdded":  "2025-02-27T19:41:43.9500000"
+                     },
+                     {
+                         "Product_Id":  75,
+                         "Product_Name":  "Batman Coffee Hoodie",
+                         "Product_Description":  "Get ready to save the day with this Batman “Coffee First” Hoodie! Featuring a graphic of Batman with a coffee cup and the text “OK…BUT COFFEE FIRST” on a yellow background, this black hoodie is perfect for superhero fans who need their coffee fix. Made from soft, cozy fabric for all-day comfort.",
+                         "Product_Price":  39.99,
+                         "Product_Rating":  0,
+                         "imgUrl":  "\\img\\products\\e3d491d5-8ec6-491f-898d-fe8f5fc17618.jpeg",
+                         "Product_Color":  "Black with Yellow and White Print",
+                         "Category_Id":  56,
+                         "Brand_Id":  5,
+                         "IsFeatured":  false,
+                         "DateAdded":  "2025-02-27T19:41:43.9500000"
+                     },
+                     {
+                         "Product_Id":  76,
+                         "Product_Name":  "Give Me More Coffee",
+                         "Product_Description":  "For the ultimate coffee lover, this “Give Me More Coffee” Navy Hoodie features a distressed white graphic with the playful text “Coffee GIVE ME MORE.” Styled like a classic soda brand logo, this hoodie is perfect for casual wear. Crafted from soft, warm fabric to keep you cozy while you sip your favorite brew.",
+                         "Product_Price":  37.99,
+                         "Product_Rating":  0,
+                         "imgUrl":  "\\img\\products\\9dd67a26-c3dc-4b64-b2cf-f242695907e6.jpg",
+                         "Product_Color":  "Navy Blue with White Print",
+                         "Category_Id":  56,
+                         "Brand_Id":  5,
+                         "IsFeatured":  false,
+                         "DateAdded":  "2025-02-27T19:41:43.9500000"
+                     },
+                     {
+                         "Product_Id":  78,
+                         "Product_Name":  "Coffee Fuel Gauge ",
+                         "Product_Description":  "Stay powered up with this Coffee Fuel Gauge Hoodie! Featuring a fuel gauge graphic with a coffee cup at the center and the text “POWER FULL,” this navy hoodie humorously shows that coffee is your ultimate energy source. Made from soft, durable fabric for a cozy fit during your daily caffeine runs.",
+                         "Product_Price":  37.99,
+                         "Product_Rating":  0,
+                         "imgUrl":  "\\img\\products\\f8ef1f60-239f-4337-b132-95d545bfd49a.jpeg",
+                         "Product_Color":  "Navy Blue with White Print",
+                         "Category_Id":  56,
+                         "Brand_Id":  15,
+                         "IsFeatured":  false,
+                         "DateAdded":  "2025-02-27T19:41:43.9500000"
+                     },
+                     {
+                         "Product_Id":  79,
+                         "Product_Name":  "Star Wars Darth Vader Coffee Hoodie",
+                         "Product_Description":  "Join the dark side of coffee with this Star Wars Darth Vader Coffee Hoodie! Featuring a parody of a famous coffee shop logo with Darth Vader’s helmet and the text “STAR WARS COFFEE,” this black hoodie is a must-have for Star Wars fans and coffee enthusiasts. Made from soft, warm fabric for ultimate comfort.",
+                         "Product_Price":  39.99,
+                         "Product_Rating":  0,
+                         "imgUrl":  "\\img\\products\\9f65d935-7b82-493b-a31d-08fdf6218142.jpeg",
+                         "Product_Color":  "Black with Green and White Print",
+                         "Category_Id":  56,
+                         "Brand_Id":  15,
+                         "IsFeatured":  false,
+                         "DateAdded":  "2025-02-27T19:41:43.9500000"
+                     },
+                     {
+                         "Product_Id":  80,
+                         "Product_Name":  "Coffee to Code",
+                         "Product_Description":  "Code better with caffeine in this “Coffee to Code” Programmer Hoodie! Featuring the text “I TURN COFFEE INTO CODE” in a playful, multicolored font with a coding symbol on a coffee cup, this dark green hoodie is perfect for programmers and tech enthusiasts. Made from soft, cozy fabric for all-day coding comfort.",
+                         "Product_Price":  39.99,
+                         "Product_Rating":  0,
+                         "imgUrl":  "\\img\\products\\566059ce-af69-431f-9a21-ef03dee98c28.jpeg",
+                         "Product_Color":  "Dark Green with Multicolor Print",
+                         "Category_Id":  56,
+                         "Brand_Id":  15,
+                         "IsFeatured":  false,
+                         "DateAdded":  "2025-02-27T19:41:43.9500000"
+                     },
+                     {
+                         "Product_Id":  81,
+                         "Product_Name":  "Minimalist “Coffee to Code”",
+                         "Product_Description":  "Fuel your coding sessions with this Minimalist “Coffee to Code” Hoodie! Featuring a sleek white graphic with the text “i turn coffee into code” and icons of a coffee cup, gears, and a code window, this black hoodie is perfect for programmers and tech lovers. Made from soft, cozy fabric for all-day comfort.",
+                         "Product_Price":  39.99,
+                         "Product_Rating":  0,
+                         "imgUrl":  "\\img\\products\\bdcde98c-19c9-4e48-bcd1-532175b6dd8a.jpeg",
+                         "Product_Color":  "Black with White Print",
+                         "Category_Id":  56,
+                         "Brand_Id":  15,
+                         "IsFeatured":  false,
+                         "DateAdded":  "2025-02-27T19:41:43.9500000"
+                     },
+                     {
+                         "Product_Id":  82,
+                         "Product_Name":  "Low Battery Need Coffee",
+                         "Product_Description":  "Recharge with this “Low Battery Need Coffee” Hoodie! Featuring a coffee cup styled as a low battery indicator with a warning symbol and the pixelated text “LOW BATTERY I NEED COFFEE,” this navy hoodie humorously captures the need for a coffee boost. Crafted from soft, warm fabric for cozy wear.",
+                         "Product_Price":  37.99,
+                         "Product_Rating":  0,
+                         "imgUrl":  "\\img\\products\\2ff6e443-4917-4af8-b719-3016c38a0dda.jpeg",
+                         "Product_Color":  "Navy Blue with White and Red Print",
+                         "Category_Id":  56,
+                         "Brand_Id":  15,
+                         "IsFeatured":  false,
+                         "DateAdded":  "2025-02-27T19:41:43.9500000"
+                     },
+                     {
+                         "Product_Id":  83,
+                         "Product_Name":  "Dark Side of Coffee",
+                         "Product_Description":  "Join the coffee rebellion with this “Dark Side of Coffee” Star Wars Hoodie! Featuring the bold text “COME TO THE DARK SIDE OF COFFEE” in yellow and white with a coffee cup icon, this dark green hoodie playfully references a famous Star Wars quote. Made from soft, cozy fabric for coffee lovers and sci-fi fans alike.",
+                         "Product_Price":  39.99,
+                         "Product_Rating":  0,
+                         "imgUrl":  "\\img\\products\\63997570-e989-42a7-abf1-c6b8ea7ba02e.jpeg",
+                         "Product_Color":  "Dark Green with Yellow and White Print",
+                         "Category_Id":  56,
+                         "Brand_Id":  15,
+                         "IsFeatured":  false,
+                         "DateAdded":  "2025-02-27T19:41:43.9500000"
+                     },
+                     {
+                         "Product_Id":  84,
+                         "Product_Name":  "The Coffee Maker",
+                         "Product_Description":  "Celebrate your coffee obsession with this “The Coffee Maker” Light Gray Hoodie! Featuring a simple black graphic with the text “The Coffee Maker” and a coffee cup icon, this hoodie is a cozy, minimalist choice for caffeine enthusiasts. Crafted from soft, warm fabric for all-day comfort.",
+                         "Product_Price":  37.99,
+                         "Product_Rating":  0,
+                         "imgUrl":  "\\img\\products\\ece1b54e-0d3f-458b-854b-1b7d84d2199b.jpeg",
+                         "Product_Color":  "Light Gray with Black Print",
+                         "Category_Id":  56,
+                         "Brand_Id":  15,
+                         "IsFeatured":  false,
+                         "DateAdded":  "2025-02-27T19:41:43.9500000"
+                     },
+                     {
+                         "Product_Id":  85,
+                         "Product_Name":  "Teaching is My Superpower",
+                         "Product_Description":  " Celebrate the power of education with this “Teaching is My Superpower” T-Shirt! Featuring a bold red and white shield with a large “S” and the word “TEACHER,” along with the text “Teaching is my SUPERPOWER,” this dark gray tee is perfect for educators with superhero skills. Made from soft, comfortable fabric for all-day wear.",
+                         "Product_Price":  24.99,
+                         "Product_Rating":  0,
+                         "imgUrl":  "\\img\\products\\88c3c17f-6dc9-4a29-bcce-f72b181255a1.jpeg",
+                         "Product_Color":  "Dark Gray with Red and White Print",
+                         "Category_Id":  58,
+                         "Brand_Id":  15,
+                         "IsFeatured":  false,
+                         "DateAdded":  "2025-02-27T19:41:43.9500000"
+                     },
+                     {
+                         "Product_Id":  86,
+                         "Product_Name":  "Teacher Ninja",
+                         "Product_Description":  "Show off your dual skills with this “Teacher Ninja” 50/50 T-Shirt! Featuring a cute cartoon teacher dressed as a ninja with scythes and the text “50% TEACHER 50% NINJA” in red, this white tee is perfect for educators with stealthy classroom management skills. Crafted from soft, breathable fabric for a comfortable fit.",
+                         "Product_Price":  24.99,
+                         "Product_Rating":  0,
+                         "imgUrl":  "\\img\\products\\7a3746d9-cbbe-40c3-9b63-0996131079f5.jpeg",
+                         "Product_Color":  "White with Black and Red Print",
+                         "Category_Id":  58,
+                         "Brand_Id":  15,
+                         "IsFeatured":  false,
+                         "DateAdded":  "2025-02-27T19:41:43.9500000"
+                     },
+                     {
+                         "Product_Id":  88,
+                         "Product_Name":  "Shine \u0026 Ride",
+                         "Product_Description":  "Hit the trails with this “Shine \u0026 Ride” Mountain Biker T-Shirt! Featuring a detailed graphic of a mountain biker riding down a rocky slope with the text “SHINE \u0026 RIDE” in bold red and white, this navy blue tee is perfect for cycling enthusiasts. Made from soft, durable fabric for active wear.",
+                         "Product_Price":  26.99,
+                         "Product_Rating":  0,
+                         "imgUrl":  "\\img\\products\\57be390d-ea0d-417a-b686-a029829a699c.jpeg",
+                         "Product_Color":  "Navy Blue with Red and White Print",
+                         "Category_Id":  58,
+                         "Brand_Id":  15,
+                         "IsFeatured":  false,
+                         "DateAdded":  "2025-02-27T19:41:43.9500000"
+                     },
+                     {
+                         "Product_Id":  89,
+                         "Product_Name":  "Science Teacher",
+                         "Product_Description":  "Geek out with this “Science Teacher” Periodic Table T-Shirt! Featuring the word “Sc I EN Ce TEACHER” spelled out with periodic table elements and a beaker with green liquid, this navy blue tee is perfect for science educators. Made from soft, breathable fabric for a comfortable classroom fit.",
+                         "Product_Price":  24.99,
+                         "Product_Rating":  0,
+                         "imgUrl":  "\\img\\products\\db6615e8-f445-4eb0-8b52-30b48b32162b.jpeg",
+                         "Product_Color":  "Navy Blue with White and Green Print",
+                         "Category_Id":  58,
+                         "Brand_Id":  15,
+                         "IsFeatured":  false,
+                         "DateAdded":  "2025-02-27T19:41:43.9500000"
+                     },
+                     {
+                         "Product_Id":  90,
+                         "Product_Name":  "Rhenium Relax",
+                         "Product_Description":  "Chill out with this “Rhenium Relax” Cannabis T-Shirt! Featuring a green cannabis leaf and the text “Rhenium RE LAX” styled with the periodic table element Rhenium, this black tee is perfect for those who love to relax with a playful twist. Made from soft, comfortable fabric for laid-back vibes.",
+                         "Product_Price":  24.99,
+                         "Product_Rating":  0,
+                         "imgUrl":  "\\img\\products\\355e1d00-1413-4c3f-b30e-bda4c54a3fda.jpeg",
+                         "Product_Color":  "Black with Green and White Print",
+                         "Category_Id":  58,
+                         "Brand_Id":  15,
+                         "IsFeatured":  false,
+                         "DateAdded":  "2025-02-27T19:41:43.9500000"
+                     },
+                     {
+                         "Product_Id":  91,
+                         "Product_Name":  "Parkour Art of Movement",
+                         "Product_Description":  "Embrace the thrill of parkour with this “Parkour Art of Movement” T-Shirt! Featuring three dynamic silhouettes of parkour athletes in action above the bold text “PARKOUR” in green and white, with “THE ART OF MOVEMENT” below, this black tee is perfect for freerunning enthusiasts. Made from soft, breathable fabric for active wear.",
+                         "Product_Price":  26.99,
+                         "Product_Rating":  0,
+                         "imgUrl":  "\\img\\products\\a3f12659-b169-4914-8d94-4e18e915abc0.jpeg",
+                         "Product_Color":  "Black with Green and White Print",
+                         "Category_Id":  58,
+                         "Brand_Id":  15,
+                         "IsFeatured":  false,
+                         "DateAdded":  "2025-02-27T19:41:43.9500000"
+                     },
+                     {
+                         "Product_Id":  92,
+                         "Product_Name":  "Mini Hulk",
+                         "Product_Description":  "Unleash your inner hero with this “Mini Hulk” Cartoon T-Shirt! Featuring a cute chibi-style Hulk character with a fierce expression and the text “MINI HULK” in green and gray, this white tee is perfect for Marvel fans who love a playful twist. Made from soft, comfortable fabric for everyday wear.",
+                         "Product_Price":  24.99,
+                         "Product_Rating":  0,
+                         "imgUrl":  "\\img\\products\\19773c8f-33c6-4115-8517-834a64609ec7.jpeg",
+                         "Product_Color":  "White with Green and Gray Print",
+                         "Category_Id":  58,
+                         "Brand_Id":  15,
+                         "IsFeatured":  false,
+                         "DateAdded":  "2025-02-27T19:41:43.9500000"
+                     },
+                     {
+                         "Product_Id":  93,
+                         "Product_Name":  "Deadpool Mask",
+                         "Product_Description":  "Show off your love for the Merc with a Mouth with this “Deadpool Mask” Minimalist T-Shirt! Featuring Deadpool’s iconic red and black mask with white eyes, this white tee is perfect for Marvel fans who appreciate a clean, bold design. Made from soft, breathable fabric for everyday wear.",
+                         "Product_Price":  24.99,
+                         "Product_Rating":  0,
+                         "imgUrl":  "\\img\\products\\e2561e68-8c9f-4a94-a955-a95c857fd29f.jpeg",
+                         "Product_Color":  "White with Red and Black Print",
+                         "Category_Id":  1,
+                         "Brand_Id":  15,
+                         "IsFeatured":  false,
+                         "DateAdded":  "2025-02-27T19:41:43.9500000"
+                     },
+                     {
+                         "Product_Id":  94,
+                         "Product_Name":  "Winter Fell",
+                         "Product_Description":  "Winter is coming to the Magic Kingdom with this “Winter Fell” Game of Thrones T-Shirt! Featuring a Disney-style castle with a medieval twist and the text “WINTER FELL” and “WINTER IS COMING,” this navy blue tee humorously blends Game of Thrones and Disney themes. Made from soft, comfortable fabric for fans of both worlds.",
+                         "Product_Price":  24.99,
+                         "Product_Rating":  0,
+                         "imgUrl":  "\\img\\products\\f5fbbd9f-30b2-4870-b53c-c4fb53534d33.jpeg",
+                         "Product_Color":  "Navy Blue with White and Blue Print",
+                         "Category_Id":  1,
+                         "Brand_Id":  15,
+                         "IsFeatured":  false,
+                         "DateAdded":  "2025-02-27T19:41:43.9500000"
+                     },
+                     {
+                         "Product_Id":  95,
+                         "Product_Name":  "The Codefather",
+                         "Product_Description":  "Pay homage to coding greatness with this “The Codefather” Programmer T-Shirt! Featuring the text “The Codefather” in a classic serif font alongside coding symbols like angle brackets and binary code, this black tee is a playful nod to The Godfather for tech enthusiasts. Made from soft, breathable fabric for all-day comfort.",
+                         "Product_Price":  24.99,
+                         "Product_Rating":  0,
+                         "imgUrl":  "\\img\\products\\cfe99cef-453e-4385-b3cc-f222dfa67179.jpeg",
+                         "Product_Color":  "Black with White Print",
+                         "Category_Id":  1,
+                         "Brand_Id":  15,
+                         "IsFeatured":  false,
+                         "DateAdded":  "2025-02-27T19:41:43.9500000"
+                     },
+                     {
+                         "Product_Id":  96,
+                         "Product_Name":  "Never Give Up",
+                         "Product_Description":  "Stay motivated with this “Never Give Up” Motivational T-Shirt! Featuring the bold, graffiti-style text “NEVER GIVE UP” in red with a teal outline, this navy blue tee is perfect for anyone needing a reminder to keep pushing forward. Made from soft, durable fabric for everyday inspiration.",
+                         "Product_Price":  24.99,
+                         "Product_Rating":  0,
+                         "imgUrl":  "\\img\\products\\513487c8-f9e2-4849-9741-bcc639df5930.jpeg",
+                         "Product_Color":  "Navy Blue with Red and Teal Print",
+                         "Category_Id":  1,
+                         "Brand_Id":  15,
+                         "IsFeatured":  false,
+                         "DateAdded":  "2025-02-27T19:41:43.9500000"
+                     },
+                     {
+                         "Product_Id":  97,
+                         "Product_Name":  "Think Outside the Box",
+                         "Product_Description":  "Inspire innovation with this “Think Outside the Box” Creative T-Shirt! Featuring the phrase “think OUTSIDE THE BOX” with “OUTSIDE THE” inside a red frame and “think” and “BOX” in bold black, this dark gray tee encourages creative thinking. Made from soft, comfortable fabric for everyday wear.",
+                         "Product_Price":  24.99,
+                         "Product_Rating":  0,
+                         "imgUrl":  "\\img\\products\\2b3a624b-c2a7-458c-803d-badd4f8e86f3.jpeg",
+                         "Product_Color":  "Dark Gray with Red and Black Print",
+                         "Category_Id":  1,
+                         "Brand_Id":  15,
+                         "IsFeatured":  false,
+                         "DateAdded":  "2025-02-27T19:41:43.9500000"
+                     },
+                     {
+                         "Product_Id":  98,
+                         "Product_Name":  "Trust Me I’m an Engineer",
+                         "Product_Description":  "Celebrate engineering ingenuity with this “Trust Me I’m an Engineer” Crane T-Shirt! Featuring a construction crane and the text “TRUST ME I’M AN ENGINEER” in bold red and black, this white tee is perfect for engineers with a sense of humor. Made from soft, breathable fabric for everyday wear.",
+                         "Product_Price":  24.99,
+                         "Product_Rating":  0,
+                         "imgUrl":  "\\img\\products\\998248c3-20df-4f5d-b7e1-0fd40b5ad3c8.jpeg",
+                         "Product_Color":  "White with Red and Black Print",
+                         "Category_Id":  1,
+                         "Brand_Id":  15,
+                         "IsFeatured":  false,
+                         "DateAdded":  "2025-02-27T19:41:43.9500000"
+                     },
+                     {
+                         "Product_Id":  99,
+                         "Product_Name":  "Teachers Jurassic Park",
+                         "Product_Description":  "Unleash your inner T-Rex with this “Teachers Jurassic Park” Let’s Eat Kids T-Shirt! Featuring a parody of the Jurassic Park logo with a T-Rex skeleton and the text “TEACHERS” and “LET’S EAT KIDS,” this white tee is a hilarious pick for educators with a sense of humor. Made from soft, comfortable fabric for classroom wear.",
+                         "Product_Price":  24.99,
+                         "Product_Rating":  0,
+                         "imgUrl":  "\\img\\products\\afb5e499-31dc-4119-a768-31d516658e9e.jpeg",
+                         "Product_Color":  "White with Black Print",
+                         "Category_Id":  1,
+                         "Brand_Id":  15,
+                         "IsFeatured":  false,
+                         "DateAdded":  "2025-02-27T19:41:43.9500000"
+                     },
+                     {
+                         "Product_Id":  100,
+                         "Product_Name":  "Peace Symbol",
+                         "Product_Description":  "Spread a message of peace with this “Peace Symbol” Pan-African T-Shirt! Featuring a peace symbol in yellow, red, and green—colors inspired by the Pan-African flag—this white tee combines unity and harmony in a bold design. Made from soft, breathable fabric for everyday wear.",
+                         "Product_Price":  24.99,
+                         "Product_Rating":  0,
+                         "imgUrl":  "\\img\\products\\7edd1e44-4109-45d0-acce-6ec67f3f7b9f.jpeg",
+                         "Product_Color":  "White with Yellow, Red, and Green Print",
+                         "Category_Id":  1,
+                         "Brand_Id":  15,
+                         "IsFeatured":  false,
+                         "DateAdded":  "2025-02-27T19:41:43.9500000"
+                     },
+                     {
+                         "Product_Id":  101,
+                         "Product_Name":  "Not Flat We Checked",
+                         "Product_Description":  "Debunk myths in style with this “Not Flat We Checked” NASA T-Shirt! Featuring a NASA-inspired logo with the text “NOT FLAT WE CHECKED” and “TRUST ME,” this navy blue tee is perfect for science lovers with a sense of humor. Made from soft, durable fabric for everyday wear.",
+                         "Product_Price":  24.99,
+                         "Product_Rating":  0,
+                         "imgUrl":  "\\img\\products\\109f1df4-53f6-4c9a-b040-670f7199edd6.jpeg",
+                         "Product_Color":  "Navy Blue with White Print",
+                         "Category_Id":  1,
+                         "Brand_Id":  15,
+                         "IsFeatured":  false,
+                         "DateAdded":  "2025-02-27T19:41:43.9500000"
+                     },
+                     {
+                         "Product_Id":  102,
+                         "Product_Name":  "Tea Cher",
+                         "Product_Description":  "Sip on some humor with this “Tea Cher” Pun T-Shirt! Featuring a teabag labeled “TEA” with an apple tag and the text “cher” to form “TEA cher,” this white tee is a clever pick for teachers who love a good pun. Made from soft, comfortable fabric for classroom or casual wear.",
+                         "Product_Price":  24.99,
+                         "Product_Rating":  0,
+                         "imgUrl":  "\\img\\products\\71d9600b-c2e6-4aad-95c5-f7b1a7c3ddc8.jpeg",
+                         "Product_Color":  "White with Black Print",
+                         "Category_Id":  1,
+                         "Brand_Id":  15,
+                         "IsFeatured":  false,
+                         "DateAdded":  "2025-02-27T19:41:43.9500000"
+                     },
+                     {
+                         "Product_Id":  103,
+                         "Product_Name":  "Low Battery I Need Coffee",
+                         "Product_Description":  "Recharge your day with this “Low Battery I Need Coffee” T-Shirt! Featuring a coffee cup with a low battery warning and the text “LOW BATTERY I NEED COFFEE” in bold red and pixelated font, this navy blue tee is perfect for coffee lovers who need a caffeine boost. Made from soft, durable fabric for everyday wear.",
+                         "Product_Price":  24.99,
+                         "Product_Rating":  0,
+                         "imgUrl":  "\\img\\products\\5db416e4-534b-4d80-b169-f8a8e5c43ee5.jpeg",
+                         "Product_Color":  "Navy Blue with Red and White Print",
+                         "Category_Id":  1,
+                         "Brand_Id":  15,
+                         "IsFeatured":  false,
+                         "DateAdded":  "2025-02-27T19:41:43.9500000"
+                     },
+                     {
+                         "Product_Id":  104,
+                         "Product_Name":  "iTeach",
+                         "Product_Description":  "Teach with tech style in this “iTeach” Apple T-Shirt! Featuring a red apple and the text “iTeach” in a sleek white font, this black tee playfully mimics Apple branding for educators who love technology. Made from soft, comfortable fabric for classroom or casual wear.",
+                         "Product_Price":  24.99,
+                         "Product_Rating":  0,
+                         "imgUrl":  "\\img\\products\\1fabac4b-706a-4ed3-aeb2-ad6f3ff22730.jpeg",
+                         "Product_Color":  "Black with Red and White Print",
+                         "Category_Id":  58,
+                         "Brand_Id":  15,
+                         "IsFeatured":  false,
+                         "DateAdded":  "2025-02-27T19:41:43.9500000"
+                     },
+                     {
+                         "Product_Id":  105,
+                         "Product_Name":  "A+ Teacher",
+                         "Product_Description":  "Give yourself a top grade with this “A+ Teacher” Grading T-Shirt! Featuring a bold red “A+” graphic and the word “teacher” in black, this white tee celebrates the excellence of educators. Made from soft, breathable fabric for everyday wear in or out of the classroom.",
+                         "Product_Price":  24.99,
+                         "Product_Rating":  0,
+                         "imgUrl":  "\\img\\products\\a453b4ee-0aac-419b-ae6f-9df696cccabd.jpg",
+                         "Product_Color":  "White with Red and Black Print",
+                         "Category_Id":  58,
+                         "Brand_Id":  15,
+                         "IsFeatured":  false,
+                         "DateAdded":  "2025-02-27T19:41:43.9500000"
+                     },
+                     {
+                         "Product_Id":  106,
+                         "Product_Name":  "Lion King Engineers",
+                         "Product_Description":  "Embrace the engineer life with this “Lion King Engineers” No Free Time T-Shirt! Featuring a Lion King-inspired graphic of Simba and Rafiki with the dialogue “No son. We’re engineers,” this black tee humorously captures the busy life of engineers. Made from soft, comfortable fabric for engineering students and professionals.",
+                         "Product_Price":  24.99,
+                         "Product_Rating":  0,
+                         "imgUrl":  "\\img\\products\\d424a8eb-03b4-41f9-b140-f17ef56865b1.jpeg",
+                         "Product_Color":  "Black with White, Red, and Blue Print",
+                         "Category_Id":  58,
+                         "Brand_Id":  15,
+                         "IsFeatured":  false,
+                         "DateAdded":  "2025-02-27T19:41:43.9500000"
+                     },
+                     {
+                         "Product_Id":  107,
+                         "Product_Name":  "Sordo Dare",
+                         "Product_Description":  "Step out in rugged style with these “Sordo Dare” Brown Suede Sneakers! Featuring a distressed brown suede upper, navy blue accents, and a durable white and black sole, these sneakers offer a vintage look perfect for everyday wear. Ideal for those who love a blend of casual comfort and classic design.",
+                         "Product_Price":  59.99,
+                         "Product_Rating":  0,
+                         "imgUrl":  "\\img\\products\\ddb760c6-dc4d-4cdd-a1f1-aaa766bc511e.jpeg",
+                         "Product_Color":  "Brown with Navy Blue Accents",
+                         "Category_Id":  4,
+                         "Brand_Id":  5,
+                         "IsFeatured":  false,
+                         "DateAdded":  "2025-02-27T19:41:43.9500000"
+                     },
+                     {
+                         "Product_Id":  108,
+                         "Product_Name":  "Nike Air Force 1 ",
+                         "Product_Description":  "Elevate your sneaker game with the classic Nike Air Force 1 White Sneakers! Featuring a clean white leather upper, black Nike swoosh, and a matching white sole, these iconic sneakers offer timeless style and all-day comfort. Perfect for casual outings or athletic wear.",
+                         "Product_Price":  90.00,
+                         "Product_Rating":  0,
+                         "imgUrl":  "\\img\\products\\48ccd419-ba74-4d00-87fa-255451e1db3f.jpeg",
+                         "Product_Color":  "White with Black Accents",
+                         "Category_Id":  4,
+                         "Brand_Id":  1,
+                         "IsFeatured":  false,
+                         "DateAdded":  "2025-02-27T19:41:43.9500000"
+                     },
+                     {
+                         "Product_Id":  109,
+                         "Product_Name":  "Air Jordan 1",
+                         "Product_Description":  "Make a bold statement with the Air Jordan 1 Red and White Sneakers! Featuring a striking red and white leather upper, black Nike swoosh, and high-top design, these legendary sneakers are a must-have for sneaker enthusiasts. Perfect for streetwear or collectors.",
+                         "Product_Price":  120.00,
+                         "Product_Rating":  0,
+                         "imgUrl":  "\\img\\products\\7bd538a6-7578-4c66-8806-982b4d8737ff.jpeg",
+                         "Product_Color":  "Red, White, and Black",
+                         "Category_Id":  4,
+                         "Brand_Id":  1,
+                         "IsFeatured":  false,
+                         "DateAdded":  "2025-02-27T19:41:43.9500000"
+                     },
+                     {
+                         "Product_Id":  110,
+                         "Product_Name":  "Adidas Samba Black",
+                         "Product_Description":  "Kick it old-school with the Adidas Samba Black Sneakers! Featuring a black leather upper, white Adidas stripes, blue tongue label, and a classic brown gum sole, these soccer-inspired sneakers are perfect for casual streetwear. A timeless choice for any wardrobe.",
+                         "Product_Price":  75.00,
+                         "Product_Rating":  0,
+                         "imgUrl":  "\\img\\products\\be8a58cc-7a23-41bd-9f37-d04330be3a49.jpeg",
+                         "Product_Color":  "Black with White and Brown Accents",
+                         "Category_Id":  4,
+                         "Brand_Id":  2,
+                         "IsFeatured":  false,
+                         "DateAdded":  "2025-02-27T19:41:43.9500000"
+                     },
+                     {
+                         "Product_Id":  111,
+                         "Product_Name":  "Heart Lightning",
+                         "Product_Description":  "Stand out with these “Heart Lightning” Custom White Sneakers! Featuring a white leather upper with a black heart and lightning bolt graphic, along with unique symbols and text, these sneakers offer a personalized, artistic flair. Perfect for those who love custom footwear with a bold edge.",
+                         "Product_Price":  85.00,
+                         "Product_Rating":  0,
+                         "imgUrl":  "\\img\\products\\e08c8618-be06-4dd1-9dc3-fc27472fd208.jpeg",
+                         "Product_Color":  "White with Black Accents",
+                         "Category_Id":  61,
+                         "Brand_Id":  1,
+                         "IsFeatured":  false,
+                         "DateAdded":  "2025-02-27T19:41:43.9500000"
+                     },
+                     {
+                         "Product_Id":  112,
+                         "Product_Name":  "UrbanPulse",
+                         "Product_Description":  "Step up your style with the “UrbanPulse” Navy and Brown Sneakers! Featuring a sleek navy blue suede and leather upper with brown accents and vibrant orange detailing, these sneakers offer a modern, versatile look. The white sole with orange highlights ensures comfort and grip, perfect for everyday wear.",
+                         "Product_Price":  69.99,
+                         "Product_Rating":  0,
+                         "imgUrl":  "\\img\\products\\25ec1d7e-6da2-40b6-a964-505064dcb140.jpeg",
+                         "Product_Color":  "Navy Blue, Brown, and Orange",
+                         "Category_Id":  4,
+                         "Brand_Id":  5,
+                         "IsFeatured":  false,
+                         "DateAdded":  "2025-02-27T19:41:43.9500000"
+                     },
+                     {
+                         "Product_Id":  113,
+                         "Product_Name":  "Rieker Green ",
+                         "Product_Description":  "Stay comfortable and stylish with the Rieker Green Comfort Sneakers! Featuring a green suede and mesh upper with orange accents, these sneakers combine practicality with a modern look. The white sole with a black bottom offers support, making them ideal for casual outings or light activities.",
+                         "Product_Price":  79.99,
+                         "Product_Rating":  0,
+                         "imgUrl":  "\\img\\products\\ee1a35d2-237d-4238-95ee-28f6e8bf0f63.jpeg",
+                         "Product_Color":  "Green with Orange Accents",
+                         "Category_Id":  4,
+                         "Brand_Id":  16,
+                         "IsFeatured":  false,
+                         "DateAdded":  "2025-02-27T19:41:43.9500000"
+                     },
+                     {
+                         "Product_Id":  114,
+                         "Product_Name":  "Geox RedPulse ",
+                         "Product_Description":  "Make a bold statement with the Geox RedPulse Sneakers! Featuring a striking combination of red, black, and gray leather and suede, these sneakers offer a modern design with Geox’s signature breathable technology. The white sole ensures comfort, making them perfect for all-day wear.",
+                         "Product_Price":  89.99,
+                         "Product_Rating":  0,
+                         "imgUrl":  "\\img\\products\\0a956b82-bbe6-4d1b-8b22-a8f907e0faa8.jpeg",
+                         "Product_Color":  "Red, Black, and Gray",
+                         "Category_Id":  4,
+                         "Brand_Id":  5,
+                         "IsFeatured":  true,
+                         "DateAdded":  "2025-02-27T19:41:43.9500000"
+                     },
+                     {
+                         "Product_Id":  116,
+                         "Product_Name":  "Maroon Wave",
+                         "Product_Description":  "Dive into style with the “Maroon Wave” Swim Shorts! These maroon shorts feature an elastic waistband with a white speckled drawstring, perfect for swimming or beach outings. Made from quick-dry fabric, they offer comfort and functionality for all your water adventures.",
+                         "Product_Price":  29.99,
+                         "Product_Rating":  0,
+                         "imgUrl":  "\\img\\products\\65db1263-fef1-428b-9420-71685f70bf6a.jpeg",
+                         "Product_Color":  "Maroon",
+                         "Category_Id":  3,
+                         "Brand_Id":  5,
+                         "IsFeatured":  false,
+                         "DateAdded":  "2025-02-27T19:41:43.9500000"
+                     },
+                     {
+                         "Product_Id":  117,
+                         "Product_Name":  "Teal Splash",
+                         "Product_Description":  "Make a splash with the “Teal Splash” Swim Shorts! Featuring a vibrant teal color with a bold orange drawstring and stitching, these shorts are perfect for the beach or pool. The elastic waistband and quick-dry fabric ensure comfort and style for all your summer activities.",
+                         "Product_Price":  29.99,
+                         "Product_Rating":  0,
+                         "imgUrl":  "\\img\\products\\c221c4d9-764d-4389-a541-0eb54372e3d2.jpeg",
+                         "Product_Color":  "Teal with Orange Accents",
+                         "Category_Id":  3,
+                         "Brand_Id":  5,
+                         "IsFeatured":  false,
+                         "DateAdded":  "2025-02-27T19:41:43.9500000"
+                     },
+                     {
+                         "Product_Id":  118,
+                         "Product_Name":  "Olive Trek",
+                         "Product_Description":  "Stay relaxed with the “Olive Trek” Casual Shorts! These olive green shorts feature an elastic waistband, white drawstring, and large side pockets for a utility-inspired look. Perfect for casual outings, lounging, or light outdoor activities, they offer a comfortable and durable fit.",
+                         "Product_Price":  34.99,
+                         "Product_Rating":  0,
+                         "imgUrl":  "\\img\\products\\5cf9c579-327b-4ca9-9a8c-38a324cb8aa7.jpeg",
+                         "Product_Color":  "Olive Green",
+                         "Category_Id":  3,
+                         "Brand_Id":  5,
+                         "IsFeatured":  false,
+                         "DateAdded":  "2025-02-27T19:41:43.9500000"
+                     },
+                     {
+                         "Product_Id":  119,
+                         "Product_Name":  "New Balance Navy Short",
+                         "Product_Description":  "Power up your workout with the New Balance Navy Performance Shorts! These navy blue athletic shorts feature an elastic waistband with a white drawstring and the iconic NB logo. Designed for running, gym sessions, or casual wear, they offer breathability and comfort for active lifestyles.",
+                         "Product_Price":  39.99,
+                         "Product_Rating":  0,
+                         "imgUrl":  "\\img\\products\\bc96da26-6e81-4040-87a5-8f91125bd5c0.jpeg",
+                         "Product_Color":  "Navy Blue",
+                         "Category_Id":  3,
+                         "Brand_Id":  17,
+                         "IsFeatured":  false,
+                         "DateAdded":  "2025-02-27T19:41:43.9500000"
+                     },
+                     {
+                         "Product_Id":  120,
+                         "Product_Name":  "Dark Green Yankees Cap",
+                         "Product_Description":  "Show your team pride with the ’47 Dark Green Yankees Cap! Featuring the iconic NY logo in white embroidery, this dark green cap offers a classic, relaxed fit with a curved bill. Perfect for sports fans or casual wear, it combines style and team spirit effortlessly.",
+                         "Product_Price":  29.99,
+                         "Product_Rating":  0,
+                         "imgUrl":  "\\img\\products\\90fef776-3b95-43ac-b8cd-1ed38063f40c.jpeg",
+                         "Product_Color":  "Dark Green with White Logo",
+                         "Category_Id":  13,
+                         "Brand_Id":  5,
+                         "IsFeatured":  false,
+                         "DateAdded":  "2025-02-27T19:41:43.9500000"
+                     }
+                 ],
+    "Stocks":  [
+                   {
+                       "Stock_Id":  204,
+                       "Size":  "S",
+                       "Quantity":  10,
+                       "Product_Id":  25
+                   },
+                   {
+                       "Stock_Id":  205,
+                       "Size":  "M",
+                       "Quantity":  20,
+                       "Product_Id":  25
+                   },
+                   {
+                       "Stock_Id":  206,
+                       "Size":  "L",
+                       "Quantity":  20,
+                       "Product_Id":  25
+                   },
+                   {
+                       "Stock_Id":  207,
+                       "Size":  "S",
+                       "Quantity":  19,
+                       "Product_Id":  26
+                   },
+                   {
+                       "Stock_Id":  208,
+                       "Size":  "M",
+                       "Quantity":  20,
+                       "Product_Id":  26
+                   },
+                   {
+                       "Stock_Id":  209,
+                       "Size":  "L",
+                       "Quantity":  20,
+                       "Product_Id":  26
+                   },
+                   {
+                       "Stock_Id":  242,
+                       "Size":  "S",
+                       "Quantity":  15,
+                       "Product_Id":  23
+                   },
+                   {
+                       "Stock_Id":  243,
+                       "Size":  "L",
+                       "Quantity":  20,
+                       "Product_Id":  23
+                   },
+                   {
+                       "Stock_Id":  244,
+                       "Size":  "S",
+                       "Quantity":  20,
+                       "Product_Id":  27
+                   },
+                   {
+                       "Stock_Id":  245,
+                       "Size":  "M",
+                       "Quantity":  19,
+                       "Product_Id":  27
+                   },
+                   {
+                       "Stock_Id":  246,
+                       "Size":  "L",
+                       "Quantity":  20,
+                       "Product_Id":  27
+                   },
+                   {
+                       "Stock_Id":  255,
+                       "Size":  "S",
+                       "Quantity":  20,
+                       "Product_Id":  28
+                   },
+                   {
+                       "Stock_Id":  256,
+                       "Size":  "M",
+                       "Quantity":  20,
+                       "Product_Id":  28
+                   },
+                   {
+                       "Stock_Id":  257,
+                       "Size":  "L",
+                       "Quantity":  20,
+                       "Product_Id":  28
+                   },
+                   {
+                       "Stock_Id":  258,
+                       "Size":  "S",
+                       "Quantity":  20,
+                       "Product_Id":  22
+                   },
+                   {
+                       "Stock_Id":  259,
+                       "Size":  "M",
+                       "Quantity":  19,
+                       "Product_Id":  22
+                   },
+                   {
+                       "Stock_Id":  260,
+                       "Size":  "L",
+                       "Quantity":  20,
+                       "Product_Id":  22
+                   },
+                   {
+                       "Stock_Id":  261,
+                       "Size":  "XL",
+                       "Quantity":  20,
+                       "Product_Id":  22
+                   },
+                   {
+                       "Stock_Id":  270,
+                       "Size":  "S",
+                       "Quantity":  16,
+                       "Product_Id":  19
+                   },
+                   {
+                       "Stock_Id":  271,
+                       "Size":  "M",
+                       "Quantity":  10,
+                       "Product_Id":  19
+                   },
+                   {
+                       "Stock_Id":  272,
+                       "Size":  "L",
+                       "Quantity":  20,
+                       "Product_Id":  19
+                   },
+                   {
+                       "Stock_Id":  273,
+                       "Size":  "XL",
+                       "Quantity":  20,
+                       "Product_Id":  19
+                   },
+                   {
+                       "Stock_Id":  282,
+                       "Size":  "S",
+                       "Quantity":  18,
+                       "Product_Id":  20
+                   },
+                   {
+                       "Stock_Id":  283,
+                       "Size":  "M",
+                       "Quantity":  20,
+                       "Product_Id":  20
+                   },
+                   {
+                       "Stock_Id":  284,
+                       "Size":  "L",
+                       "Quantity":  20,
+                       "Product_Id":  20
+                   },
+                   {
+                       "Stock_Id":  285,
+                       "Size":  "XL",
+                       "Quantity":  20,
+                       "Product_Id":  20
+                   },
+                   {
+                       "Stock_Id":  286,
+                       "Size":  "S",
+                       "Quantity":  20,
+                       "Product_Id":  21
+                   },
+                   {
+                       "Stock_Id":  287,
+                       "Size":  "M",
+                       "Quantity":  20,
+                       "Product_Id":  21
+                   },
+                   {
+                       "Stock_Id":  288,
+                       "Size":  "L",
+                       "Quantity":  20,
+                       "Product_Id":  21
+                   },
+                   {
+                       "Stock_Id":  289,
+                       "Size":  "XL",
+                       "Quantity":  20,
+                       "Product_Id":  21
+                   },
+                   {
+                       "Stock_Id":  290,
+                       "Size":  "S",
+                       "Quantity":  18,
+                       "Product_Id":  12
+                   },
+                   {
+                       "Stock_Id":  291,
+                       "Size":  "M",
+                       "Quantity":  20,
+                       "Product_Id":  12
+                   },
+                   {
+                       "Stock_Id":  292,
+                       "Size":  "L",
+                       "Quantity":  10,
+                       "Product_Id":  12
+                   },
+                   {
+                       "Stock_Id":  293,
+                       "Size":  "XL",
+                       "Quantity":  0,
+                       "Product_Id":  12
+                   },
+                   {
+                       "Stock_Id":  296,
+                       "Size":  "S",
+                       "Quantity":  18,
+                       "Product_Id":  13
+                   },
+                   {
+                       "Stock_Id":  297,
+                       "Size":  "M",
+                       "Quantity":  18,
+                       "Product_Id":  13
+                   },
+                   {
+                       "Stock_Id":  298,
+                       "Size":  "L",
+                       "Quantity":  18,
+                       "Product_Id":  13
+                   },
+                   {
+                       "Stock_Id":  299,
+                       "Size":  "XL",
+                       "Quantity":  18,
+                       "Product_Id":  13
+                   },
+                   {
+                       "Stock_Id":  320,
+                       "Size":  "S",
+                       "Quantity":  15,
+                       "Product_Id":  53
+                   },
+                   {
+                       "Stock_Id":  321,
+                       "Size":  "M",
+                       "Quantity":  20,
+                       "Product_Id":  53
+                   },
+                   {
+                       "Stock_Id":  322,
+                       "Size":  "L",
+                       "Quantity":  18,
+                       "Product_Id":  53
+                   },
+                   {
+                       "Stock_Id":  323,
+                       "Size":  "XL",
+                       "Quantity":  10,
+                       "Product_Id":  53
+                   },
+                   {
+                       "Stock_Id":  324,
+                       "Size":  "S",
+                       "Quantity":  10,
+                       "Product_Id":  52
+                   },
+                   {
+                       "Stock_Id":  325,
+                       "Size":  "M",
+                       "Quantity":  15,
+                       "Product_Id":  52
+                   },
+                   {
+                       "Stock_Id":  326,
+                       "Size":  "L",
+                       "Quantity":  12,
+                       "Product_Id":  52
+                   },
+                   {
+                       "Stock_Id":  327,
+                       "Size":  "XL",
+                       "Quantity":  8,
+                       "Product_Id":  52
+                   },
+                   {
+                       "Stock_Id":  328,
+                       "Size":  "S",
+                       "Quantity":  15,
+                       "Product_Id":  50
+                   },
+                   {
+                       "Stock_Id":  329,
+                       "Size":  "M",
+                       "Quantity":  20,
+                       "Product_Id":  50
+                   },
+                   {
+                       "Stock_Id":  330,
+                       "Size":  "L",
+                       "Quantity":  18,
+                       "Product_Id":  50
+                   },
+                   {
+                       "Stock_Id":  331,
+                       "Size":  "XL",
+                       "Quantity":  10,
+                       "Product_Id":  50
+                   },
+                   {
+                       "Stock_Id":  332,
+                       "Size":  "S",
+                       "Quantity":  12,
+                       "Product_Id":  51
+                   },
+                   {
+                       "Stock_Id":  333,
+                       "Size":  "M",
+                       "Quantity":  18,
+                       "Product_Id":  51
+                   },
+                   {
+                       "Stock_Id":  334,
+                       "Size":  "L",
+                       "Quantity":  15,
+                       "Product_Id":  51
+                   },
+                   {
+                       "Stock_Id":  335,
+                       "Size":  "XL",
+                       "Quantity":  8,
+                       "Product_Id":  51
+                   },
+                   {
+                       "Stock_Id":  336,
+                       "Size":  "S",
+                       "Quantity":  10,
+                       "Product_Id":  54
+                   },
+                   {
+                       "Stock_Id":  337,
+                       "Size":  "M",
+                       "Quantity":  15,
+                       "Product_Id":  54
+                   },
+                   {
+                       "Stock_Id":  338,
+                       "Size":  "L",
+                       "Quantity":  12,
+                       "Product_Id":  54
+                   },
+                   {
+                       "Stock_Id":  339,
+                       "Size":  "XL",
+                       "Quantity":  8,
+                       "Product_Id":  54
+                   },
+                   {
+                       "Stock_Id":  340,
+                       "Size":  "S",
+                       "Quantity":  12,
+                       "Product_Id":  55
+                   },
+                   {
+                       "Stock_Id":  341,
+                       "Size":  "M",
+                       "Quantity":  18,
+                       "Product_Id":  55
+                   },
+                   {
+                       "Stock_Id":  342,
+                       "Size":  "L",
+                       "Quantity":  15,
+                       "Product_Id":  55
+                   },
+                   {
+                       "Stock_Id":  343,
+                       "Size":  "XL",
+                       "Quantity":  8,
+                       "Product_Id":  55
+                   },
+                   {
+                       "Stock_Id":  344,
+                       "Size":  "S",
+                       "Quantity":  10,
+                       "Product_Id":  56
+                   },
+                   {
+                       "Stock_Id":  345,
+                       "Size":  "M",
+                       "Quantity":  15,
+                       "Product_Id":  56
+                   },
+                   {
+                       "Stock_Id":  346,
+                       "Size":  "L",
+                       "Quantity":  12,
+                       "Product_Id":  56
+                   },
+                   {
+                       "Stock_Id":  347,
+                       "Size":  "XL",
+                       "Quantity":  8,
+                       "Product_Id":  56
+                   },
+                   {
+                       "Stock_Id":  348,
+                       "Size":  "S",
+                       "Quantity":  15,
+                       "Product_Id":  57
+                   },
+                   {
+                       "Stock_Id":  349,
+                       "Size":  "M",
+                       "Quantity":  20,
+                       "Product_Id":  57
+                   },
+                   {
+                       "Stock_Id":  350,
+                       "Size":  "L",
+                       "Quantity":  18,
+                       "Product_Id":  57
+                   },
+                   {
+                       "Stock_Id":  351,
+                       "Size":  "XL",
+                       "Quantity":  10,
+                       "Product_Id":  57
+                   },
+                   {
+                       "Stock_Id":  352,
+                       "Size":  "S",
+                       "Quantity":  10,
+                       "Product_Id":  58
+                   },
+                   {
+                       "Stock_Id":  353,
+                       "Size":  "M",
+                       "Quantity":  15,
+                       "Product_Id":  58
+                   },
+                   {
+                       "Stock_Id":  354,
+                       "Size":  "L",
+                       "Quantity":  12,
+                       "Product_Id":  58
+                   },
+                   {
+                       "Stock_Id":  355,
+                       "Size":  "XL",
+                       "Quantity":  8,
+                       "Product_Id":  58
+                   },
+                   {
+                       "Stock_Id":  356,
+                       "Size":  "S",
+                       "Quantity":  15,
+                       "Product_Id":  59
+                   },
+                   {
+                       "Stock_Id":  357,
+                       "Size":  "M",
+                       "Quantity":  20,
+                       "Product_Id":  59
+                   },
+                   {
+                       "Stock_Id":  358,
+                       "Size":  "L",
+                       "Quantity":  18,
+                       "Product_Id":  59
+                   },
+                   {
+                       "Stock_Id":  359,
+                       "Size":  "XL",
+                       "Quantity":  10,
+                       "Product_Id":  59
+                   },
+                   {
+                       "Stock_Id":  360,
+                       "Size":  "S",
+                       "Quantity":  12,
+                       "Product_Id":  60
+                   },
+                   {
+                       "Stock_Id":  361,
+                       "Size":  "M",
+                       "Quantity":  18,
+                       "Product_Id":  60
+                   },
+                   {
+                       "Stock_Id":  362,
+                       "Size":  "L",
+                       "Quantity":  15,
+                       "Product_Id":  60
+                   },
+                   {
+                       "Stock_Id":  363,
+                       "Size":  "XL",
+                       "Quantity":  8,
+                       "Product_Id":  60
+                   },
+                   {
+                       "Stock_Id":  364,
+                       "Size":  "S",
+                       "Quantity":  12,
+                       "Product_Id":  61
+                   },
+                   {
+                       "Stock_Id":  365,
+                       "Size":  "M",
+                       "Quantity":  18,
+                       "Product_Id":  61
+                   },
+                   {
+                       "Stock_Id":  366,
+                       "Size":  "L",
+                       "Quantity":  15,
+                       "Product_Id":  61
+                   },
+                   {
+                       "Stock_Id":  367,
+                       "Size":  "XL",
+                       "Quantity":  8,
+                       "Product_Id":  61
+                   },
+                   {
+                       "Stock_Id":  372,
+                       "Size":  "S",
+                       "Quantity":  10,
+                       "Product_Id":  62
+                   },
+                   {
+                       "Stock_Id":  373,
+                       "Size":  "M",
+                       "Quantity":  15,
+                       "Product_Id":  62
+                   },
+                   {
+                       "Stock_Id":  374,
+                       "Size":  "L",
+                       "Quantity":  12,
+                       "Product_Id":  62
+                   },
+                   {
+                       "Stock_Id":  375,
+                       "Size":  "XL",
+                       "Quantity":  8,
+                       "Product_Id":  62
+                   },
+                   {
+                       "Stock_Id":  376,
+                       "Size":  "S",
+                       "Quantity":  10,
+                       "Product_Id":  63
+                   },
+                   {
+                       "Stock_Id":  377,
+                       "Size":  "M",
+                       "Quantity":  15,
+                       "Product_Id":  63
+                   },
+                   {
+                       "Stock_Id":  378,
+                       "Size":  "L",
+                       "Quantity":  12,
+                       "Product_Id":  63
+                   },
+                   {
+                       "Stock_Id":  379,
+                       "Size":  "XL",
+                       "Quantity":  8,
+                       "Product_Id":  63
+                   },
+                   {
+                       "Stock_Id":  380,
+                       "Size":  "S",
+                       "Quantity":  15,
+                       "Product_Id":  64
+                   },
+                   {
+                       "Stock_Id":  381,
+                       "Size":  "M",
+                       "Quantity":  10,
+                       "Product_Id":  64
+                   },
+                   {
+                       "Stock_Id":  382,
+                       "Size":  "L",
+                       "Quantity":  12,
+                       "Product_Id":  64
+                   },
+                   {
+                       "Stock_Id":  383,
+                       "Size":  "XL",
+                       "Quantity":  8,
+                       "Product_Id":  64
+                   },
+                   {
+                       "Stock_Id":  388,
+                       "Size":  "S",
+                       "Quantity":  8,
+                       "Product_Id":  65
+                   },
+                   {
+                       "Stock_Id":  389,
+                       "Size":  "M",
+                       "Quantity":  12,
+                       "Product_Id":  65
+                   },
+                   {
+                       "Stock_Id":  390,
+                       "Size":  "L",
+                       "Quantity":  10,
+                       "Product_Id":  65
+                   },
+                   {
+                       "Stock_Id":  391,
+                       "Size":  "XL",
+                       "Quantity":  6,
+                       "Product_Id":  65
+                   },
+                   {
+                       "Stock_Id":  392,
+                       "Size":  "S",
+                       "Quantity":  8,
+                       "Product_Id":  66
+                   },
+                   {
+                       "Stock_Id":  393,
+                       "Size":  "M",
+                       "Quantity":  12,
+                       "Product_Id":  66
+                   },
+                   {
+                       "Stock_Id":  394,
+                       "Size":  "L",
+                       "Quantity":  10,
+                       "Product_Id":  66
+                   },
+                   {
+                       "Stock_Id":  395,
+                       "Size":  "XL",
+                       "Quantity":  6,
+                       "Product_Id":  66
+                   },
+                   {
+                       "Stock_Id":  396,
+                       "Size":  "S",
+                       "Quantity":  10,
+                       "Product_Id":  67
+                   },
+                   {
+                       "Stock_Id":  397,
+                       "Size":  "M",
+                       "Quantity":  15,
+                       "Product_Id":  67
+                   },
+                   {
+                       "Stock_Id":  398,
+                       "Size":  "L",
+                       "Quantity":  12,
+                       "Product_Id":  67
+                   },
+                   {
+                       "Stock_Id":  399,
+                       "Size":  "XL",
+                       "Quantity":  8,
+                       "Product_Id":  67
+                   },
+                   {
+                       "Stock_Id":  400,
+                       "Size":  "S",
+                       "Quantity":  10,
+                       "Product_Id":  68
+                   },
+                   {
+                       "Stock_Id":  401,
+                       "Size":  "M",
+                       "Quantity":  15,
+                       "Product_Id":  68
+                   },
+                   {
+                       "Stock_Id":  402,
+                       "Size":  "L",
+                       "Quantity":  12,
+                       "Product_Id":  68
+                   },
+                   {
+                       "Stock_Id":  403,
+                       "Size":  "XL",
+                       "Quantity":  8,
+                       "Product_Id":  68
+                   },
+                   {
+                       "Stock_Id":  404,
+                       "Size":  "S",
+                       "Quantity":  8,
+                       "Product_Id":  69
+                   },
+                   {
+                       "Stock_Id":  405,
+                       "Size":  "M",
+                       "Quantity":  12,
+                       "Product_Id":  69
+                   },
+                   {
+                       "Stock_Id":  406,
+                       "Size":  "L",
+                       "Quantity":  10,
+                       "Product_Id":  69
+                   },
+                   {
+                       "Stock_Id":  407,
+                       "Size":  "XL",
+                       "Quantity":  6,
+                       "Product_Id":  69
+                   },
+                   {
+                       "Stock_Id":  408,
+                       "Size":  "S",
+                       "Quantity":  20,
+                       "Product_Id":  71
+                   },
+                   {
+                       "Stock_Id":  409,
+                       "Size":  "M",
+                       "Quantity":  12,
+                       "Product_Id":  71
+                   },
+                   {
+                       "Stock_Id":  410,
+                       "Size":  "L",
+                       "Quantity":  10,
+                       "Product_Id":  71
+                   },
+                   {
+                       "Stock_Id":  411,
+                       "Size":  "XL",
+                       "Quantity":  8,
+                       "Product_Id":  71
+                   },
+                   {
+                       "Stock_Id":  412,
+                       "Size":  "S",
+                       "Quantity":  20,
+                       "Product_Id":  73
+                   },
+                   {
+                       "Stock_Id":  413,
+                       "Size":  "M",
+                       "Quantity":  18,
+                       "Product_Id":  73
+                   },
+                   {
+                       "Stock_Id":  414,
+                       "Size":  "L",
+                       "Quantity":  15,
+                       "Product_Id":  73
+                   },
+                   {
+                       "Stock_Id":  415,
+                       "Size":  "XL",
+                       "Quantity":  10,
+                       "Product_Id":  73
+                   },
+                   {
+                       "Stock_Id":  416,
+                       "Size":  "S",
+                       "Quantity":  12,
+                       "Product_Id":  74
+                   },
+                   {
+                       "Stock_Id":  417,
+                       "Size":  "M",
+                       "Quantity":  18,
+                       "Product_Id":  74
+                   },
+                   {
+                       "Stock_Id":  418,
+                       "Size":  "L",
+                       "Quantity":  15,
+                       "Product_Id":  74
+                   },
+                   {
+                       "Stock_Id":  419,
+                       "Size":  "XL",
+                       "Quantity":  8,
+                       "Product_Id":  74
+                   },
+                   {
+                       "Stock_Id":  436,
+                       "Size":  "S",
+                       "Quantity":  10,
+                       "Product_Id":  76
+                   },
+                   {
+                       "Stock_Id":  437,
+                       "Size":  "M",
+                       "Quantity":  15,
+                       "Product_Id":  76
+                   },
+                   {
+                       "Stock_Id":  438,
+                       "Size":  "L",
+                       "Quantity":  12,
+                       "Product_Id":  76
+                   },
+                   {
+                       "Stock_Id":  439,
+                       "Size":  "XL",
+                       "Quantity":  8,
+                       "Product_Id":  76
+                   },
+                   {
+                       "Stock_Id":  440,
+                       "Size":  "S",
+                       "Quantity":  10,
+                       "Product_Id":  75
+                   },
+                   {
+                       "Stock_Id":  441,
+                       "Size":  "M",
+                       "Quantity":  15,
+                       "Product_Id":  75
+                   },
+                   {
+                       "Stock_Id":  442,
+                       "Size":  "L",
+                       "Quantity":  12,
+                       "Product_Id":  75
+                   },
+                   {
+                       "Stock_Id":  443,
+                       "Size":  "XL",
+                       "Quantity":  8,
+                       "Product_Id":  75
+                   },
+                   {
+                       "Stock_Id":  446,
+                       "Size":  "S",
+                       "Quantity":  10,
+                       "Product_Id":  78
+                   },
+                   {
+                       "Stock_Id":  447,
+                       "Size":  "M",
+                       "Quantity":  15,
+                       "Product_Id":  78
+                   },
+                   {
+                       "Stock_Id":  448,
+                       "Size":  "L",
+                       "Quantity":  12,
+                       "Product_Id":  78
+                   },
+                   {
+                       "Stock_Id":  449,
+                       "Size":  "XL",
+                       "Quantity":  8,
+                       "Product_Id":  78
+                   },
+                   {
+                       "Stock_Id":  450,
+                       "Size":  "S",
+                       "Quantity":  10,
+                       "Product_Id":  79
+                   },
+                   {
+                       "Stock_Id":  451,
+                       "Size":  "M",
+                       "Quantity":  15,
+                       "Product_Id":  79
+                   },
+                   {
+                       "Stock_Id":  452,
+                       "Size":  "L",
+                       "Quantity":  12,
+                       "Product_Id":  79
+                   },
+                   {
+                       "Stock_Id":  453,
+                       "Size":  "XL",
+                       "Quantity":  8,
+                       "Product_Id":  79
+                   },
+                   {
+                       "Stock_Id":  454,
+                       "Size":  "S",
+                       "Quantity":  10,
+                       "Product_Id":  80
+                   },
+                   {
+                       "Stock_Id":  455,
+                       "Size":  "M",
+                       "Quantity":  15,
+                       "Product_Id":  80
+                   },
+                   {
+                       "Stock_Id":  456,
+                       "Size":  "L",
+                       "Quantity":  12,
+                       "Product_Id":  80
+                   },
+                   {
+                       "Stock_Id":  457,
+                       "Size":  "XL",
+                       "Quantity":  8,
+                       "Product_Id":  80
+                   },
+                   {
+                       "Stock_Id":  458,
+                       "Size":  "S",
+                       "Quantity":  10,
+                       "Product_Id":  81
+                   },
+                   {
+                       "Stock_Id":  459,
+                       "Size":  "M",
+                       "Quantity":  15,
+                       "Product_Id":  81
+                   },
+                   {
+                       "Stock_Id":  460,
+                       "Size":  "L",
+                       "Quantity":  12,
+                       "Product_Id":  81
+                   },
+                   {
+                       "Stock_Id":  461,
+                       "Size":  "XL",
+                       "Quantity":  8,
+                       "Product_Id":  81
+                   },
+                   {
+                       "Stock_Id":  462,
+                       "Size":  "S",
+                       "Quantity":  10,
+                       "Product_Id":  82
+                   },
+                   {
+                       "Stock_Id":  463,
+                       "Size":  "M",
+                       "Quantity":  15,
+                       "Product_Id":  82
+                   },
+                   {
+                       "Stock_Id":  464,
+                       "Size":  "L",
+                       "Quantity":  12,
+                       "Product_Id":  82
+                   },
+                   {
+                       "Stock_Id":  465,
+                       "Size":  "XL",
+                       "Quantity":  10,
+                       "Product_Id":  82
+                   },
+                   {
+                       "Stock_Id":  466,
+                       "Size":  "S",
+                       "Quantity":  10,
+                       "Product_Id":  83
+                   },
+                   {
+                       "Stock_Id":  467,
+                       "Size":  "M",
+                       "Quantity":  15,
+                       "Product_Id":  83
+                   },
+                   {
+                       "Stock_Id":  468,
+                       "Size":  "L",
+                       "Quantity":  12,
+                       "Product_Id":  83
+                   },
+                   {
+                       "Stock_Id":  469,
+                       "Size":  "XL",
+                       "Quantity":  8,
+                       "Product_Id":  83
+                   },
+                   {
+                       "Stock_Id":  470,
+                       "Size":  "S",
+                       "Quantity":  10,
+                       "Product_Id":  84
+                   },
+                   {
+                       "Stock_Id":  471,
+                       "Size":  "M",
+                       "Quantity":  15,
+                       "Product_Id":  84
+                   },
+                   {
+                       "Stock_Id":  472,
+                       "Size":  "L",
+                       "Quantity":  12,
+                       "Product_Id":  84
+                   },
+                   {
+                       "Stock_Id":  473,
+                       "Size":  "XL",
+                       "Quantity":  8,
+                       "Product_Id":  84
+                   },
+                   {
+                       "Stock_Id":  478,
+                       "Size":  "S",
+                       "Quantity":  15,
+                       "Product_Id":  86
+                   },
+                   {
+                       "Stock_Id":  479,
+                       "Size":  "M",
+                       "Quantity":  20,
+                       "Product_Id":  86
+                   },
+                   {
+                       "Stock_Id":  480,
+                       "Size":  "L",
+                       "Quantity":  18,
+                       "Product_Id":  86
+                   },
+                   {
+                       "Stock_Id":  481,
+                       "Size":  "XL",
+                       "Quantity":  10,
+                       "Product_Id":  86
+                   },
+                   {
+                       "Stock_Id":  482,
+                       "Size":  "S",
+                       "Quantity":  10,
+                       "Product_Id":  85
+                   },
+                   {
+                       "Stock_Id":  483,
+                       "Size":  "M",
+                       "Quantity":  15,
+                       "Product_Id":  85
+                   },
+                   {
+                       "Stock_Id":  484,
+                       "Size":  "L",
+                       "Quantity":  12,
+                       "Product_Id":  85
+                   },
+                   {
+                       "Stock_Id":  485,
+                       "Size":  "XL",
+                       "Quantity":  8,
+                       "Product_Id":  85
+                   },
+                   {
+                       "Stock_Id":  486,
+                       "Size":  "S",
+                       "Quantity":  10,
+                       "Product_Id":  88
+                   },
+                   {
+                       "Stock_Id":  487,
+                       "Size":  "M",
+                       "Quantity":  15,
+                       "Product_Id":  88
+                   },
+                   {
+                       "Stock_Id":  488,
+                       "Size":  "L",
+                       "Quantity":  12,
+                       "Product_Id":  88
+                   },
+                   {
+                       "Stock_Id":  489,
+                       "Size":  "XL",
+                       "Quantity":  8,
+                       "Product_Id":  88
+                   },
+                   {
+                       "Stock_Id":  490,
+                       "Size":  "S",
+                       "Quantity":  10,
+                       "Product_Id":  89
+                   },
+                   {
+                       "Stock_Id":  491,
+                       "Size":  "M",
+                       "Quantity":  15,
+                       "Product_Id":  89
+                   },
+                   {
+                       "Stock_Id":  492,
+                       "Size":  "L",
+                       "Quantity":  12,
+                       "Product_Id":  89
+                   },
+                   {
+                       "Stock_Id":  493,
+                       "Size":  "XL",
+                       "Quantity":  8,
+                       "Product_Id":  89
+                   },
+                   {
+                       "Stock_Id":  494,
+                       "Size":  "S",
+                       "Quantity":  10,
+                       "Product_Id":  90
+                   },
+                   {
+                       "Stock_Id":  495,
+                       "Size":  "M",
+                       "Quantity":  15,
+                       "Product_Id":  90
+                   },
+                   {
+                       "Stock_Id":  496,
+                       "Size":  "L",
+                       "Quantity":  12,
+                       "Product_Id":  90
+                   },
+                   {
+                       "Stock_Id":  497,
+                       "Size":  "XL",
+                       "Quantity":  8,
+                       "Product_Id":  90
+                   },
+                   {
+                       "Stock_Id":  498,
+                       "Size":  "S",
+                       "Quantity":  10,
+                       "Product_Id":  91
+                   },
+                   {
+                       "Stock_Id":  499,
+                       "Size":  "M",
+                       "Quantity":  15,
+                       "Product_Id":  91
+                   },
+                   {
+                       "Stock_Id":  500,
+                       "Size":  "L",
+                       "Quantity":  12,
+                       "Product_Id":  91
+                   },
+                   {
+                       "Stock_Id":  501,
+                       "Size":  "XL",
+                       "Quantity":  8,
+                       "Product_Id":  91
+                   },
+                   {
+                       "Stock_Id":  502,
+                       "Size":  "S",
+                       "Quantity":  10,
+                       "Product_Id":  92
+                   },
+                   {
+                       "Stock_Id":  503,
+                       "Size":  "M",
+                       "Quantity":  15,
+                       "Product_Id":  92
+                   },
+                   {
+                       "Stock_Id":  504,
+                       "Size":  "L",
+                       "Quantity":  12,
+                       "Product_Id":  92
+                   },
+                   {
+                       "Stock_Id":  505,
+                       "Size":  "XL",
+                       "Quantity":  8,
+                       "Product_Id":  92
+                   },
+                   {
+                       "Stock_Id":  506,
+                       "Size":  "S",
+                       "Quantity":  10,
+                       "Product_Id":  93
+                   },
+                   {
+                       "Stock_Id":  507,
+                       "Size":  "M",
+                       "Quantity":  15,
+                       "Product_Id":  93
+                   },
+                   {
+                       "Stock_Id":  508,
+                       "Size":  "L",
+                       "Quantity":  12,
+                       "Product_Id":  93
+                   },
+                   {
+                       "Stock_Id":  509,
+                       "Size":  "XL",
+                       "Quantity":  8,
+                       "Product_Id":  93
+                   },
+                   {
+                       "Stock_Id":  510,
+                       "Size":  "S",
+                       "Quantity":  10,
+                       "Product_Id":  94
+                   },
+                   {
+                       "Stock_Id":  511,
+                       "Size":  "S",
+                       "Quantity":  10,
+                       "Product_Id":  95
+                   },
+                   {
+                       "Stock_Id":  512,
+                       "Size":  "M",
+                       "Quantity":  15,
+                       "Product_Id":  95
+                   },
+                   {
+                       "Stock_Id":  513,
+                       "Size":  "L",
+                       "Quantity":  12,
+                       "Product_Id":  95
+                   },
+                   {
+                       "Stock_Id":  514,
+                       "Size":  "XL",
+                       "Quantity":  8,
+                       "Product_Id":  95
+                   },
+                   {
+                       "Stock_Id":  515,
+                       "Size":  "S",
+                       "Quantity":  10,
+                       "Product_Id":  96
+                   },
+                   {
+                       "Stock_Id":  516,
+                       "Size":  "M",
+                       "Quantity":  15,
+                       "Product_Id":  96
+                   },
+                   {
+                       "Stock_Id":  517,
+                       "Size":  "L",
+                       "Quantity":  12,
+                       "Product_Id":  96
+                   },
+                   {
+                       "Stock_Id":  518,
+                       "Size":  "XL",
+                       "Quantity":  8,
+                       "Product_Id":  96
+                   },
+                   {
+                       "Stock_Id":  519,
+                       "Size":  "S",
+                       "Quantity":  10,
+                       "Product_Id":  97
+                   },
+                   {
+                       "Stock_Id":  520,
+                       "Size":  "M",
+                       "Quantity":  15,
+                       "Product_Id":  97
+                   },
+                   {
+                       "Stock_Id":  521,
+                       "Size":  "L",
+                       "Quantity":  12,
+                       "Product_Id":  97
+                   },
+                   {
+                       "Stock_Id":  522,
+                       "Size":  "XL",
+                       "Quantity":  8,
+                       "Product_Id":  97
+                   },
+                   {
+                       "Stock_Id":  523,
+                       "Size":  "S",
+                       "Quantity":  10,
+                       "Product_Id":  98
+                   },
+                   {
+                       "Stock_Id":  524,
+                       "Size":  "M",
+                       "Quantity":  15,
+                       "Product_Id":  98
+                   },
+                   {
+                       "Stock_Id":  525,
+                       "Size":  "L",
+                       "Quantity":  12,
+                       "Product_Id":  98
+                   },
+                   {
+                       "Stock_Id":  526,
+                       "Size":  "XL",
+                       "Quantity":  8,
+                       "Product_Id":  98
+                   },
+                   {
+                       "Stock_Id":  527,
+                       "Size":  "S",
+                       "Quantity":  10,
+                       "Product_Id":  99
+                   },
+                   {
+                       "Stock_Id":  528,
+                       "Size":  "M",
+                       "Quantity":  15,
+                       "Product_Id":  99
+                   },
+                   {
+                       "Stock_Id":  529,
+                       "Size":  "L",
+                       "Quantity":  12,
+                       "Product_Id":  99
+                   },
+                   {
+                       "Stock_Id":  530,
+                       "Size":  "XL",
+                       "Quantity":  8,
+                       "Product_Id":  99
+                   },
+                   {
+                       "Stock_Id":  531,
+                       "Size":  "S",
+                       "Quantity":  10,
+                       "Product_Id":  100
+                   },
+                   {
+                       "Stock_Id":  532,
+                       "Size":  "M",
+                       "Quantity":  15,
+                       "Product_Id":  100
+                   },
+                   {
+                       "Stock_Id":  533,
+                       "Size":  "L",
+                       "Quantity":  12,
+                       "Product_Id":  100
+                   },
+                   {
+                       "Stock_Id":  534,
+                       "Size":  "XL",
+                       "Quantity":  8,
+                       "Product_Id":  100
+                   },
+                   {
+                       "Stock_Id":  535,
+                       "Size":  "S",
+                       "Quantity":  10,
+                       "Product_Id":  101
+                   },
+                   {
+                       "Stock_Id":  536,
+                       "Size":  "M",
+                       "Quantity":  15,
+                       "Product_Id":  101
+                   },
+                   {
+                       "Stock_Id":  537,
+                       "Size":  "L",
+                       "Quantity":  10,
+                       "Product_Id":  101
+                   },
+                   {
+                       "Stock_Id":  538,
+                       "Size":  "XL",
+                       "Quantity":  8,
+                       "Product_Id":  101
+                   },
+                   {
+                       "Stock_Id":  539,
+                       "Size":  "S",
+                       "Quantity":  10,
+                       "Product_Id":  102
+                   },
+                   {
+                       "Stock_Id":  540,
+                       "Size":  "M",
+                       "Quantity":  15,
+                       "Product_Id":  102
+                   },
+                   {
+                       "Stock_Id":  541,
+                       "Size":  "L",
+                       "Quantity":  12,
+                       "Product_Id":  102
+                   },
+                   {
+                       "Stock_Id":  542,
+                       "Size":  "XL",
+                       "Quantity":  8,
+                       "Product_Id":  102
+                   },
+                   {
+                       "Stock_Id":  543,
+                       "Size":  "S",
+                       "Quantity":  10,
+                       "Product_Id":  103
+                   },
+                   {
+                       "Stock_Id":  544,
+                       "Size":  "M",
+                       "Quantity":  15,
+                       "Product_Id":  103
+                   },
+                   {
+                       "Stock_Id":  545,
+                       "Size":  "L",
+                       "Quantity":  12,
+                       "Product_Id":  103
+                   },
+                   {
+                       "Stock_Id":  546,
+                       "Size":  "XL",
+                       "Quantity":  8,
+                       "Product_Id":  103
+                   },
+                   {
+                       "Stock_Id":  547,
+                       "Size":  "S",
+                       "Quantity":  10,
+                       "Product_Id":  104
+                   },
+                   {
+                       "Stock_Id":  548,
+                       "Size":  "M",
+                       "Quantity":  15,
+                       "Product_Id":  104
+                   },
+                   {
+                       "Stock_Id":  549,
+                       "Size":  "L",
+                       "Quantity":  12,
+                       "Product_Id":  104
+                   },
+                   {
+                       "Stock_Id":  550,
+                       "Size":  "XL",
+                       "Quantity":  8,
+                       "Product_Id":  104
+                   },
+                   {
+                       "Stock_Id":  555,
+                       "Size":  "S",
+                       "Quantity":  10,
+                       "Product_Id":  106
+                   },
+                   {
+                       "Stock_Id":  556,
+                       "Size":  "M",
+                       "Quantity":  15,
+                       "Product_Id":  106
+                   },
+                   {
+                       "Stock_Id":  557,
+                       "Size":  "L",
+                       "Quantity":  12,
+                       "Product_Id":  106
+                   },
+                   {
+                       "Stock_Id":  558,
+                       "Size":  "XL",
+                       "Quantity":  8,
+                       "Product_Id":  106
+                   },
+                   {
+                       "Stock_Id":  563,
+                       "Size":  "S",
+                       "Quantity":  10,
+                       "Product_Id":  107
+                   },
+                   {
+                       "Stock_Id":  564,
+                       "Size":  "M",
+                       "Quantity":  15,
+                       "Product_Id":  107
+                   },
+                   {
+                       "Stock_Id":  565,
+                       "Size":  "L",
+                       "Quantity":  12,
+                       "Product_Id":  107
+                   },
+                   {
+                       "Stock_Id":  566,
+                       "Size":  "XL",
+                       "Quantity":  10,
+                       "Product_Id":  107
+                   },
+                   {
+                       "Stock_Id":  567,
+                       "Size":  "S",
+                       "Quantity":  10,
+                       "Product_Id":  108
+                   },
+                   {
+                       "Stock_Id":  568,
+                       "Size":  "M",
+                       "Quantity":  15,
+                       "Product_Id":  108
+                   },
+                   {
+                       "Stock_Id":  569,
+                       "Size":  "L",
+                       "Quantity":  12,
+                       "Product_Id":  108
+                   },
+                   {
+                       "Stock_Id":  570,
+                       "Size":  "XL",
+                       "Quantity":  8,
+                       "Product_Id":  108
+                   },
+                   {
+                       "Stock_Id":  571,
+                       "Size":  "S",
+                       "Quantity":  10,
+                       "Product_Id":  109
+                   },
+                   {
+                       "Stock_Id":  572,
+                       "Size":  "M",
+                       "Quantity":  15,
+                       "Product_Id":  109
+                   },
+                   {
+                       "Stock_Id":  573,
+                       "Size":  "L",
+                       "Quantity":  12,
+                       "Product_Id":  109
+                   },
+                   {
+                       "Stock_Id":  574,
+                       "Size":  "XL",
+                       "Quantity":  8,
+                       "Product_Id":  109
+                   },
+                   {
+                       "Stock_Id":  575,
+                       "Size":  "S",
+                       "Quantity":  10,
+                       "Product_Id":  110
+                   },
+                   {
+                       "Stock_Id":  576,
+                       "Size":  "M",
+                       "Quantity":  15,
+                       "Product_Id":  110
+                   },
+                   {
+                       "Stock_Id":  577,
+                       "Size":  "L",
+                       "Quantity":  12,
+                       "Product_Id":  110
+                   },
+                   {
+                       "Stock_Id":  578,
+                       "Size":  "XL",
+                       "Quantity":  8,
+                       "Product_Id":  110
+                   },
+                   {
+                       "Stock_Id":  583,
+                       "Size":  "S",
+                       "Quantity":  10,
+                       "Product_Id":  111
+                   },
+                   {
+                       "Stock_Id":  584,
+                       "Size":  "M",
+                       "Quantity":  15,
+                       "Product_Id":  111
+                   },
+                   {
+                       "Stock_Id":  585,
+                       "Size":  "L",
+                       "Quantity":  12,
+                       "Product_Id":  111
+                   },
+                   {
+                       "Stock_Id":  586,
+                       "Size":  "XL",
+                       "Quantity":  10,
+                       "Product_Id":  111
+                   },
+                   {
+                       "Stock_Id":  587,
+                       "Size":  "S",
+                       "Quantity":  10,
+                       "Product_Id":  105
+                   },
+                   {
+                       "Stock_Id":  588,
+                       "Size":  "M",
+                       "Quantity":  15,
+                       "Product_Id":  105
+                   },
+                   {
+                       "Stock_Id":  589,
+                       "Size":  "L",
+                       "Quantity":  12,
+                       "Product_Id":  105
+                   },
+                   {
+                       "Stock_Id":  590,
+                       "Size":  "XL",
+                       "Quantity":  8,
+                       "Product_Id":  105
+                   },
+                   {
+                       "Stock_Id":  591,
+                       "Size":  "S",
+                       "Quantity":  10,
+                       "Product_Id":  112
+                   },
+                   {
+                       "Stock_Id":  592,
+                       "Size":  "M",
+                       "Quantity":  15,
+                       "Product_Id":  112
+                   },
+                   {
+                       "Stock_Id":  593,
+                       "Size":  "L",
+                       "Quantity":  12,
+                       "Product_Id":  112
+                   },
+                   {
+                       "Stock_Id":  594,
+                       "Size":  "XL",
+                       "Quantity":  8,
+                       "Product_Id":  112
+                   },
+                   {
+                       "Stock_Id":  599,
+                       "Size":  "S",
+                       "Quantity":  10,
+                       "Product_Id":  113
+                   },
+                   {
+                       "Stock_Id":  600,
+                       "Size":  "M",
+                       "Quantity":  15,
+                       "Product_Id":  113
+                   },
+                   {
+                       "Stock_Id":  601,
+                       "Size":  "L",
+                       "Quantity":  12,
+                       "Product_Id":  113
+                   },
+                   {
+                       "Stock_Id":  602,
+                       "Size":  "XL",
+                       "Quantity":  8,
+                       "Product_Id":  113
+                   },
+                   {
+                       "Stock_Id":  603,
+                       "Size":  "S",
+                       "Quantity":  10,
+                       "Product_Id":  114
+                   },
+                   {
+                       "Stock_Id":  604,
+                       "Size":  "M",
+                       "Quantity":  15,
+                       "Product_Id":  114
+                   },
+                   {
+                       "Stock_Id":  605,
+                       "Size":  "L",
+                       "Quantity":  12,
+                       "Product_Id":  114
+                   },
+                   {
+                       "Stock_Id":  606,
+                       "Size":  "XL",
+                       "Quantity":  8,
+                       "Product_Id":  114
+                   },
+                   {
+                       "Stock_Id":  611,
+                       "Size":  "S",
+                       "Quantity":  10,
+                       "Product_Id":  116
+                   },
+                   {
+                       "Stock_Id":  612,
+                       "Size":  "M",
+                       "Quantity":  15,
+                       "Product_Id":  116
+                   },
+                   {
+                       "Stock_Id":  613,
+                       "Size":  "L",
+                       "Quantity":  12,
+                       "Product_Id":  116
+                   },
+                   {
+                       "Stock_Id":  614,
+                       "Size":  "XL",
+                       "Quantity":  8,
+                       "Product_Id":  116
+                   },
+                   {
+                       "Stock_Id":  615,
+                       "Size":  "S",
+                       "Quantity":  10,
+                       "Product_Id":  117
+                   },
+                   {
+                       "Stock_Id":  616,
+                       "Size":  "M",
+                       "Quantity":  15,
+                       "Product_Id":  117
+                   },
+                   {
+                       "Stock_Id":  617,
+                       "Size":  "L",
+                       "Quantity":  12,
+                       "Product_Id":  117
+                   },
+                   {
+                       "Stock_Id":  618,
+                       "Size":  "XL",
+                       "Quantity":  8,
+                       "Product_Id":  117
+                   },
+                   {
+                       "Stock_Id":  619,
+                       "Size":  "S",
+                       "Quantity":  10,
+                       "Product_Id":  118
+                   },
+                   {
+                       "Stock_Id":  620,
+                       "Size":  "M",
+                       "Quantity":  15,
+                       "Product_Id":  118
+                   },
+                   {
+                       "Stock_Id":  621,
+                       "Size":  "L",
+                       "Quantity":  12,
+                       "Product_Id":  118
+                   },
+                   {
+                       "Stock_Id":  622,
+                       "Size":  "XL",
+                       "Quantity":  8,
+                       "Product_Id":  118
+                   },
+                   {
+                       "Stock_Id":  623,
+                       "Size":  "S",
+                       "Quantity":  10,
+                       "Product_Id":  119
+                   },
+                   {
+                       "Stock_Id":  624,
+                       "Size":  "M",
+                       "Quantity":  15,
+                       "Product_Id":  119
+                   },
+                   {
+                       "Stock_Id":  625,
+                       "Size":  "L",
+                       "Quantity":  12,
+                       "Product_Id":  119
+                   },
+                   {
+                       "Stock_Id":  626,
+                       "Size":  "XL",
+                       "Quantity":  8,
+                       "Product_Id":  119
+                   },
+                   {
+                       "Stock_Id":  627,
+                       "Size":  "M",
+                       "Quantity":  20,
+                       "Product_Id":  120
+                   }
+               ]
+}
