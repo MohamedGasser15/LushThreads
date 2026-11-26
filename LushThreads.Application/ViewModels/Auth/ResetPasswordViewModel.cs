@@ -8,7 +8,8 @@ namespace LushThreads.Application.ViewModels.Auth
         public string Email { get; set; }
 
         [Required]
-        [StringLength(100, MinimumLength = 6)]
+        [StringLength(100, ErrorMessage = "Password must be at least {2} characters long.", MinimumLength = 8)]
+        [RegularExpression(@".*\d.*", ErrorMessage = "Password must contain at least one number.")]
         [DataType(DataType.Password)]
         public string NewPassword { get; set; }
 

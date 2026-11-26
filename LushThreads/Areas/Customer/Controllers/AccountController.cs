@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Security.Claims;
@@ -69,6 +70,7 @@ namespace LushThreads.Web.Areas.Customer.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [EnableRateLimiting("auth")]
         public async Task<IActionResult> Login(LoginViewModel model, string returnUrl = null)
         {
             returnUrl = returnUrl ?? Url.Content("~/");
@@ -106,7 +108,8 @@ namespace LushThreads.Web.Areas.Customer.Controllers
             await _signInManager.SignInAsync(user, model.RememberMe);
             HttpContext.Session.SetString("lang", user.PreferredLanguage ?? "en");
 
-            return LocalRedirect(returnUrl);
+            var targetUrl = await GetPostLoginRedirectUrlAsync(user, returnUrl);
+            return LocalRedirect(targetUrl);
         }
 
         [HttpGet]
@@ -142,7 +145,13 @@ namespace LushThreads.Web.Areas.Customer.Controllers
             var user = await _userManager.FindByIdAsync(userId);
             HttpContext.Session.SetString("lang", user?.PreferredLanguage ?? "en");
 
-            return RedirectToAction("Index", "Home");
+            if (user != null)
+            {
+                var targetUrl = await GetPostLoginRedirectUrlAsync(user, null);
+                return LocalRedirect(targetUrl);
+            }
+
+            return RedirectToAction("Home", "Home");
         }
 
         #endregion
@@ -158,6 +167,7 @@ namespace LushThreads.Web.Areas.Customer.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [EnableRateLimiting("auth")]
         public async Task<IActionResult> Register(RegisterViewModel model, string returnUrl = null)
         {
             returnUrl = returnUrl ?? Url.Content("~/");
@@ -215,6 +225,7 @@ namespace LushThreads.Web.Areas.Customer.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [EnableRateLimiting("auth")]
         public async Task<IActionResult> ResendEmailCode(string email)
         {
             var (success, errorMessage, newCode) = await _accountService.ResendEmailVerificationCodeAsync(email);
@@ -252,6 +263,7 @@ namespace LushThreads.Web.Areas.Customer.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [EnableRateLimiting("auth")]
         public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
         {
             if (!ModelState.IsValid)
@@ -302,6 +314,7 @@ namespace LushThreads.Web.Areas.Customer.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [EnableRateLimiting("auth")]
         public async Task<IActionResult> ResendResetCode(string email)
         {
             var (success, errorMessage, newCode) = await _accountService.ResendPasswordResetCodeAsync(email);
@@ -385,7 +398,7 @@ namespace LushThreads.Web.Areas.Customer.Controllers
             }
 
             await _accountService.TrackUserDeviceAsync(user, HttpContext);
-            var safeReturnUrl = Url.IsLocalUrl(callbackReturnUrl) ? callbackReturnUrl : Url.Content("~/");
+            var safeReturnUrl = await GetPostLoginRedirectUrlAsync(user, callbackReturnUrl);
 
             if (isPopup)
             {
@@ -393,6 +406,21 @@ namespace LushThreads.Web.Areas.Customer.Controllers
             }
 
             return LocalRedirect(safeReturnUrl);
+        }
+
+        private async Task<string> GetPostLoginRedirectUrlAsync(ApplicationUser user, string? returnUrl)
+        {
+            if (!string.IsNullOrEmpty(returnUrl) && returnUrl != "/" && returnUrl != "~/" && Url.IsLocalUrl(returnUrl))
+            {
+                return returnUrl;
+            }
+
+            if (await _userManager.IsInRoleAsync(user, SD.Admin))
+            {
+                return Url.Action("Index", "Analytics", new { area = "Admin" }) ?? "/Admin/Analytics";
+            }
+
+            return Url.Content("~/");
         }
 
         private ContentResult PopupCallbackResult(string messageType, string redirectUrl)

@@ -173,14 +173,10 @@ namespace LushThreads.Application.Services
             if (existingUserByEmail != null)
                 return (false, "This email is already registered.", null, null);
 
-            var existingUserByName = await _userManager.FindByNameAsync(model.Name);
-            if (existingUserByName != null)
-                return (false, "This name is already taken.", null, null);
-
             // Create user
             var user = new ApplicationUser
             {
-                UserName = model.Name,
+                UserName = model.Email,
                 Email = model.Email,
                 Name = model.Name
             };
