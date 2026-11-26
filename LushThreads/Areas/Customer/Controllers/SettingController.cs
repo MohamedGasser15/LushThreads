@@ -1,6 +1,5 @@
 ﻿using LushThreads.Application.ServiceInterfaces;
 using LushThreads.Domain.Entites;
-using LushThreads.Infrastructure.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;

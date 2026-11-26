@@ -25,9 +25,8 @@ Application            ISettingService -> SettingService (278 lines)
                        IAdminActivityService -> AdminActivityService
 ```
 
-### Dependencies (`:18-19`)
-`ISettingService`, `IAdminActivityService` (plus inherited `_userManager` and `_deviceTrackingService`).  
-*(Note: `SettingController.cs:3` still contains an unused `using LushThreads.Infrastructure.Data;` statement.)*
+### Dependencies (`:17-18`)
+`ISettingService`, `IAdminActivityService` (plus inherited `_userManager` and `_deviceTrackingService`).
 
 ---
 
@@ -107,8 +106,7 @@ flowchart LR
 
 ## Hidden Behaviors & Technical Notes
 
-1. **Unused Infrastructure Namespace (`:3`):** `using LushThreads.Infrastructure.Data;` remains imported at the top of `SettingController.cs`.
-2. **Entity Typo:** Payment preference updates `ApplicationUser.PaymentMehtod` (`ApplicationUser.cs:30`).
+1. **Entity Typo:** Payment preference updates `ApplicationUser.PaymentMehtod` (`ApplicationUser.cs:30`).
 
 ---
 

@@ -109,7 +109,6 @@ Documentation/
 - **Namespace/Directory Typo:** `LushThreads.Domain/Entites/` instead of `Entities`.
 - **Property Typos:** `ApplicationUser.PaymentMehtod` (`ApplicationUser.cs:30`), lowercase `Product.brand_Id` (`Product.cs:60`), lowercase `OrderDetail.price` (`OrderDetail.cs:27`).
 - **Audit Log Cross-Pollution:** `SettingService.UpdateUserPropertyAsync` (`SettingService.cs:48`) writes customer preference updates to `AdminActivity` rather than `SecurityActivity`.
-- **Unused Import:** `SettingController.cs:3` retains an unused `using LushThreads.Infrastructure.Data;`.
 - **Duplicated Helpers:** `CartController.CalculateOrderTotals` (`:258`) duplicates `CartService.CalculateOrderTotals` (`:59`); `BaseController.IsValidEmail` (`:29`) duplicates `ProfileService.IsValidEmail` (`:469`).
 
 ---
