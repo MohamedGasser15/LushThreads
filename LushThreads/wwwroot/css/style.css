@@ -234,6 +234,38 @@ body {
             border-radius: 1.25rem; /* 20px */
         }
 
+    /* Shop page 6/3/2 responsive grid */
+    #product1 .pro-container.shop-grid {
+        display: grid;
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+        gap: 1.25rem;
+    }
+
+        #product1 .pro-container.shop-grid .pro {
+            width: 100%;
+            min-width: 0;
+            max-width: 300px;
+            margin: 0 auto;
+        }
+
+            #product1 .pro-container.shop-grid .pro img {
+                aspect-ratio: 4 / 5;
+                object-fit: cover;
+            }
+
+    @media (max-width: 1199px) {
+        #product1 .pro-container.shop-grid {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+    }
+
+    @media (max-width: 640px) {
+        #product1 .pro-container.shop-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0.75rem;
+        }
+    }
+
         #product1 .pro .des {
             text-align: start;
             padding: 0.625rem 0; /* 10px */

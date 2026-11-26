@@ -1,4 +1,4 @@
-@using LushThreads.Application.ViewModels.Home
+ï»¿@using LushThreads.Application.ViewModels.Home
 @model HomeViewModel
 
 @{
@@ -450,7 +450,7 @@
 }
 
 .size-modal .size-option.disabled::after {
-    content: "×";
+    content: "ï¿½";
     position: absolute;
     top: -5px;
     right: -5px;
@@ -1143,6 +1143,9 @@ section, div {
 
 #hero {
     background-image: url("../img/hero6.png");
+    background-position: right -168px top 5%;
+    background-repeat: no-repeat;
+    background-color: #e3e6f3;
 }
 
     @@media (max-width: 477px) {
@@ -1378,7 +1381,7 @@ section, div {
     <div class="quick-view-modal animate-modal">
         <div class="modal-header">
             <h3 class="modal-title" id="quickViewProductName"></h3>
-            <button class="close-modal" onclick="hideQuickViewModal()">×</button>
+            <button class="close-modal" onclick="hideQuickViewModal()">ï¿½</button>
         </div>
         <div class="quick-view-content">
             <div class="quick-view-image">
@@ -1412,7 +1415,7 @@ section, div {
         <div class="size-modal">
             <div class="modal-header">
                 <h3 class="modal-title">Select Size & Quantity</h3>
-                <button class="close-modal" onclick="hideSizeModal()">×</button>
+                <button class="close-modal" onclick="hideSizeModal()">ï¿½</button>
             </div>
             <div class="size-options" id="sizeOptionsContainer">
                 <!-- Size options populated dynamically -->
